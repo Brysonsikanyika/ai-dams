@@ -33,13 +33,16 @@ services:
     image: mysql:8.4
     container_name: aidams-mysql
     restart: unless-stopped
+    command: --log-bin=mysql-bin --binlog-format=ROW --server-id=1
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
       MYSQL_DATABASE: aidams_demo
+      MYSQL_AGENT_PASSWORD: ${MYSQL_AGENT_PASSWORD:-changeme_agent}
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 15s
