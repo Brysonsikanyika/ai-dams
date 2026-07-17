@@ -1,0 +1,27 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# node
+node_modules/
+dist/
+build/
+
+# docker volumes are managed by docker, not git, but just in case
+volumes/
+
+# certs (once mTLS phase starts)
+*.pem
+*.key
+*.jks
+*.p12
+kafka/certs/
+
+# OS/editor cruft
+.DS_Store
+*.log
