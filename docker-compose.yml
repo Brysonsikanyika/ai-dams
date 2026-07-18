@@ -80,6 +80,7 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-ChangeMe123!}
+      MSSQL_AGENT_ENABLED: "true"
     ports:
       - "1433:1433"
     volumes:
@@ -90,6 +91,23 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+
+  # One-shot init: creates aidams_demo, enables CDC, creates the agent login.
+  # The official mssql image has no docker-entrypoint-initdb.d equivalent,
+  # so this runs as its own short-lived service instead.
+  mssql-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: aidams-mssql-init
+    depends_on:
+      mssql:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-ChangeMe123!}
+      MSSQL_AGENT_PASSWORD: ${MSSQL_AGENT_PASSWORD:-changeme_agent}
+    entrypoint: ["/bin/bash", "/mssql-init/init.sh"]
+    volumes:
+      - ./mssql-init:/mssql-init:ro
+    restart: "no"
 
 volumes:
   kafka-data:
