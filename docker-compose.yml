@@ -54,13 +54,16 @@ services:
     image: postgres:16
     container_name: aidams-postgres
     restart: unless-stopped
+    command: ["postgres", "-c", "wal_level=logical", "-c", "max_replication_slots=4", "-c", "max_wal_senders=4"]
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       POSTGRES_DB: aidams_demo
+      PG_AGENT_PASSWORD: ${PG_AGENT_PASSWORD:-changeme_agent}
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 15s
