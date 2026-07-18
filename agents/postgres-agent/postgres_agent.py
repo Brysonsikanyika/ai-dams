@@ -59,9 +59,11 @@ def emit(producer: KafkaProducer, event_type: str, payload: dict) -> None:
         "captured_at": datetime.now(timezone.utc).isoformat(),
         **payload,
     }
-    producer.send(KAFKA_TOPIC, value=json.dumps(envelope).encode("utf-8"))
-    producer.flush()
-    print(f"[postgres-agent] sent {event_type}: {payload}", flush=True)
+    future = producer.send(KAFKA_TOPIC, value=json.dumps(envelope).encode("utf-8"))
+    future.add_errback(
+        lambda exc: print(f"[postgres-agent] FAILED to send {event_type}: {exc}", flush=True)
+    )
+    print(f"[postgres-agent] queued {event_type}: {payload}", flush=True)
 
 
 def ensure_slot() -> None:
@@ -123,11 +125,15 @@ def run(producer: KafkaProducer) -> None:
 
 if __name__ == "__main__":
     kafka_producer = build_producer()
-    while True:
-        try:
-            run(kafka_producer)
-        except KeyboardInterrupt:
-            break
-        except Exception as exc:  # noqa: BLE001 - top-level retry loop, log and retry
-            print(f"[postgres-agent] stream error: {exc}; retrying in 5s", flush=True)
-            time.sleep(5)
+    try:
+        while True:
+            try:
+                run(kafka_producer)
+            except KeyboardInterrupt:
+                break
+            except Exception as exc:  # noqa: BLE001 - top-level retry loop, log and retry
+                print(f"[postgres-agent] stream error: {exc}; retrying in 5s", flush=True)
+                time.sleep(5)
+    finally:
+        kafka_producer.flush(timeout=10)
+        kafka_producer.close()
