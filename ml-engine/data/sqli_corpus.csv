@@ -1,0 +1,1201 @@
+query_text,label,category
+' OR ''=',1,comment_bypass
+SELECT * FROM test_transactions WHERE amount > 631 AND amount < 3331,0,benign
+"SELECT id FROM sessions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+admin'#,1,comment_bypass
+INSERT INTO test_customers (name) VALUES ('jane'),0,benign
+SELECT * FROM orders WHERE id = 373 OR '1'='1',1,tautology
+SELECT * FROM test_customers WHERE id = 234 OR '1'='1',1,tautology
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+' UNION SELECT @@version--,1,union_based
+1; DELETE FROM test_orders;--,1,stacked_queries
+"SELECT id FROM test_customers WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+"SELECT * FROM orders WHERE id = 481 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM customers WHERE id = 784,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+"SELECT id FROM sessions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM customers WHERE id = 690,0,benign
+SELECT item FROM test_transactions WHERE item = 'smith',0,benign
+SELECT * FROM customers WHERE amount > 723 AND amount < 4741,0,benign
+"SELECT * FROM test_transactions WHERE id = 801 UNION SELECT username, password FROM users--",1,union_based
+"SELECT * FROM test_transactions WHERE id = 856 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT item FROM customers WHERE item = 'jane',0,benign
+DELETE FROM test_orders WHERE id = 274,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+INSERT INTO test_orders (item) VALUES ('corp'),0,benign
+INSERT INTO test_orders (amount) VALUES ('acme'),0,benign
+SELECT * FROM sessions WHERE id = 594,0,benign
+SELECT COUNT(*) FROM sessions WHERE email IS NOT NULL,0,benign
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+INSERT INTO test_transactions (id) VALUES ('john'),0,benign
+' OR 1=1#,1,tautology
+' UNION SELECT @@version--,1,union_based
+admin'--,1,comment_bypass
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM sessions WHERE name LIKE '%john%',0,benign
+admin'--,1,comment_bypass
+INSERT INTO sessions (item) VALUES ('acme'),0,benign
+acme; DROP TABLE customers;--,1,stacked_queries
+SELECT * FROM sessions WHERE amount > 936 AND amount < 4862,0,benign
+INSERT INTO customers (id) VALUES ('acme'),0,benign
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+ltd; DROP TABLE customers;--,1,stacked_queries
+SELECT * FROM orders WHERE name LIKE '%jane%',0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+"SELECT * FROM customers WHERE id = 545 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM customers ORDER BY name DESC LIMIT 10,0,benign
+SELECT * FROM test_customers WHERE id = 288 OR '1'='1',1,tautology
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM test_transactions ORDER BY name DESC LIMIT 10,0,benign
+' OR ''=',1,comment_bypass
+SELECT * FROM test_transactions WHERE id = 128 OR '1'='1',1,tautology
+SELECT * FROM test_orders WHERE id = 11 AND SLEEP(5),1,blind_time_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+UPDATE sessions SET status = 'test' WHERE id = 410,0,benign
+SELECT * FROM test_transactions WHERE id = 309,0,benign
+UPDATE customers SET email = 'gadget' WHERE id = 642,0,benign
+UPDATE test_customers SET status = 'test' WHERE id = 730,0,benign
+'; INSERT INTO test_customers VALUES ('hacked');--,1,stacked_queries
+UPDATE test_orders SET item = 'widget' WHERE id = 10,0,benign
+admin' OR '1'='1'--,1,tautology
+SELECT * FROM orders ORDER BY id DESC LIMIT 10,0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT COUNT(*) FROM test_orders WHERE amount IS NOT NULL,0,benign
+' OR ''=',1,comment_bypass
+INSERT INTO test_orders (item) VALUES ('gadget'),0,benign
+SELECT * FROM test_customers WHERE id = 751 OR 'a'='a',1,tautology
+admin'--,1,comment_bypass
+' UNION SELECT @@version--,1,union_based
+' OR ''=',1,comment_bypass
+SELECT COUNT(*) FROM customers WHERE id IS NOT NULL,0,benign
+UPDATE test_orders SET item = 'corp' WHERE id = 105,0,benign
+SELECT id FROM test_orders WHERE id = 'john',0,benign
+DELETE FROM customers WHERE id = 250,0,benign
+SELECT * FROM orders WHERE name LIKE '%corp%',0,benign
+UPDATE test_orders SET amount = 'ltd' WHERE id = 696,0,benign
+"SELECT * FROM test_orders WHERE id = 492 UNION SELECT username, password FROM users--",1,union_based
+UPDATE orders SET item = 'gadget' WHERE id = 733,0,benign
+UPDATE test_customers SET status = 'smith' WHERE id = 180,0,benign
+admin'--,1,comment_bypass
+DELETE FROM orders WHERE id = 800,0,benign
+1; DELETE FROM test_customers;--,1,stacked_queries
+SELECT * FROM test_transactions WHERE name LIKE '%jane%',0,benign
+"SELECT amount FROM test_orders WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+' OR ''=',1,comment_bypass
+SELECT * FROM test_transactions WHERE id = 535 AND SLEEP(5),1,blind_time_based
+test; DROP TABLE test_transactions;--,1,stacked_queries
+1; DELETE FROM orders;--,1,stacked_queries
+1; DELETE FROM test_orders;--,1,stacked_queries
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM sessions WHERE name LIKE '%corp%',0,benign
+SELECT status FROM customers WHERE status = 'smith',0,benign
+SELECT * FROM test_transactions WHERE name LIKE '%jane%',0,benign
+DELETE FROM test_transactions WHERE id = 953,0,benign
+SELECT * FROM test_orders WHERE name = '' OR 1=1--,1,tautology
+' UNION SELECT @@version--,1,union_based
+DELETE FROM customers WHERE id = 827,0,benign
+SELECT * FROM test_customers WHERE id = 970 AND SLEEP(5),1,blind_time_based
+' OR 1=1#,1,tautology
+SELECT COUNT(*) FROM test_orders WHERE email IS NOT NULL,0,benign
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+UPDATE test_customers SET amount = 'smith' WHERE id = 282,0,benign
+SELECT * FROM test_customers WHERE id = 671 AND SLEEP(5),1,blind_time_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+ltd; DROP TABLE test_transactions;--,1,stacked_queries
+"SELECT * FROM orders WHERE id = 96 UNION SELECT username, password FROM users--",1,union_based
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_orders ORDER BY status DESC LIMIT 10,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+DELETE FROM customers WHERE id = 238,0,benign
+SELECT item FROM customers WHERE item = 'jane',0,benign
+SELECT COUNT(*) FROM test_customers WHERE item IS NOT NULL,0,benign
+admin'#,1,comment_bypass
+admin' OR '1'='1'--,1,tautology
+admin'--,1,comment_bypass
+"SELECT email FROM sessions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT COUNT(*) FROM test_orders WHERE amount IS NOT NULL,0,benign
+SELECT * FROM orders WHERE name = 'admin'--' AND password = 'test',1,comment_bypass
+DELETE FROM customers WHERE id = 825,0,benign
+SELECT * FROM sessions WHERE amount > 44 AND amount < 2178,0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+"SELECT * FROM test_orders WHERE id = 622 UNION SELECT username, password FROM users--",1,union_based
+SELECT * FROM test_orders WHERE name = 'admin'--' AND password = 'corp',1,comment_bypass
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM customers WHERE name LIKE '%gadget%',0,benign
+SELECT * FROM sessions ORDER BY status DESC LIMIT 10,0,benign
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_transactions ORDER BY name DESC LIMIT 10,0,benign
+"SELECT * FROM orders WHERE id = 254 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+admin' OR '1'='1'--,1,tautology
+"SELECT * FROM test_orders WHERE id = 515 UNION SELECT username, password FROM users--",1,union_based
+SELECT * FROM test_transactions WHERE name LIKE '%gadget%',0,benign
+SELECT email FROM test_orders WHERE email = 'smith',0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+"SELECT * FROM test_transactions WHERE id = 423 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+DELETE FROM orders WHERE id = 17,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM customers WHERE id = 653,0,benign
+INSERT INTO sessions (item) VALUES ('gadget'),0,benign
+admin'#,1,comment_bypass
+admin'--,1,comment_bypass
+"SELECT * FROM test_transactions WHERE id = 179 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+"SELECT * FROM test_transactions WHERE id = 537 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM orders WHERE name LIKE '%gadget%',0,benign
+jane; DROP TABLE customers;--,1,stacked_queries
+SELECT * FROM sessions WHERE name = 'admin'--' AND password = 'ltd',1,comment_bypass
+admin'--,1,comment_bypass
+INSERT INTO customers (email) VALUES ('smith'),0,benign
+DELETE FROM test_customers WHERE id = 327,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+"SELECT * FROM test_orders WHERE id = 800 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM sessions WHERE id = 683,0,benign
+SELECT * FROM sessions WHERE name = '' OR 1=1--,1,tautology
+' OR ''=',1,comment_bypass
+1; DELETE FROM test_transactions;--,1,stacked_queries
+INSERT INTO customers (item) VALUES ('jane'),0,benign
+SELECT * FROM test_customers WHERE name LIKE '%corp%',0,benign
+DELETE FROM customers WHERE id = 64,0,benign
+corp; DROP TABLE orders;--,1,stacked_queries
+DELETE FROM orders WHERE id = 797,0,benign
+UPDATE test_transactions SET amount = 'widget' WHERE id = 704,0,benign
+SELECT * FROM test_transactions WHERE amount > 348 AND amount < 4988,0,benign
+"SELECT * FROM test_transactions WHERE id = 396 UNION SELECT username, password FROM users--",1,union_based
+SELECT id FROM orders WHERE id = 'john',0,benign
+' OR 1=1#,1,tautology
+UPDATE customers SET name = 'jane' WHERE id = 539,0,benign
+INSERT INTO test_transactions (email) VALUES ('test'),0,benign
+SELECT * FROM test_transactions ORDER BY item DESC LIMIT 10,0,benign
+' OR 1=1#,1,tautology
+SELECT * FROM test_orders WHERE id = 489 AND SLEEP(5),1,blind_time_based
+UPDATE test_customers SET item = 'jane' WHERE id = 335,0,benign
+SELECT * FROM test_customers WHERE name LIKE '%jane%',0,benign
+SELECT * FROM test_transactions WHERE name = 'admin'--' AND password = 'gadget',1,comment_bypass
+UPDATE test_transactions SET email = 'ltd' WHERE id = 592,0,benign
+SELECT * FROM sessions WHERE id = 44 AND SLEEP(5),1,blind_time_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM test_orders WHERE amount > 58 AND amount < 3608,0,benign
+SELECT email FROM test_orders WHERE email = 'jane',0,benign
+SELECT * FROM test_customers WHERE amount > 221 AND amount < 3389,0,benign
+SELECT * FROM customers WHERE id = 238 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM customers ORDER BY status DESC LIMIT 10,0,benign
+SELECT status FROM test_customers WHERE status = 'gadget',0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+DELETE FROM customers WHERE id = 845,0,benign
+SELECT * FROM sessions WHERE amount > 855 AND amount < 1335,0,benign
+UPDATE sessions SET item = 'corp' WHERE id = 570,0,benign
+SELECT COUNT(*) FROM orders WHERE item IS NOT NULL,0,benign
+"SELECT * FROM customers WHERE id = 762 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_customers WHERE amount > 794 AND amount < 2066,0,benign
+INSERT INTO sessions (amount) VALUES ('corp'),0,benign
+admin' OR '1'='1'--,1,tautology
+"SELECT * FROM test_transactions WHERE id = 51 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+UPDATE orders SET id = 'smith' WHERE id = 249,0,benign
+smith; DROP TABLE test_customers;--,1,stacked_queries
+SELECT * FROM customers WHERE id = 860,0,benign
+DELETE FROM test_transactions WHERE id = 978,0,benign
+admin' OR '1'='1'--,1,tautology
+SELECT * FROM test_customers ORDER BY amount DESC LIMIT 10,0,benign
+SELECT name FROM test_orders WHERE name = 'john',0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+admin'--,1,comment_bypass
+SELECT * FROM test_customers ORDER BY amount DESC LIMIT 10,0,benign
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+"SELECT id FROM test_orders WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM test_orders ORDER BY status DESC LIMIT 10,0,benign
+SELECT COUNT(*) FROM sessions WHERE amount IS NOT NULL,0,benign
+SELECT * FROM test_orders WHERE name LIKE '%jane%',0,benign
+SELECT * FROM test_customers WHERE id = 853,0,benign
+SELECT item FROM test_transactions WHERE item = 'test',0,benign
+SELECT status FROM orders WHERE status = 'smith',0,benign
+SELECT * FROM orders ORDER BY item DESC LIMIT 10,0,benign
+1; DELETE FROM customers;--,1,stacked_queries
+DELETE FROM test_customers WHERE id = 872,0,benign
+SELECT amount FROM customers WHERE amount = 'widget',0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT id FROM test_orders WHERE id = 'corp',0,benign
+INSERT INTO sessions (status) VALUES ('gadget'),0,benign
+SELECT status FROM customers WHERE status = 'john',0,benign
+INSERT INTO orders (email) VALUES ('test'),0,benign
+SELECT * FROM sessions ORDER BY id DESC LIMIT 10,0,benign
+INSERT INTO test_orders (amount) VALUES ('widget'),0,benign
+' OR '1'='1,1,tautology
+' UNION SELECT @@version--,1,union_based
+admin' OR '1'='1'--,1,tautology
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+' UNION SELECT @@version--,1,union_based
+SELECT * FROM orders WHERE amount > 422 AND amount < 3318,0,benign
+admin' OR '1'='1'--,1,tautology
+SELECT COUNT(*) FROM test_transactions WHERE item IS NOT NULL,0,benign
+DELETE FROM customers WHERE id = 195,0,benign
+"SELECT * FROM test_orders WHERE id = 239 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT COUNT(*) FROM sessions WHERE status IS NOT NULL,0,benign
+SELECT amount FROM test_transactions WHERE amount = 'acme',0,benign
+INSERT INTO test_orders (item) VALUES ('acme'),0,benign
+' OR 1=1#,1,tautology
+' UNION SELECT @@version--,1,union_based
+INSERT INTO customers (amount) VALUES ('widget'),0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT * FROM test_customers WHERE amount > 372 AND amount < 2265,0,benign
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM sessions WHERE id = 392 OR 'a'='a',1,tautology
+SELECT * FROM test_orders WHERE name = '' OR 1=1--,1,tautology
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+DELETE FROM orders WHERE id = 501,0,benign
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM sessions WHERE id = 247,0,benign
+SELECT * FROM test_transactions WHERE amount > 65 AND amount < 1454,0,benign
+' OR '1'='1,1,tautology
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM test_orders ORDER BY item DESC LIMIT 10,0,benign
+SELECT * FROM sessions WHERE amount > 706 AND amount < 1245,0,benign
+' OR '1'='1,1,tautology
+SELECT * FROM customers WHERE id = 622 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM test_orders ORDER BY id DESC LIMIT 10,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+"SELECT * FROM customers WHERE id = 970 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT COUNT(*) FROM test_orders WHERE name IS NOT NULL,0,benign
+SELECT * FROM orders WHERE amount > 675 AND amount < 2765,0,benign
+SELECT * FROM test_transactions WHERE name LIKE '%corp%',0,benign
+SELECT * FROM sessions ORDER BY email DESC LIMIT 10,0,benign
+SELECT * FROM orders WHERE name = 'admin'--' AND password = 'john',1,comment_bypass
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+john; DROP TABLE sessions;--,1,stacked_queries
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_orders WHERE id = 416 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT COUNT(*) FROM sessions WHERE id IS NOT NULL,0,benign
+admin'#,1,comment_bypass
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM test_orders WHERE name = 'admin'--' AND password = 'acme',1,comment_bypass
+'; INSERT INTO test_customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM sessions WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_orders WHERE id = 215 OR '1'='1',1,tautology
+"SELECT * FROM test_transactions WHERE id = 534 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM orders WHERE id = 985,0,benign
+'; INSERT INTO test_customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM orders WHERE id = 240,0,benign
+' UNION SELECT @@version--,1,union_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT COUNT(*) FROM orders WHERE name IS NOT NULL,0,benign
+UPDATE test_transactions SET name = 'acme' WHERE id = 755,0,benign
+SELECT item FROM orders WHERE item = 'smith',0,benign
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+' OR '1'='1,1,tautology
+DELETE FROM sessions WHERE id = 588,0,benign
+UPDATE customers SET name = 'corp' WHERE id = 461,0,benign
+SELECT COUNT(*) FROM orders WHERE amount IS NOT NULL,0,benign
+' OR ''=',1,comment_bypass
+SELECT * FROM test_orders WHERE id = 251,0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM orders WHERE id = 945 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+"SELECT * FROM customers WHERE id = 407 UNION SELECT username, password FROM users--",1,union_based
+"SELECT * FROM test_orders WHERE id = 125 UNION SELECT username, password FROM users--",1,union_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM orders WHERE amount > 537 AND amount < 1609,0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT * FROM orders ORDER BY id DESC LIMIT 10,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM sessions ORDER BY status DESC LIMIT 10,0,benign
+"SELECT item FROM test_transactions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT name FROM test_orders WHERE name = 'gadget',0,benign
+SELECT * FROM test_customers WHERE id = 571,0,benign
+SELECT * FROM sessions WHERE name = 'admin'--' AND password = 'corp',1,comment_bypass
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+'; INSERT INTO sessions VALUES ('hacked');--,1,stacked_queries
+admin'#,1,comment_bypass
+SELECT * FROM orders WHERE name = '' OR 1=1--,1,tautology
+SELECT * FROM orders WHERE name LIKE '%widget%',0,benign
+SELECT * FROM test_transactions WHERE amount > 942 AND amount < 1522,0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT * FROM orders WHERE id = 592 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM orders WHERE id = 162 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT COUNT(*) FROM test_orders WHERE email IS NOT NULL,0,benign
+INSERT INTO orders (email) VALUES ('corp'),0,benign
+UPDATE orders SET id = 'smith' WHERE id = 324,0,benign
+' OR ''=',1,comment_bypass
+SELECT * FROM test_customers WHERE name = 'admin'--' AND password = 'widget',1,comment_bypass
+admin' OR '1'='1'--,1,tautology
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+' OR '1'='1,1,tautology
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+'; INSERT INTO sessions VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_customers WHERE name LIKE '%widget%',0,benign
+admin' OR '1'='1'--,1,tautology
+SELECT * FROM test_transactions ORDER BY status DESC LIMIT 10,0,benign
+SELECT COUNT(*) FROM test_customers WHERE amount IS NOT NULL,0,benign
+INSERT INTO customers (item) VALUES ('john'),0,benign
+INSERT INTO sessions (email) VALUES ('corp'),0,benign
+' OR ''=',1,comment_bypass
+UPDATE customers SET status = 'ltd' WHERE id = 223,0,benign
+SELECT * FROM sessions WHERE id = 427,0,benign
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+SELECT COUNT(*) FROM test_orders WHERE item IS NOT NULL,0,benign
+admin' OR '1'='1'--,1,tautology
+' OR ''=',1,comment_bypass
+SELECT * FROM customers WHERE name LIKE '%ltd%',0,benign
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+1; DELETE FROM sessions;--,1,stacked_queries
+SELECT * FROM orders WHERE name LIKE '%jane%',0,benign
+SELECT * FROM test_transactions ORDER BY name DESC LIMIT 10,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT COUNT(*) FROM customers WHERE amount IS NOT NULL,0,benign
+' OR '1'='1,1,tautology
+' OR 1=1#,1,tautology
+INSERT INTO test_transactions (status) VALUES ('john'),0,benign
+' OR ''=',1,comment_bypass
+SELECT * FROM test_orders WHERE name LIKE '%acme%',0,benign
+SELECT * FROM test_transactions ORDER BY item DESC LIMIT 10,0,benign
+SELECT * FROM orders ORDER BY status DESC LIMIT 10,0,benign
+'; INSERT INTO test_orders VALUES ('hacked');--,1,stacked_queries
+INSERT INTO sessions (amount) VALUES ('smith'),0,benign
+SELECT COUNT(*) FROM test_customers WHERE id IS NOT NULL,0,benign
+SELECT COUNT(*) FROM orders WHERE email IS NOT NULL,0,benign
+UPDATE test_orders SET item = 'ltd' WHERE id = 824,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+' OR 1=1#,1,tautology
+DELETE FROM test_transactions WHERE id = 398,0,benign
+' OR 1=1#,1,tautology
+SELECT * FROM test_customers WHERE id = 677 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+"SELECT * FROM orders WHERE id = 331 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+' OR ''=',1,comment_bypass
+"SELECT * FROM test_orders WHERE id = 257 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+1; DELETE FROM sessions;--,1,stacked_queries
+admin' OR '1'='1'--,1,tautology
+SELECT * FROM orders WHERE amount > 783 AND amount < 2651,0,benign
+"SELECT * FROM customers WHERE id = 654 UNION SELECT username, password FROM users--",1,union_based
+"SELECT * FROM test_transactions WHERE id = 931 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+INSERT INTO test_customers (item) VALUES ('gadget'),0,benign
+admin'#,1,comment_bypass
+SELECT status FROM test_customers WHERE status = 'ltd',0,benign
+DELETE FROM sessions WHERE id = 383,0,benign
+SELECT * FROM test_customers WHERE id = 562 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM customers WHERE name = '' OR 1=1--,1,tautology
+INSERT INTO test_orders (item) VALUES ('gadget'),0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_customers WHERE name LIKE '%john%',0,benign
+SELECT * FROM orders WHERE name LIKE '%john%',0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT COUNT(*) FROM sessions WHERE status IS NOT NULL,0,benign
+SELECT * FROM test_orders ORDER BY name DESC LIMIT 10,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT * FROM test_customers ORDER BY email DESC LIMIT 10,0,benign
+jane; DROP TABLE test_transactions;--,1,stacked_queries
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_customers WHERE name = '' OR 1=1--,1,tautology
+"SELECT * FROM orders WHERE id = 21 UNION SELECT username, password FROM users--",1,union_based
+SELECT * FROM test_orders WHERE name LIKE '%john%',0,benign
+admin'--,1,comment_bypass
+UPDATE test_transactions SET email = 'smith' WHERE id = 436,0,benign
+"SELECT * FROM sessions WHERE id = 257 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM orders WHERE id = 957,0,benign
+gadget; DROP TABLE test_transactions;--,1,stacked_queries
+"SELECT id FROM customers WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM orders ORDER BY id DESC LIMIT 10,0,benign
+SELECT * FROM customers ORDER BY item DESC LIMIT 10,0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+DELETE FROM customers WHERE id = 507,0,benign
+'; INSERT INTO orders VALUES ('hacked');--,1,stacked_queries
+INSERT INTO test_transactions (status) VALUES ('corp'),0,benign
+"SELECT * FROM sessions WHERE id = 601 UNION SELECT username, password FROM users--",1,union_based
+SELECT * FROM customers WHERE name LIKE '%john%',0,benign
+admin'#,1,comment_bypass
+INSERT INTO test_orders (email) VALUES ('ltd'),0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_orders WHERE amount > 83 AND amount < 3796,0,benign
+' UNION SELECT @@version--,1,union_based
+SELECT * FROM test_customers WHERE id = 882 AND SLEEP(5),1,blind_time_based
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM sessions WHERE status = 'active' OR status = 'pending',0,benign
+SELECT item FROM sessions WHERE item = 'corp',0,benign
+SELECT COUNT(*) FROM orders WHERE id IS NOT NULL,0,benign
+admin'#,1,comment_bypass
+DELETE FROM test_customers WHERE id = 948,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+1; DELETE FROM orders;--,1,stacked_queries
+INSERT INTO test_orders (id) VALUES ('smith'),0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM test_transactions WHERE id = 9,0,benign
+jane; DROP TABLE orders;--,1,stacked_queries
+"SELECT name FROM sessions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM test_transactions WHERE amount > 615 AND amount < 2279,0,benign
+acme; DROP TABLE test_transactions;--,1,stacked_queries
+SELECT * FROM test_transactions WHERE id = 577 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+INSERT INTO test_orders (email) VALUES ('ltd'),0,benign
+INSERT INTO orders (name) VALUES ('acme'),0,benign
+SELECT * FROM orders WHERE id = 88,0,benign
+SELECT COUNT(*) FROM test_orders WHERE id IS NOT NULL,0,benign
+SELECT * FROM test_orders WHERE id = 993,0,benign
+SELECT id FROM test_transactions WHERE id = 'acme',0,benign
+' OR 1=1#,1,tautology
+' OR '1'='1,1,tautology
+SELECT * FROM orders WHERE name LIKE '%ltd%',0,benign
+SELECT COUNT(*) FROM customers WHERE email IS NOT NULL,0,benign
+UPDATE sessions SET name = 'gadget' WHERE id = 813,0,benign
+SELECT * FROM orders WHERE id = 523 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT COUNT(*) FROM sessions WHERE id IS NOT NULL,0,benign
+INSERT INTO test_orders (item) VALUES ('john'),0,benign
+john; DROP TABLE test_transactions;--,1,stacked_queries
+"SELECT * FROM test_customers WHERE id = 82 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT COUNT(*) FROM test_orders WHERE name IS NOT NULL,0,benign
+SELECT * FROM orders WHERE name LIKE '%widget%',0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+"SELECT * FROM test_orders WHERE id = 165 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+DELETE FROM orders WHERE id = 481,0,benign
+SELECT COUNT(*) FROM test_orders WHERE item IS NOT NULL,0,benign
+SELECT * FROM test_transactions WHERE id = 260,0,benign
+jane; DROP TABLE sessions;--,1,stacked_queries
+SELECT * FROM sessions WHERE id = 798,0,benign
+SELECT * FROM customers WHERE amount > 224 AND amount < 1952,0,benign
+admin' OR '1'='1'--,1,tautology
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT amount FROM sessions WHERE amount = 'corp',0,benign
+SELECT status FROM sessions WHERE status = 'corp',0,benign
+' OR '1'='1,1,tautology
+SELECT * FROM test_customers WHERE amount > 810 AND amount < 2616,0,benign
+'; INSERT INTO test_orders VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+INSERT INTO orders (status) VALUES ('acme'),0,benign
+admin' OR '1'='1'--,1,tautology
+INSERT INTO test_orders (id) VALUES ('gadget'),0,benign
+SELECT * FROM test_orders WHERE name LIKE '%widget%',0,benign
+admin'#,1,comment_bypass
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+' OR 1=1#,1,tautology
+SELECT * FROM sessions WHERE amount > 103 AND amount < 3790,0,benign
+"SELECT * FROM customers WHERE id = 203 UNION SELECT username, password FROM users--",1,union_based
+UPDATE customers SET id = 'jane' WHERE id = 850,0,benign
+' OR ''=',1,comment_bypass
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+"SELECT * FROM test_customers WHERE id = 647 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+DELETE FROM orders WHERE id = 69,0,benign
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+INSERT INTO customers (id) VALUES ('gadget'),0,benign
+DELETE FROM customers WHERE id = 120,0,benign
+"SELECT * FROM sessions WHERE id = 722 UNION SELECT username, password FROM users--",1,union_based
+' UNION SELECT @@version--,1,union_based
+UPDATE test_orders SET email = 'acme' WHERE id = 312,0,benign
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+"SELECT * FROM sessions WHERE id = 752 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+DELETE FROM test_transactions WHERE id = 684,0,benign
+SELECT COUNT(*) FROM test_transactions WHERE item IS NOT NULL,0,benign
+SELECT * FROM sessions ORDER BY amount DESC LIMIT 10,0,benign
+SELECT * FROM test_transactions WHERE id = 691 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM test_customers WHERE id = 515 OR '1'='1',1,tautology
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM test_transactions WHERE id = 63,0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+"SELECT status FROM orders WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM test_transactions WHERE amount > 449 AND amount < 4684,0,benign
+INSERT INTO test_orders (id) VALUES ('ltd'),0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM orders WHERE name LIKE '%ltd%',0,benign
+SELECT * FROM test_orders WHERE name = '' OR 1=1--,1,tautology
+SELECT * FROM sessions ORDER BY email DESC LIMIT 10,0,benign
+test; DROP TABLE test_orders;--,1,stacked_queries
+' UNION SELECT @@version--,1,union_based
+DELETE FROM test_transactions WHERE id = 564,0,benign
+SELECT * FROM sessions WHERE id = 509 OR '1'='1',1,tautology
+SELECT * FROM test_transactions ORDER BY email DESC LIMIT 10,0,benign
+UPDATE orders SET email = 'corp' WHERE id = 40,0,benign
+DELETE FROM sessions WHERE id = 6,0,benign
+UPDATE sessions SET item = 'acme' WHERE id = 186,0,benign
+SELECT * FROM customers ORDER BY id DESC LIMIT 10,0,benign
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+DELETE FROM test_transactions WHERE id = 112,0,benign
+UPDATE test_orders SET amount = 'test' WHERE id = 766,0,benign
+SELECT * FROM test_transactions ORDER BY amount DESC LIMIT 10,0,benign
+SELECT * FROM test_customers WHERE amount > 510 AND amount < 4641,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+DELETE FROM test_orders WHERE id = 627,0,benign
+SELECT * FROM test_customers WHERE id = 585,0,benign
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_orders WHERE name LIKE '%corp%',0,benign
+DELETE FROM test_orders WHERE id = 353,0,benign
+SELECT * FROM customers WHERE id = 629 AND SLEEP(5),1,blind_time_based
+SELECT * FROM test_orders WHERE id = 835 OR '1'='1',1,tautology
+' OR '1'='1,1,tautology
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+corp; DROP TABLE test_customers;--,1,stacked_queries
+1; DELETE FROM test_transactions;--,1,stacked_queries
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_orders WHERE name = 'admin'--' AND password = 'widget',1,comment_bypass
+DELETE FROM customers WHERE id = 515,0,benign
+UPDATE customers SET status = 'widget' WHERE id = 24,0,benign
+SELECT * FROM test_orders WHERE name LIKE '%test%',0,benign
+"SELECT * FROM orders WHERE id = 322 UNION SELECT username, password FROM users--",1,union_based
+"SELECT * FROM customers WHERE id = 805 UNION SELECT username, password FROM users--",1,union_based
+SELECT COUNT(*) FROM test_customers WHERE name IS NOT NULL,0,benign
+SELECT * FROM customers WHERE id = 715,0,benign
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+SELECT status FROM test_customers WHERE status = 'ltd',0,benign
+admin'#,1,comment_bypass
+admin'--,1,comment_bypass
+SELECT * FROM test_orders WHERE id = 553,0,benign
+SELECT * FROM test_transactions WHERE id = 629 AND SLEEP(5),1,blind_time_based
+DELETE FROM orders WHERE id = 954,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM test_orders WHERE id = 619,0,benign
+UPDATE test_customers SET name = 'test' WHERE id = 935,0,benign
+' OR ''=',1,comment_bypass
+'; INSERT INTO test_customers VALUES ('hacked');--,1,stacked_queries
+DELETE FROM test_orders WHERE id = 495,0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+' UNION SELECT @@version--,1,union_based
+SELECT * FROM sessions WHERE id = 82 AND SLEEP(5),1,blind_time_based
+SELECT COUNT(*) FROM test_transactions WHERE id IS NOT NULL,0,benign
+DELETE FROM sessions WHERE id = 630,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+admin' OR '1'='1'--,1,tautology
+SELECT status FROM test_orders WHERE status = 'john',0,benign
+SELECT * FROM test_customers WHERE amount > 210 AND amount < 2234,0,benign
+acme; DROP TABLE test_transactions;--,1,stacked_queries
+SELECT id FROM orders WHERE id = 'jane',0,benign
+SELECT * FROM test_customers WHERE amount > 510 AND amount < 4738,0,benign
+INSERT INTO test_transactions (status) VALUES ('ltd'),0,benign
+SELECT COUNT(*) FROM test_orders WHERE email IS NOT NULL,0,benign
+jane; DROP TABLE sessions;--,1,stacked_queries
+SELECT * FROM test_transactions WHERE id = 569 AND SLEEP(5),1,blind_time_based
+admin'--,1,comment_bypass
+SELECT COUNT(*) FROM test_orders WHERE status IS NOT NULL,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+smith; DROP TABLE test_transactions;--,1,stacked_queries
+SELECT * FROM test_transactions WHERE id = 584 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM test_customers WHERE amount > 391 AND amount < 3440,0,benign
+admin'--,1,comment_bypass
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_orders WHERE name LIKE '%widget%',0,benign
+INSERT INTO test_orders (id) VALUES ('test'),0,benign
+"SELECT status FROM orders WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+' OR '1'='1,1,tautology
+SELECT * FROM test_transactions WHERE amount > 917 AND amount < 3163,0,benign
+SELECT COUNT(*) FROM sessions WHERE item IS NOT NULL,0,benign
+INSERT INTO test_customers (status) VALUES ('test'),0,benign
+SELECT name FROM test_customers WHERE name = 'john',0,benign
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM orders WHERE name LIKE '%jane%',0,benign
+SELECT * FROM test_transactions WHERE amount > 394 AND amount < 4094,0,benign
+SELECT COUNT(*) FROM test_transactions WHERE name IS NOT NULL,0,benign
+SELECT email FROM test_customers WHERE email = 'test',0,benign
+'; INSERT INTO orders VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM sessions WHERE amount > 22 AND amount < 4957,0,benign
+SELECT * FROM test_customers WHERE amount > 996 AND amount < 2410,0,benign
+1; DELETE FROM sessions;--,1,stacked_queries
+SELECT email FROM sessions WHERE email = 'jane',0,benign
+' UNION SELECT @@version--,1,union_based
+SELECT * FROM test_transactions WHERE name = '' OR 1=1--,1,tautology
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_orders WHERE name = 'admin'--' AND password = 'widget',1,comment_bypass
+SELECT * FROM sessions WHERE id = 368,0,benign
+' UNION SELECT @@version--,1,union_based
+"SELECT * FROM orders WHERE id = 332 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM test_orders WHERE amount > 379 AND amount < 2276,0,benign
+SELECT * FROM customers WHERE id = 139,0,benign
+admin'--,1,comment_bypass
+SELECT COUNT(*) FROM orders WHERE status IS NOT NULL,0,benign
+'; INSERT INTO test_customers VALUES ('hacked');--,1,stacked_queries
+SELECT COUNT(*) FROM sessions WHERE name IS NOT NULL,0,benign
+SELECT * FROM test_orders WHERE id = 514 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM orders WHERE id = 982 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+admin'--,1,comment_bypass
+SELECT COUNT(*) FROM sessions WHERE name IS NOT NULL,0,benign
+SELECT * FROM orders ORDER BY email DESC LIMIT 10,0,benign
+SELECT * FROM test_orders WHERE name LIKE '%corp%',0,benign
+"SELECT * FROM test_customers WHERE id = 21 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+UPDATE test_customers SET name = 'smith' WHERE id = 431,0,benign
+SELECT * FROM sessions WHERE status = 'active' OR status = 'pending',0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+DELETE FROM test_customers WHERE id = 602,0,benign
+INSERT INTO orders (name) VALUES ('john'),0,benign
+admin'#,1,comment_bypass
+DELETE FROM test_orders WHERE id = 101,0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT * FROM test_customers WHERE id = 560 OR 'a'='a',1,tautology
+' OR 1=1#,1,tautology
+SELECT * FROM test_customers WHERE amount > 513 AND amount < 3288,0,benign
+SELECT amount FROM test_customers WHERE amount = 'smith',0,benign
+SELECT * FROM sessions ORDER BY name DESC LIMIT 10,0,benign
+UPDATE test_transactions SET status = 'acme' WHERE id = 612,0,benign
+' UNION SELECT @@version--,1,union_based
+admin'--,1,comment_bypass
+corp; DROP TABLE test_customers;--,1,stacked_queries
+DELETE FROM orders WHERE id = 294,0,benign
+UPDATE sessions SET email = 'acme' WHERE id = 361,0,benign
+' OR 1=1#,1,tautology
+SELECT status FROM sessions WHERE status = 'john',0,benign
+admin'--,1,comment_bypass
+admin'--,1,comment_bypass
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM orders WHERE id = 956,0,benign
+SELECT * FROM test_customers WHERE id = 63,0,benign
+SELECT * FROM test_transactions WHERE amount > 680 AND amount < 3382,0,benign
+' OR ''=',1,comment_bypass
+' UNION SELECT @@version--,1,union_based
+UPDATE orders SET status = 'widget' WHERE id = 445,0,benign
+SELECT * FROM orders WHERE id = 855 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM test_transactions WHERE id = 881 OR '1'='1',1,tautology
+SELECT * FROM test_orders WHERE name = '' OR 1=1--,1,tautology
+UPDATE test_orders SET status = 'jane' WHERE id = 498,0,benign
+DELETE FROM test_orders WHERE id = 836,0,benign
+SELECT * FROM orders WHERE name LIKE '%test%',0,benign
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+admin' OR '1'='1'--,1,tautology
+"SELECT * FROM orders WHERE id = 317 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM test_customers WHERE id = 937 AND SLEEP(5),1,blind_time_based
+"SELECT * FROM test_customers WHERE id = 102 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT COUNT(*) FROM test_orders WHERE email IS NOT NULL,0,benign
+"SELECT * FROM orders WHERE id = 944 UNION SELECT username, password FROM users--",1,union_based
+SELECT status FROM customers WHERE status = 'jane',0,benign
+"SELECT amount FROM sessions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+' OR '1'='1,1,tautology
+SELECT * FROM test_transactions WHERE amount > 866 AND amount < 2237,0,benign
+SELECT COUNT(*) FROM test_orders WHERE email IS NOT NULL,0,benign
+INSERT INTO sessions (item) VALUES ('acme'),0,benign
+admin'--,1,comment_bypass
+SELECT * FROM orders WHERE id = 349,0,benign
+SELECT * FROM sessions WHERE amount > 370 AND amount < 2030,0,benign
+SELECT * FROM test_orders ORDER BY id DESC LIMIT 10,0,benign
+DELETE FROM sessions WHERE id = 526,0,benign
+SELECT * FROM customers WHERE name LIKE '%john%',0,benign
+DELETE FROM orders WHERE id = 215,0,benign
+SELECT * FROM customers WHERE id = 437,0,benign
+admin' OR '1'='1'--,1,tautology
+SELECT COUNT(*) FROM test_customers WHERE id IS NOT NULL,0,benign
+jane; DROP TABLE test_orders;--,1,stacked_queries
+admin'--,1,comment_bypass
+SELECT COUNT(*) FROM test_customers WHERE name IS NOT NULL,0,benign
+SELECT * FROM sessions ORDER BY status DESC LIMIT 10,0,benign
+SELECT * FROM test_orders WHERE name = '' OR 1=1--,1,tautology
+DELETE FROM orders WHERE id = 852,0,benign
+INSERT INTO customers (item) VALUES ('gadget'),0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_transactions WHERE id = 68,0,benign
+SELECT * FROM test_orders WHERE name LIKE '%smith%',0,benign
+SELECT * FROM test_orders ORDER BY name DESC LIMIT 10,0,benign
+"SELECT amount FROM orders WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM test_customers WHERE name = 'admin'--' AND password = 'widget',1,comment_bypass
+SELECT * FROM test_orders WHERE amount > 881 AND amount < 3410,0,benign
+SELECT COUNT(*) FROM sessions WHERE item IS NOT NULL,0,benign
+SELECT * FROM test_customers WHERE id = 670 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM customers ORDER BY item DESC LIMIT 10,0,benign
+UPDATE orders SET item = 'widget' WHERE id = 49,0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+admin'--,1,comment_bypass
+DELETE FROM sessions WHERE id = 991,0,benign
+SELECT item FROM orders WHERE item = 'widget',0,benign
+SELECT amount FROM test_orders WHERE amount = 'widget',0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT COUNT(*) FROM test_customers WHERE amount IS NOT NULL,0,benign
+SELECT COUNT(*) FROM sessions WHERE name IS NOT NULL,0,benign
+'; INSERT INTO sessions VALUES ('hacked');--,1,stacked_queries
+SELECT COUNT(*) FROM sessions WHERE id IS NOT NULL,0,benign
+SELECT status FROM orders WHERE status = 'ltd',0,benign
+SELECT * FROM test_transactions WHERE id = 942 OR 'a'='a',1,tautology
+SELECT name FROM orders WHERE name = 'john',0,benign
+' UNION SELECT @@version--,1,union_based
+SELECT * FROM sessions WHERE amount > 426 AND amount < 1255,0,benign
+DELETE FROM test_customers WHERE id = 738,0,benign
+INSERT INTO test_orders (item) VALUES ('ltd'),0,benign
+1; DELETE FROM sessions;--,1,stacked_queries
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+1; DELETE FROM orders;--,1,stacked_queries
+"SELECT * FROM orders WHERE id = 160 UNION SELECT username, password FROM users--",1,union_based
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT amount FROM test_orders WHERE amount = 'ltd',0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+UPDATE test_transactions SET id = 'corp' WHERE id = 377,0,benign
+SELECT * FROM orders WHERE id = 891,0,benign
+' OR ''=',1,comment_bypass
+SELECT * FROM customers WHERE name = '' OR 1=1--,1,tautology
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_customers ORDER BY item DESC LIMIT 10,0,benign
+INSERT INTO customers (item) VALUES ('jane'),0,benign
+SELECT COUNT(*) FROM test_customers WHERE amount IS NOT NULL,0,benign
+' OR ''=',1,comment_bypass
+'; INSERT INTO sessions VALUES ('hacked');--,1,stacked_queries
+admin'--,1,comment_bypass
+SELECT * FROM sessions WHERE amount > 824 AND amount < 4531,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM sessions ORDER BY name DESC LIMIT 10,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_transactions WHERE amount > 66 AND amount < 2699,0,benign
+gadget; DROP TABLE test_customers;--,1,stacked_queries
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+INSERT INTO sessions (amount) VALUES ('widget'),0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT * FROM sessions WHERE id = 397 OR '1'='1',1,tautology
+SELECT * FROM test_orders WHERE id = 426,0,benign
+SELECT * FROM test_customers ORDER BY email DESC LIMIT 10,0,benign
+"SELECT * FROM orders WHERE id = 834 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+"SELECT item FROM sessions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM orders ORDER BY name DESC LIMIT 10,0,benign
+SELECT * FROM customers WHERE name = 'admin'--' AND password = 'smith',1,comment_bypass
+SELECT * FROM sessions WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_orders WHERE name LIKE '%acme%',0,benign
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+DELETE FROM test_customers WHERE id = 697,0,benign
+DELETE FROM customers WHERE id = 447,0,benign
+DELETE FROM test_transactions WHERE id = 662,0,benign
+SELECT * FROM orders WHERE amount > 957 AND amount < 3366,0,benign
+SELECT email FROM test_transactions WHERE email = 'smith',0,benign
+SELECT * FROM orders WHERE id = 824 AND SLEEP(5),1,blind_time_based
+SELECT id FROM test_orders WHERE id = 'gadget',0,benign
+INSERT INTO customers (amount) VALUES ('test'),0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM test_orders WHERE amount > 714 AND amount < 1925,0,benign
+' OR ''=',1,comment_bypass
+SELECT COUNT(*) FROM test_customers WHERE status IS NOT NULL,0,benign
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM sessions WHERE name = 'admin'--' AND password = 'jane',1,comment_bypass
+SELECT * FROM test_orders WHERE id = 78 AND SLEEP(5),1,blind_time_based
+SELECT COUNT(*) FROM test_orders WHERE id IS NOT NULL,0,benign
+SELECT * FROM test_transactions WHERE id = 512,0,benign
+INSERT INTO orders (item) VALUES ('gadget'),0,benign
+SELECT * FROM orders ORDER BY email DESC LIMIT 10,0,benign
+SELECT * FROM sessions WHERE name LIKE '%test%',0,benign
+UPDATE sessions SET item = 'acme' WHERE id = 268,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+SELECT COUNT(*) FROM test_orders WHERE id IS NOT NULL,0,benign
+"SELECT * FROM customers WHERE id = 839 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM test_customers WHERE id = 716 AND SLEEP(5),1,blind_time_based
+SELECT * FROM test_orders WHERE id = 503 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT amount FROM orders WHERE amount = 'john',0,benign
+' OR 1=1#,1,tautology
+INSERT INTO test_customers (name) VALUES ('test'),0,benign
+SELECT * FROM sessions WHERE name = 'admin'--' AND password = 'test',1,comment_bypass
+admin'--,1,comment_bypass
+DELETE FROM test_transactions WHERE id = 134,0,benign
+DELETE FROM orders WHERE id = 96,0,benign
+"SELECT * FROM orders WHERE id = 255 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+'; INSERT INTO orders VALUES ('hacked');--,1,stacked_queries
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT * FROM test_transactions WHERE name = '' OR 1=1--,1,tautology
+SELECT * FROM sessions WHERE id = 244,0,benign
+"SELECT item FROM test_customers WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+DELETE FROM customers WHERE id = 584,0,benign
+UPDATE test_customers SET item = 'smith' WHERE id = 965,0,benign
+SELECT * FROM customers WHERE name LIKE '%gadget%',0,benign
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM orders WHERE name LIKE '%acme%',0,benign
+SELECT * FROM test_orders WHERE name = 'admin'--' AND password = 'john',1,comment_bypass
+widget; DROP TABLE sessions;--,1,stacked_queries
+1; DELETE FROM test_orders;--,1,stacked_queries
+UPDATE sessions SET item = 'acme' WHERE id = 930,0,benign
+UPDATE test_customers SET id = 'gadget' WHERE id = 482,0,benign
+INSERT INTO sessions (item) VALUES ('gadget'),0,benign
+UPDATE sessions SET email = 'jane' WHERE id = 666,0,benign
+"SELECT amount FROM customers WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM orders WHERE id = 91 AND SLEEP(5),1,blind_time_based
+admin' OR '1'='1'--,1,tautology
+' UNION SELECT @@version--,1,union_based
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT * FROM sessions WHERE name LIKE '%jane%',0,benign
+SELECT * FROM orders WHERE id = 511 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM sessions WHERE amount > 225 AND amount < 3804,0,benign
+"SELECT * FROM test_orders WHERE id = 989 UNION SELECT username, password FROM users--",1,union_based
+DELETE FROM test_customers WHERE id = 204,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM orders WHERE amount > 765 AND amount < 4601,0,benign
+SELECT * FROM sessions WHERE amount > 625 AND amount < 4932,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT COUNT(*) FROM test_orders WHERE email IS NOT NULL,0,benign
+SELECT * FROM customers WHERE name LIKE '%smith%',0,benign
+'; INSERT INTO test_customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_transactions WHERE id = 295 AND SLEEP(5),1,blind_time_based
+SELECT COUNT(*) FROM orders WHERE id IS NOT NULL,0,benign
+SELECT * FROM test_orders WHERE id = 644 OR '1'='1',1,tautology
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+1; DELETE FROM sessions;--,1,stacked_queries
+INSERT INTO sessions (name) VALUES ('jane'),0,benign
+UPDATE test_transactions SET email = 'widget' WHERE id = 816,0,benign
+SELECT * FROM orders WHERE id = 104,0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+"SELECT * FROM test_customers WHERE id = 77 UNION SELECT username, password FROM users--",1,union_based
+INSERT INTO orders (name) VALUES ('jane'),0,benign
+DELETE FROM test_orders WHERE id = 630,0,benign
+admin'--,1,comment_bypass
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM sessions WHERE name = 'admin'--' AND password = 'gadget',1,comment_bypass
+UPDATE test_customers SET amount = 'ltd' WHERE id = 111,0,benign
+SELECT * FROM test_orders WHERE name = '' OR 1=1--,1,tautology
+1; DELETE FROM test_orders;--,1,stacked_queries
+1; DELETE FROM orders;--,1,stacked_queries
+SELECT status FROM customers WHERE status = 'gadget',0,benign
+' OR '1'='1,1,tautology
+DELETE FROM customers WHERE id = 218,0,benign
+SELECT * FROM sessions WHERE id = 580 OR 'a'='a',1,tautology
+' OR '1'='1,1,tautology
+"SELECT * FROM orders WHERE id = 88 UNION SELECT username, password FROM users--",1,union_based
+SELECT * FROM test_transactions WHERE id = 699,0,benign
+DELETE FROM test_customers WHERE id = 779,0,benign
+1; DELETE FROM test_customers;--,1,stacked_queries
+SELECT COUNT(*) FROM test_customers WHERE item IS NOT NULL,0,benign
+SELECT * FROM orders WHERE name LIKE '%gadget%',0,benign
+' UNION SELECT @@version--,1,union_based
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM customers WHERE id = 221,0,benign
+"SELECT name FROM sessions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM test_customers WHERE id = 360 OR '1'='1',1,tautology
+' OR ''=',1,comment_bypass
+' UNION SELECT @@version--,1,union_based
+UPDATE customers SET id = 'corp' WHERE id = 582,0,benign
+SELECT * FROM test_customers ORDER BY name DESC LIMIT 10,0,benign
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+UPDATE test_customers SET item = 'test' WHERE id = 849,0,benign
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+'; INSERT INTO sessions VALUES ('hacked');--,1,stacked_queries
+"SELECT id FROM customers WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM test_customers ORDER BY name DESC LIMIT 10,0,benign
+admin'--,1,comment_bypass
+SELECT * FROM test_orders WHERE name = 'admin'--' AND password = 'widget',1,comment_bypass
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM test_orders WHERE amount > 345 AND amount < 3739,0,benign
+"SELECT * FROM orders WHERE id = 364 UNION SELECT username, password FROM users--",1,union_based
+SELECT * FROM test_customers WHERE id = 833 AND SLEEP(5),1,blind_time_based
+SELECT * FROM customers WHERE amount > 597 AND amount < 2641,0,benign
+SELECT COUNT(*) FROM sessions WHERE status IS NOT NULL,0,benign
+DELETE FROM test_customers WHERE id = 158,0,benign
+SELECT * FROM sessions WHERE name LIKE '%john%',0,benign
+SELECT * FROM test_transactions WHERE name LIKE '%gadget%',0,benign
+admin' OR '1'='1'--,1,tautology
+SELECT COUNT(*) FROM orders WHERE id IS NOT NULL,0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+UPDATE sessions SET id = 'test' WHERE id = 389,0,benign
+SELECT * FROM sessions WHERE id = 678,0,benign
+SELECT * FROM orders WHERE name LIKE '%jane%',0,benign
+"SELECT * FROM test_orders WHERE id = 947 UNION SELECT username, password FROM users--",1,union_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+'; INSERT INTO test_transactions VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM orders WHERE name = 'admin'--' AND password = 'jane',1,comment_bypass
+SELECT * FROM customers ORDER BY email DESC LIMIT 10,0,benign
+' OR ''=',1,comment_bypass
+test; DROP TABLE orders;--,1,stacked_queries
+SELECT * FROM orders WHERE amount > 309 AND amount < 2099,0,benign
+UPDATE test_customers SET email = 'widget' WHERE id = 689,0,benign
+SELECT * FROM test_transactions ORDER BY name DESC LIMIT 10,0,benign
+' OR 1=1#,1,tautology
+SELECT * FROM test_customers ORDER BY id DESC LIMIT 10,0,benign
+SELECT * FROM sessions WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM orders ORDER BY id DESC LIMIT 10,0,benign
+SELECT * FROM test_orders WHERE amount > 89 AND amount < 2641,0,benign
+SELECT * FROM test_customers WHERE amount > 396 AND amount < 1334,0,benign
+' OR 1=1#,1,tautology
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+UPDATE test_customers SET amount = 'smith' WHERE id = 981,0,benign
+SELECT * FROM sessions ORDER BY status DESC LIMIT 10,0,benign
+SELECT COUNT(*) FROM test_orders WHERE amount IS NOT NULL,0,benign
+"SELECT * FROM sessions WHERE id = 620 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+UPDATE test_transactions SET email = 'smith' WHERE id = 739,0,benign
+DELETE FROM test_customers WHERE id = 851,0,benign
+"SELECT * FROM orders WHERE id = 718 UNION SELECT username, password FROM users--",1,union_based
+1; DELETE FROM test_customers;--,1,stacked_queries
+' OR ''=',1,comment_bypass
+admin' OR '1'='1'--,1,tautology
+SELECT * FROM test_customers WHERE id = 476 OR 'a'='a',1,tautology
+SELECT * FROM orders WHERE id = 278,0,benign
+SELECT * FROM sessions WHERE status = 'active' OR status = 'pending',0,benign
+"SELECT * FROM sessions WHERE id = 140 UNION SELECT username, password FROM users--",1,union_based
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_orders WHERE amount > 984 AND amount < 2483,0,benign
+SELECT * FROM customers WHERE name = '' OR 1=1--,1,tautology
+SELECT * FROM test_customers WHERE id = 96 AND SLEEP(5),1,blind_time_based
+test; DROP TABLE orders;--,1,stacked_queries
+DELETE FROM customers WHERE id = 520,0,benign
+SELECT COUNT(*) FROM test_transactions WHERE name IS NOT NULL,0,benign
+SELECT * FROM orders WHERE id = 268 AND SLEEP(5),1,blind_time_based
+SELECT amount FROM sessions WHERE amount = 'widget',0,benign
+SELECT status FROM test_orders WHERE status = 'john',0,benign
+UPDATE test_transactions SET email = 'smith' WHERE id = 157,0,benign
+admin'#,1,comment_bypass
+1; DELETE FROM test_orders;--,1,stacked_queries
+SELECT * FROM customers WHERE name LIKE '%widget%',0,benign
+admin'#,1,comment_bypass
+SELECT * FROM test_customers WHERE amount > 465 AND amount < 3070,0,benign
+1; DELETE FROM customers;--,1,stacked_queries
+DELETE FROM orders WHERE id = 135,0,benign
+SELECT * FROM test_transactions WHERE name = 'admin'--' AND password = 'test',1,comment_bypass
+DELETE FROM test_customers WHERE id = 905,0,benign
+SELECT COUNT(*) FROM test_customers WHERE email IS NOT NULL,0,benign
+SELECT * FROM customers WHERE id = 119,0,benign
+SELECT * FROM test_orders WHERE id = 330,0,benign
+admin' OR '1'='1'--,1,tautology
+SELECT COUNT(*) FROM sessions WHERE id IS NOT NULL,0,benign
+DELETE FROM sessions WHERE id = 448,0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT * FROM test_transactions ORDER BY amount DESC LIMIT 10,0,benign
+SELECT * FROM test_transactions WHERE name LIKE '%smith%',0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+' UNION SELECT @@version--,1,union_based
+DELETE FROM test_customers WHERE id = 883,0,benign
+SELECT item FROM test_orders WHERE item = 'widget',0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM orders WHERE id = 450,0,benign
+"SELECT * FROM test_customers WHERE id = 329 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+'; INSERT INTO orders VALUES ('hacked');--,1,stacked_queries
+UPDATE orders SET id = 'acme' WHERE id = 135,0,benign
+DELETE FROM customers WHERE id = 236,0,benign
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+' UNION SELECT @@version--,1,union_based
+test; DROP TABLE test_customers;--,1,stacked_queries
+SELECT * FROM customers WHERE name LIKE '%jane%',0,benign
+SELECT COUNT(*) FROM test_transactions WHERE name IS NOT NULL,0,benign
+SELECT * FROM orders WHERE name LIKE '%gadget%',0,benign
+INSERT INTO test_customers (amount) VALUES ('smith'),0,benign
+INSERT INTO sessions (email) VALUES ('gadget'),0,benign
+SELECT COUNT(*) FROM customers WHERE amount IS NOT NULL,0,benign
+SELECT * FROM orders WHERE amount > 88 AND amount < 4162,0,benign
+SELECT * FROM test_orders WHERE id = 883 OR '1'='1',1,tautology
+admin'#,1,comment_bypass
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+'; INSERT INTO test_customers VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM sessions WHERE name LIKE '%smith%',0,benign
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM sessions WHERE id = 466,0,benign
+SELECT * FROM orders WHERE name LIKE '%ltd%',0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+1; DELETE FROM test_transactions;--,1,stacked_queries
+admin'--,1,comment_bypass
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_transactions WHERE amount > 272 AND amount < 1571,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM customers WHERE name = 'admin'--' AND password = 'john',1,comment_bypass
+UPDATE test_transactions SET id = 'widget' WHERE id = 688,0,benign
+SELECT * FROM test_transactions WHERE id = 168 OR '1'='1',1,tautology
+'; INSERT INTO customers VALUES ('hacked');--,1,stacked_queries
+' OR ''=',1,comment_bypass
+admin' OR '1'='1'--,1,tautology
+SELECT * FROM test_customers WHERE id = 997 AND SLEEP(5),1,blind_time_based
+' OR '1'='1,1,tautology
+SELECT * FROM sessions WHERE name LIKE '%smith%',0,benign
+SELECT COUNT(*) FROM test_transactions WHERE item IS NOT NULL,0,benign
+SELECT * FROM test_customers ORDER BY id DESC LIMIT 10,0,benign
+'; INSERT INTO test_orders VALUES ('hacked');--,1,stacked_queries
+SELECT * FROM test_orders WHERE id = 318 OR 'a'='a',1,tautology
+UPDATE test_transactions SET id = 'jane' WHERE id = 261,0,benign
+SELECT * FROM sessions ORDER BY amount DESC LIMIT 10,0,benign
+UPDATE customers SET name = 'corp' WHERE id = 720,0,benign
+' OR '1'='1,1,tautology
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+admin'--,1,comment_bypass
+SELECT * FROM test_orders WHERE amount > 508 AND amount < 4951,0,benign
+SELECT * FROM test_orders WHERE id = 180,0,benign
+SELECT * FROM test_customers WHERE id = 674,0,benign
+SELECT * FROM test_customers WHERE id = 381 AND SLEEP(5),1,blind_time_based
+SELECT email FROM sessions WHERE email = 'gadget',0,benign
+SELECT * FROM test_orders WHERE name LIKE '%ltd%',0,benign
+"SELECT * FROM customers WHERE id = 861 UNION SELECT username, password FROM users--",1,union_based
+SELECT COUNT(*) FROM test_transactions WHERE status IS NOT NULL,0,benign
+INSERT INTO orders (item) VALUES ('corp'),0,benign
+1; DELETE FROM test_orders;--,1,stacked_queries
+UPDATE test_transactions SET id = 'acme' WHERE id = 96,0,benign
+SELECT * FROM customers WHERE name LIKE '%widget%',0,benign
+SELECT COUNT(*) FROM orders WHERE email IS NOT NULL,0,benign
+SELECT * FROM test_orders WHERE name LIKE '%test%',0,benign
+SELECT * FROM sessions WHERE id = 537 OR '1'='1',1,tautology
+DELETE FROM test_orders WHERE id = 885,0,benign
+1; DELETE FROM customers;--,1,stacked_queries
+1; DELETE FROM test_transactions;--,1,stacked_queries
+SELECT * FROM test_transactions WHERE id = 969 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+UPDATE orders SET email = 'ltd' WHERE id = 225,0,benign
+"SELECT status FROM test_orders WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT * FROM orders WHERE amount > 977 AND amount < 3957,0,benign
+INSERT INTO orders (item) VALUES ('widget'),0,benign
+SELECT status FROM orders WHERE status = 'john',0,benign
+UPDATE test_orders SET name = 'test' WHERE id = 485,0,benign
+SELECT * FROM test_orders ORDER BY item DESC LIMIT 10,0,benign
+SELECT * FROM sessions WHERE id = 621 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+DELETE FROM orders WHERE id = 528,0,benign
+DELETE FROM test_transactions WHERE id = 62,0,benign
+SELECT * FROM customers WHERE amount > 704 AND amount < 3946,0,benign
+'; INSERT INTO sessions VALUES ('hacked');--,1,stacked_queries
+UPDATE test_transactions SET item = 'smith' WHERE id = 342,0,benign
+1; DELETE FROM test_transactions;--,1,stacked_queries
+' UNION SELECT @@version--,1,union_based
+SELECT * FROM orders WHERE name LIKE '%gadget%',0,benign
+"SELECT * FROM test_orders WHERE id = 629 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM orders ORDER BY amount DESC LIMIT 10,0,benign
+"SELECT * FROM test_orders WHERE id = 243 UNION SELECT username, password FROM users--",1,union_based
+admin' OR '1'='1'--,1,tautology
+SELECT * FROM customers WHERE id = 312,0,benign
+"SELECT * FROM orders WHERE id = 94 UNION SELECT username, password FROM users--",1,union_based
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+SELECT * FROM sessions WHERE name = 'admin'--' AND password = 'acme',1,comment_bypass
+admin'--,1,comment_bypass
+SELECT * FROM customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM customers ORDER BY amount DESC LIMIT 10,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM test_transactions WHERE name = 'admin'--' AND password = 'jane',1,comment_bypass
+SELECT * FROM sessions WHERE name LIKE '%widget%',0,benign
+SELECT * FROM sessions ORDER BY name DESC LIMIT 10,0,benign
+SELECT * FROM test_customers WHERE amount > 419 AND amount < 1611,0,benign
+SELECT * FROM test_transactions WHERE name LIKE '%test%',0,benign
+SELECT * FROM test_orders WHERE status = 'active' OR status = 'pending',0,benign
+' OR ''=',1,comment_bypass
+"SELECT * FROM customers WHERE id = 661 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM customers ORDER BY item DESC LIMIT 10,0,benign
+'; INSERT INTO test_orders VALUES ('hacked');--,1,stacked_queries
+"SELECT * FROM customers WHERE id = 753 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT amount FROM sessions WHERE amount = 'ltd',0,benign
+"SELECT * FROM sessions WHERE id = 22 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+admin'#,1,comment_bypass
+SELECT COUNT(*) FROM orders WHERE status IS NOT NULL,0,benign
+UPDATE orders SET email = 'smith' WHERE id = 581,0,benign
+admin'--,1,comment_bypass
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+jane; DROP TABLE orders;--,1,stacked_queries
+SELECT name FROM orders WHERE name = 'gadget',0,benign
+SELECT * FROM orders WHERE id = 278 OR 'a'='a',1,tautology
+DELETE FROM orders WHERE id = 601,0,benign
+SELECT * FROM test_customers WHERE name LIKE '%ltd%',0,benign
+admin'--,1,comment_bypass
+DELETE FROM sessions WHERE id = 834,0,benign
+' OR ''=',1,comment_bypass
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+DELETE FROM test_transactions WHERE id = 338,0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+1; DELETE FROM customers;--,1,stacked_queries
+SELECT * FROM test_transactions WHERE name = 'admin'--' AND password = 'test',1,comment_bypass
+SELECT * FROM test_customers ORDER BY id DESC LIMIT 10,0,benign
+SELECT COUNT(*) FROM test_customers WHERE name IS NOT NULL,0,benign
+SELECT * FROM test_orders WHERE id = 960,0,benign
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+SELECT * FROM test_customers WHERE id = 550 OR '1'='1',1,tautology
+SELECT amount FROM sessions WHERE amount = 'john',0,benign
+"SELECT * FROM sessions WHERE id = 369 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+' OR '1'='1,1,tautology
+SELECT * FROM sessions ORDER BY item DESC LIMIT 10,0,benign
+SELECT * FROM customers WHERE id = 694 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+' OR '1'='1,1,tautology
+SELECT COUNT(*) FROM test_orders WHERE email IS NOT NULL,0,benign
+' UNION SELECT @@version--,1,union_based
+SELECT status FROM orders WHERE status = 'gadget',0,benign
+SELECT * FROM sessions ORDER BY name DESC LIMIT 10,0,benign
+SELECT * FROM orders ORDER BY item DESC LIMIT 10,0,benign
+' OR ''=',1,comment_bypass
+' OR ''=',1,comment_bypass
+"SELECT * FROM customers WHERE id = 847 UNION SELECT username, password FROM users--",1,union_based
+admin' OR '1'='1'--,1,tautology
+DELETE FROM test_customers WHERE id = 155,0,benign
+SELECT * FROM test_transactions WHERE status = 'active' OR status = 'pending',0,benign
+"SELECT amount FROM test_customers WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+SELECT COUNT(*) FROM customers WHERE id IS NOT NULL,0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+UPDATE test_customers SET status = 'corp' WHERE id = 426,0,benign
+acme; DROP TABLE test_customers;--,1,stacked_queries
+DELETE FROM test_customers WHERE id = 851,0,benign
+1; DELETE FROM test_customers;--,1,stacked_queries
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+UPDATE customers SET status = 'test' WHERE id = 130,0,benign
+SELECT COUNT(*) FROM orders WHERE status IS NOT NULL,0,benign
+admin'#,1,comment_bypass
+SELECT COUNT(*) FROM test_orders WHERE amount IS NOT NULL,0,benign
+"SELECT * FROM test_orders WHERE id = 918 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+UPDATE test_customers SET item = 'acme' WHERE id = 515,0,benign
+SELECT * FROM test_transactions WHERE id = 47,0,benign
+DELETE FROM orders WHERE id = 424,0,benign
+"SELECT status FROM test_transactions WHERE id = -1 UNION SELECT table_name, NULL FROM information_schema.tables--",1,union_based
+DELETE FROM customers WHERE id = 803,0,benign
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+SELECT email FROM sessions WHERE email = 'jane',0,benign
+"SELECT * FROM customers WHERE id = 141 UNION SELECT username, password FROM users--",1,union_based
+1; DELETE FROM test_customers;--,1,stacked_queries
+SELECT * FROM test_customers WHERE status = 'active' OR status = 'pending',0,benign
+SELECT * FROM test_customers WHERE id = 231,0,benign
+SELECT status FROM test_customers WHERE status = 'jane',0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--,1,blind_time_based
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM sessions WHERE amount > 607 AND amount < 3234,0,benign
+SELECT * FROM test_customers WHERE name LIKE '%smith%',0,benign
+' OR '1'='1,1,tautology
+SELECT * FROM sessions ORDER BY amount DESC LIMIT 10,0,benign
+SELECT item FROM sessions WHERE item = 'john',0,benign
+' OR 1=1#,1,tautology
+UPDATE test_transactions SET status = 'widget' WHERE id = 624,0,benign
+SELECT * FROM sessions WHERE id = 976 OR 'a'='a',1,tautology
+SELECT COUNT(*) FROM test_customers WHERE email IS NOT NULL,0,benign
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+UPDATE orders SET id = 'smith' WHERE id = 900,0,benign
+SELECT * FROM customers ORDER BY amount DESC LIMIT 10,0,benign
+SELECT * FROM sessions WHERE status = 'active' OR status = 'pending',0,benign
+SELECT status FROM customers WHERE status = 'corp',0,benign
+' OR ''=',1,comment_bypass
+1; DELETE FROM test_orders;--,1,stacked_queries
+acme; DROP TABLE test_customers;--,1,stacked_queries
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+INSERT INTO customers (status) VALUES ('gadget'),0,benign
+"' AND extractvalue(1, concat(0x7e, (SELECT version())))--",1,error_based
+' UNION SELECT @@version--,1,union_based
+UPDATE sessions SET status = 'smith' WHERE id = 707,0,benign
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+"' AND 1=CONVERT(int, (SELECT @@version))--",1,error_based
+SELECT * FROM sessions WHERE name LIKE '%ltd%',0,benign
+' OR 1=1#,1,tautology
+admin'#,1,comment_bypass
+admin'#,1,comment_bypass
+' UNION SELECT @@version--,1,union_based
+SELECT * FROM customers WHERE id = 41 OR '1'='1',1,tautology
+"SELECT * FROM test_orders WHERE id = 539 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM test_orders WHERE name = '' OR 1=1--,1,tautology
+' UNION SELECT @@version--,1,union_based
+1; DELETE FROM test_customers;--,1,stacked_queries
+SELECT * FROM sessions WHERE id = 435 AND (SELECT COUNT(*) FROM information_schema.tables) > 0 AND SLEEP(3),1,blind_time_based
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+' OR 1=1#,1,tautology
+'; WAITFOR DELAY '0:0:5'--,1,blind_time_based
+SELECT * FROM test_customers WHERE name = 'admin'--' AND password = 'acme',1,comment_bypass
+"SELECT * FROM orders WHERE id = 859 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM sessions WHERE amount > 976 AND amount < 1127,0,benign
+SELECT * FROM customers WHERE id = 221,0,benign
+SELECT name FROM test_orders WHERE name = 'corp',0,benign
+admin'#,1,comment_bypass
+'; INSERT INTO orders VALUES ('hacked');--,1,stacked_queries
+"' UNION SELECT NULL, NULL, NULL--",1,union_based
+"SELECT * FROM test_customers WHERE id = 905 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
+SELECT * FROM orders WHERE status = 'active' OR status = 'pending',0,benign
+' OR ''=',1,comment_bypass
+"SELECT * FROM orders WHERE id = 292 AND updatexml(1, concat(0x7e, database()), 1)--",1,error_based
