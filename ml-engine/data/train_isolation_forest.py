@@ -60,10 +60,12 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
         ["customer_id", "simulated_timestamp"]
     )["table"].transform("size")
 
+    df["distinct_targets_at_exact_timestamp"] = df.groupby(
+        ["customer_id", "simulated_timestamp"]
+    )["target_customer_id"].transform("nunique")
     df = pd.get_dummies(df, columns=["table", "operation"], prefix=["table", "op"])
 
     return df
-
 
 def main():
     raw = pd.read_csv(INPUT_PATH, parse_dates=["simulated_timestamp"])
@@ -75,7 +77,8 @@ def main():
         c for c in df.columns
         if c.startswith("table_") or c.startswith("op_")
         or c in ("hour_of_day", "day_of_week", "is_night", "events_last_hour",
-                  "distinct_tables_last_hour", "events_at_exact_timestamp")
+                  "distinct_tables_last_hour", "events_at_exact_timestamp",
+                  "distinct_targets_at_exact_timestamp")
     ]
     X = df[feature_cols].fillna(0)
     y_true = df["is_anomaly"]

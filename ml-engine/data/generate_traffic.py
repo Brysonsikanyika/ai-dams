@@ -19,6 +19,15 @@ a SIMULATED timestamp (in ground_truth.csv) distinct from the real
 execution time Kafka will record. Downstream feature engineering should
 use the simulated timestamp for time-of-day features, not Kafka's
 captured_at.
+
+v2 CHANGE: added target_customer_id, distinct from customer_id (the
+acting/querying customer). For nearly all traffic, target == actor
+(people only touch their own data). bulk_scan is the one exception --
+its defining trait is one actor querying MANY OTHER customers' records,
+which v1 of this generator never captured, making bulk_scan structurally
+undetectable by any model trained on its output (confirmed empirically:
+both Isolation Forest and the LSTM Autoencoder independently showed weak
+bulk_scan recall, traced to this exact gap).
 """
 
 import csv
@@ -123,6 +132,8 @@ def random_simulated_timestamp(start):
     hour = int(random.betavariate(2, 2) * 24)  # roughly clustered around mid-day
     minute = random.randint(0, 59)
     return start + timedelta(days=day_offset, hours=hour, minutes=minute)
+
+
 def normal_event(conn, customer_id, writer, sim_ts) -> int:
     kind = random.choices(
         ["select_orders", "select_sessions", "insert_order", "update_order", "insert_session"],
@@ -155,10 +166,10 @@ def normal_event(conn, customer_id, writer, sim_ts) -> int:
             )
             table, op = "sessions", "INSERT"
 
-    writer.writerow([sim_ts.isoformat(), customer_id, table, op, 0, ""])
+    # target_customer_id == customer_id here: normal traffic only ever
+    # touches the actor's own data.
+    writer.writerow([sim_ts.isoformat(), customer_id, customer_id, table, op, 0, ""])
     return 1
-
-
 def anomaly_burst(conn, customer_ids, writer, sim_ts) -> int:
     anomaly_type = random.choice(
         ["bulk_scan", "off_hours_bulk_delete", "high_frequency_burst", "unusual_table_combo"]
@@ -167,13 +178,14 @@ def anomaly_burst(conn, customer_ids, writer, sim_ts) -> int:
     written = 0
 
     if anomaly_type == "bulk_scan":
-        # one connection querying many OTHER customers' orders -- not their own
+        # THE ONE CASE where target != actor -- one connection querying
+        # many OTHER customers' orders, not their own.
         targets = random.sample(customer_ids, k=min(8, len(customer_ids)))
         with conn.cursor() as cur:
             for target in targets:
                 cur.execute("SELECT * FROM orders WHERE customer_id = %s", (target,))
-        for _ in targets:
-            writer.writerow([sim_ts.isoformat(), actor, "orders", "SELECT", 1, anomaly_type])
+        for target in targets:
+            writer.writerow([sim_ts.isoformat(), actor, target, "orders", "SELECT", 1, anomaly_type])
             written += 1
 
     elif anomaly_type == "off_hours_bulk_delete":
@@ -183,7 +195,7 @@ def anomaly_burst(conn, customer_ids, writer, sim_ts) -> int:
                     "DELETE FROM orders WHERE customer_id = %s ORDER BY id ASC LIMIT 1", (actor,)
                 )
         for _ in range(5):
-            writer.writerow([sim_ts.isoformat(), actor, "orders", "DELETE", 1, anomaly_type])
+            writer.writerow([sim_ts.isoformat(), actor, actor, "orders", "DELETE", 1, anomaly_type])
             written += 1
 
     elif anomaly_type == "high_frequency_burst":
@@ -194,7 +206,7 @@ def anomaly_burst(conn, customer_ids, writer, sim_ts) -> int:
                     (actor, random.choice(ITEMS), round(random.uniform(5, 500), 2), "pending", datetime.now()),
                 )
         for _ in range(30):
-            writer.writerow([sim_ts.isoformat(), actor, "orders", "INSERT", 1, anomaly_type])
+            writer.writerow([sim_ts.isoformat(), actor, actor, "orders", "INSERT", 1, anomaly_type])
             written += 1
 
     else:  # unusual_table_combo
@@ -203,7 +215,7 @@ def anomaly_burst(conn, customer_ids, writer, sim_ts) -> int:
             cur.execute("SELECT * FROM orders WHERE customer_id = %s", (actor,))
             cur.execute("SELECT * FROM sessions WHERE customer_id = %s", (actor,))
         for table in ("customers", "orders", "sessions"):
-            writer.writerow([sim_ts.isoformat(), actor, table, "SELECT", 1, anomaly_type])
+            writer.writerow([sim_ts.isoformat(), actor, actor, table, "SELECT", 1, anomaly_type])
             written += 1
 
     return written
@@ -220,7 +232,8 @@ def main():
     with open(GROUND_TRUTH_PATH, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(
-            ["simulated_timestamp", "customer_id", "table", "operation", "is_anomaly", "anomaly_type"]
+            ["simulated_timestamp", "customer_id", "target_customer_id",
+             "table", "operation", "is_anomaly", "anomaly_type"]
         )
 
         generated = 0

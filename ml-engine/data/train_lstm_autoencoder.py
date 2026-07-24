@@ -32,6 +32,9 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df["events_at_exact_timestamp"] = df.groupby(
         ["customer_id", "simulated_timestamp"]
     )["table"].transform("size")
+    df["distinct_targets_at_exact_timestamp"] = df.groupby(
+        ["customer_id", "simulated_timestamp"]
+    )["target_customer_id"].transform("nunique")
     df = pd.get_dummies(df, columns=["table", "operation"], prefix=["table", "op"])
     return df
 
@@ -86,7 +89,8 @@ def main():
     feature_cols = [
         c for c in df.columns
         if c.startswith("table_") or c.startswith("op_")
-        or c in ("hour_of_day", "day_of_week", "is_night", "events_at_exact_timestamp")
+        or c in ("hour_of_day", "day_of_week", "is_night", "events_at_exact_timestamp",
+                  "distinct_targets_at_exact_timestamp")
     ]
 
     numeric_cols = ["hour_of_day", "day_of_week", "events_at_exact_timestamp"]
