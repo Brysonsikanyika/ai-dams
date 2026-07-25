@@ -70,6 +70,8 @@ def run_isolation_forest(raw: pd.DataFrame) -> pd.DataFrame:
         "simulated_timestamp": df["simulated_timestamp"],
         "if_raw_score": -scores,  # flip sign: higher now = more anomalous
     })
+
+
 def run_lstm_autoencoder(raw: pd.DataFrame) -> pd.DataFrame:
     df = lstm_engineer_features(raw.copy())
     feature_cols = [
@@ -105,10 +107,23 @@ def run_lstm_autoencoder(raw: pd.DataFrame) -> pd.DataFrame:
 
 
 def normalize(series: pd.Series) -> pd.Series:
-    lo, hi = series.min(), series.max()
-    if hi == lo:
-        return series * 0
-    return (series - lo) / (hi - lo)
+    """Percentile-rank normalization, not min-max.
+
+    Min-max normalization was the actual bug behind the aggregator's poor
+    precision: a few extreme Isolation Forest scores stretched the scale
+    so much that many ordinary, non-anomalous buckets still landed above
+    a fixed threshold of 0.3 -- explaining the 2117 false positives seen
+    with min-max. Percentile rank instead asks "what fraction of buckets
+    does this one score higher than", which is immune to a handful of
+    extreme outliers distorting the whole scale, and produces a score
+    that's directly interpretable as "top X% most anomalous."
+
+    IMPORTANT: this changes what a sensible THRESHOLD means. With ranks,
+    threshold=0.3 would mean "flag the top 70% of all buckets" -- far too
+    liberal. A rank-based threshold needs to be high (e.g. 0.9 = top 10%
+    most anomalous), not the old 0.3.
+    """
+    return series.rank(pct=True)
 
 
 def main():
@@ -162,18 +177,20 @@ def main():
           f"{lstm_bucketed.shape[0]} have an LSTM score, "
           f"{len(combined)} total distinct buckets across both")
 
-    print("\n--- Detection performance at combined_risk > 0.3 ---")
-    for col, label in [("if_risk", "Isolation Forest alone"),
-                        ("lstm_risk", "LSTM alone"),
-                        ("combined_risk", "Combined")]:
-        pred = (combined[col].fillna(0) > 0.3).astype(int)
-        truth = combined["bucket_has_anomaly"]
-        tp = ((pred == 1) & (truth == 1)).sum()
-        fp = ((pred == 1) & (truth == 0)).sum()
-        fn = ((pred == 0) & (truth == 1)).sum()
-        precision = tp / (tp + fp) if (tp + fp) > 0 else 0
-        recall = tp / (tp + fn) if (tp + fn) > 0 else 0
-        print(f"  {label:25s} precision={precision:.3f} recall={recall:.3f} (TP={tp} FP={fp} FN={fn})")
+    for thresh in (0.90, 0.95, 0.99):
+        print(f"\n--- Detection performance at combined_risk > {thresh} (top {(1-thresh)*100:.0f}%) ---")
+        for col, label in [("if_risk", "Isolation Forest alone"),
+                            ("lstm_risk", "LSTM alone"),
+                            ("combined_risk", "Combined")]:
+            pred = (combined[col].fillna(0) > thresh).astype(int)
+            truth = combined["bucket_has_anomaly"]
+            tp = ((pred == 1) & (truth == 1)).sum()
+            fp = ((pred == 1) & (truth == 0)).sum()
+            fn = ((pred == 0) & (truth == 1)).sum()
+            precision = tp / (tp + fp) if (tp + fp) > 0 else 0
+            recall = tp / (tp + fn) if (tp + fn) > 0 else 0
+            print(f"  {label:25s} precision={precision:.3f} recall={recall:.3f} (TP={tp} FP={fp} FN={fn})")
+
     combined.to_csv("risk_scores.csv", index=False)
     print("\nSaved per-(customer, time-bucket) risk scores to risk_scores.csv")
 
