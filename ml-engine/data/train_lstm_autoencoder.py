@@ -32,6 +32,10 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df["events_at_exact_timestamp"] = df.groupby(
         ["customer_id", "simulated_timestamp"]
     )["table"].transform("size")
+    # NEW: distinct targets touched by this actor at this exact moment --
+    # 1 everywhere except bulk_scan, where it spikes. See
+    # train_isolation_forest.py's comment for the full rationale; this is
+    # the same fix, applied identically to keep both models comparable.
     df["distinct_targets_at_exact_timestamp"] = df.groupby(
         ["customer_id", "simulated_timestamp"]
     )["target_customer_id"].transform("nunique")
@@ -43,16 +47,21 @@ def build_windows(df: pd.DataFrame, feature_cols, window_size: int):
     """Slide a fixed-size window over each customer's own event sequence.
 
     Returns X of shape (n_windows, window_size, n_features), a
-    window-level label (1 if ANY event inside is anomalous), and the
+    window-level label (1 if ANY event inside is anomalous), the
     anomaly_type of the first anomalous event in the window (for
-    per-type diagnostics; "" if the window is entirely normal).
+    per-type diagnostics; "" if the window is entirely normal), the
+    customer_id, and the END timestamp of the window (the last event's
+    simulated_timestamp) -- needed by the risk aggregator to bucket
+    window-level scores into time windows alongside Isolation Forest's
+    per-event scores.
     """
-    X, y, types = [], [], []
-    for _customer_id, group in df.groupby("customer_id"):
+    X, y, types, customer_ids_out, end_timestamps = [], [], [], [], []
+    for customer_id, group in df.groupby("customer_id"):
         group = group.sort_values("simulated_timestamp")
         feats = group[feature_cols].values
         anomalies = group["is_anomaly"].values
         atypes = group["anomaly_type"].fillna("").values
+        timestamps = group["simulated_timestamp"].values
         for start in range(len(group) - window_size + 1):
             window_feats = feats[start : start + window_size]
             window_anom_flags = anomalies[start : start + window_size]
@@ -63,7 +72,15 @@ def build_windows(df: pd.DataFrame, feature_cols, window_size: int):
             X.append(window_feats)
             y.append(window_anom)
             types.append(window_type)
-    return np.array(X, dtype="float32"), np.array(y), np.array(types)
+            customer_ids_out.append(customer_id)
+            end_timestamps.append(timestamps[start + window_size - 1])
+    return (
+        np.array(X, dtype="float32"),
+        np.array(y),
+        np.array(types),
+        np.array(customer_ids_out),
+        np.array(end_timestamps),
+    )
 
 
 def build_autoencoder(window_size: int, n_features: int) -> keras.Model:
@@ -97,7 +114,7 @@ def main():
     scaler = StandardScaler()
     df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
 
-    X, y, types = build_windows(df, feature_cols, WINDOW_SIZE)
+    X, y, types, window_customer_ids, window_end_ts = build_windows(df, feature_cols, WINDOW_SIZE)
     print(f"Built {len(X)} windows of size {WINDOW_SIZE}, {y.sum()} contain at least one anomalous event")
 
     X_normal = X[y == 0]
