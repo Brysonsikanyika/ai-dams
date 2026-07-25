@@ -1,0 +1,36 @@
+query_text,label,note
+1' AND '1'='1,1,tautology - different phrasing than template
+x' AND 1=(SELECT COUNT(*) FROM information_schema.tables); --,1,subquery-based - novel structure
+'; EXEC xp_cmdshell('dir'); --,1,MSSQL command execution - entirely new attack pattern
+1 OR 1=1 LIMIT 1,1,tautology with LIMIT - novel structure
+' OR SLEEP(5)=',1,blind time-based - different phrasing
+1;SELECT * FROM information_schema.columns--,1,schema enumeration - novel
+' HAVING 1=1--,1,HAVING-based bypass - not in original categories
+' GROUP BY columnnames HAVING 1=1--,1,GROUP BY enumeration - novel
+admin')-- ,1,comment bypass with parenthesis - different form
+1' ORDER BY 10--,1,ORDER BY column enumeration - novel technique
+"' AND (SELECT SUBSTRING(@@version,1,1))='5",1,blind boolean-based version extraction
+"1' UNION ALL SELECT NULL,NULL,NULL,NULL--",1,UNION ALL variant with 4 columns
+'||(SELECT version())||',1,string concatenation injection - novel syntax
+"1' AND updatexml(1,concat(0x3a,(SELECT database())),1)--",1,"error-based, different function combo"
+' OR 'x'='x,1,tautology - minimal single-char variant
+1) OR (1=1,1,tautology with parenthesis wrapping
+' AND SLEEP(5) AND '1'='1,1,combined blind time-based and tautology
+x'; DROP TABLE users; --,1,stacked query variant
+"' UNION SELECT null, table_name FROM information_schema.tables--",1,UNION-based schema enumeration
+1' AND 1=CAST((SELECT @@version) AS INT)--,1,error-based type cast
+"SELECT title, author FROM articles WHERE published = 1",0,blog domain - not e-commerce
+UPDATE inventory SET stock = stock - 1 WHERE sku = 'ABC123',0,inventory domain
+SELECT * FROM users WHERE last_login > '2026-01-01',0,different date filter style
+"INSERT INTO comments (post_id, body) VALUES (42, 'Great article!')",0,blog comments domain
+SELECT COUNT(*) FROM subscribers WHERE active = 1,0,newsletter domain
+DELETE FROM sessions WHERE expires_at < NOW(),0,session cleanup query
+SELECT * FROM products WHERE price BETWEEN 10 AND 50,0,range query - different structure
+UPDATE users SET last_login = NOW() WHERE id = 42,0,timestamp update
+SELECT name FROM employees WHERE department = 'Engineering' OR department = 'Product',0,legitimate OR usage
+SELECT * FROM tickets WHERE status = 'open' AND priority = 'high',0,support ticket domain
+SELECT AVG(rating) FROM reviews WHERE product_id = 17,0,aggregate query
+"INSERT INTO audit_log (action, user_id, timestamp) VALUES ('login', 88, NOW())",0,audit logging domain
+SELECT * FROM invoices WHERE due_date < CURDATE() AND paid = 0,0,billing domain
+UPDATE articles SET views = views + 1 WHERE id = 205,0,view counter update
+SELECT DISTINCT category FROM products ORDER BY category,0,distinct/order by - legitimate use
