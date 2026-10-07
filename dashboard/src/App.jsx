@@ -238,6 +238,8 @@ export default function App() {
     return [...filteredRows].sort((a, b) => b.combined_risk - a.combined_risk).slice(0, 20)
   }, [filteredRows])
 
+  const criticalCount = filteredRows.filter((r) => r.combined_risk > THRESHOLD).length
+
   if (!token) {
     return <Login onLogin={handleLogin} />
   }
@@ -263,29 +265,34 @@ export default function App() {
   return (
     <div className="console">
       <div className="titlebar">
-        <span className="dot dot-cyan" />
-        AI-DAMS :: RISK CONSOLE
+        <div className="brand-lockup">
+          <span className="brand-mark">A</span>
+          <span>AI-DAMS <em>/</em> SECURITY OPERATIONS</span>
+        </div>
+        <div className="titlebar-status"><span className="dot dot-cyan" /> SENSOR MESH ONLINE</div>
         <button className="logout-btn" onClick={handleLogout}>LOG OUT</button>
       </div>
 
-      <p className="deck">
-        Isolation Forest + LSTM Autoencoder, fused per (customer, 15-minute
-        window). Click any point for detail. Flags anything above the 95th
-        percentile of combined risk.
-      </p>
-      <p className="scope-note">
-        NLP query-text classifier not represented here -- captured text
-        currently cannot be attributed to a customer_id. See
-        build_risk_aggregator.py.
-      </p>
-
+      <div className="hero-row">
+        <div>
+          <p className="eyebrow">THREAT DETECTION CENTER <span className="eyebrow-line" /></p>
+          <h1>Watch the signal.<br /><span>Find the breach.</span></h1>
+          <p className="deck">Behavioral intelligence across customer activity, scored every 15 minutes by two independent detection models.</p>
+        </div>
+        <div className="posture-card">
+          <div className="posture-top"><span className="pulse-ring" /> CURRENT POSTURE</div>
+          <strong>{criticalCount ? 'ELEVATED' : 'NOMINAL'}</strong>
+          <span>{criticalCount} active {criticalCount === 1 ? 'signal' : 'signals'} above threshold</span>
+        </div>
+      </div>
       <SystemInfo />
 
       <div className="signal-panel">
         <div className="panel-head">
           <IconWave />
-          <span>RISK SIGNAL</span>
+          <span>LIVE RISK SIGNAL</span>
           <span className="panel-head-sub">{filteredRows.length} windows observed</span>
+          <span className="panel-head-live"><span className="dot dot-cyan" /> STREAMING</span>
         </div>
         <ResponsiveContainer width="100%" height={160}>
           <ComposedChart data={signalData} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
@@ -305,8 +312,9 @@ export default function App() {
       </div>
 
       <div className="controls">
+        <div className="filter-heading">INVESTIGATE BY</div>
         <label>
-          FILTER :: CUSTOMER
+          CUSTOMER
           <select value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)}>
             <option value="all">ALL</option>
             {customerIds.map((id) => (
@@ -315,12 +323,12 @@ export default function App() {
           </select>
         </label>
         <label>
-          FROM
+          FROM DATE
           <input type="text" placeholder="YYYY-MM-DD" value={dateFrom}
                  onChange={(e) => setDateFrom(e.target.value)} />
         </label>
         <label>
-          TO
+          TO DATE
           <input type="text" placeholder="YYYY-MM-DD" value={dateTo}
                  onChange={(e) => setDateTo(e.target.value)} />
         </label>
@@ -339,8 +347,8 @@ export default function App() {
       <div className="panel">
         <div className="panel-head">
           <IconTarget />
-          <span>DETECTION FIELD</span>
-          <span className="panel-head-sub">click a point for detail, red = confirmed anomaly</span>
+          <span>THREAT LANDSCAPE</span>
+          <span className="panel-head-sub">click a point for incident detail</span>
         </div>
         <ResponsiveContainer width="100%" height={340}>
           <ScatterChart margin={{ top: 12, right: 20, bottom: 8, left: 8 }}>

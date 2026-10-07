@@ -9,12 +9,14 @@ const path = require('path')
 const app = express()
 const PORT = process.env.PORT || 4000
 const JWT_SECRET = process.env.JWT_SECRET
-const ANALYST_USERNAME = process.env.ANALYST_USERNAME
-const ANALYST_PASSWORD_HASH = process.env.ANALYST_PASSWORD_HASH
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173'
+const USERS = [
+  { username: process.env.ANALYST_USERNAME, passwordHash: process.env.ANALYST_PASSWORD_HASH },
+  { username: process.env.ANALYST_USERNAME_2, passwordHash: process.env.ANALYST_PASSWORD_HASH_2 },
+].filter((user) => user.username && user.passwordHash)
 
-if (!JWT_SECRET || !ANALYST_USERNAME || !ANALYST_PASSWORD_HASH) {
-  throw new Error('Missing required env vars. Copy .env.example to .env and fill in JWT_SECRET, ANALYST_USERNAME, ANALYST_PASSWORD_HASH.')
+if (!JWT_SECRET || !USERS.length) {
+  throw new Error('Missing required env vars. Copy .env.example to .env and configure at least one analyst account.')
 }
 
 app.use(cors({ origin: FRONTEND_ORIGIN }))
@@ -25,10 +27,11 @@ app.post('/api/login', async (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ error: 'username and password required' })
   }
-  if (username !== ANALYST_USERNAME) {
+  const user = USERS.find((candidate) => candidate.username === username)
+  if (!user) {
     return res.status(401).json({ error: 'Invalid credentials' })
   }
-  const valid = await bcrypt.compare(password, ANALYST_PASSWORD_HASH)
+  const valid = await bcrypt.compare(password, user.passwordHash)
   if (!valid) {
     return res.status(401).json({ error: 'Invalid credentials' })
   }

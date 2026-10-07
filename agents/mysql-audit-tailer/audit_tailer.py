@@ -23,6 +23,20 @@ fragments, each of which IS well-formed XML on its own.
 The 'query' class logs both "Query Start" and "Query Status End" per
 statement (same text, twice) -- this tailer keeps only "Query Start" to
 avoid duplicate publishing.
+
+ACCOUNT ATTRIBUTION (v2): an earlier version of this tailer attempted to
+resolve the connecting account by adding MySQL's "connection" event class
+to the audit filter and correlating Connect records by CONNECTION_ID.
+That approach was abandoned -- adding the connection class caused Percona
+to silently skip logging the query class entirely ("Skipping disabled
+event class 'query'"), for reasons that weren't confidently diagnosed,
+and the query class is the one thing this tailer actually depends on.
+Rather than keep patching an unverified component interaction, this
+version resolves the account a different way: a direct, live lookup
+against performance_schema.threads, keyed by CONNECTION_ID, using a
+dedicated minimal-privilege MySQL account (see
+mysql-init/04-create-tailer-account.sh). This only needs the 'query'
+class to remain enabled exactly as it always was.
 """
 
 import json
@@ -33,12 +47,17 @@ import time
 from datetime import datetime, timezone
 import xml.etree.ElementTree as ET
 
+import pymysql
 from kafka import KafkaProducer
 
 AUDIT_LOG_PATH = os.environ.get("AUDIT_LOG_PATH", "/var/lib/mysql/audit_filter.log")
 KAFKA_BOOTSTRAP = os.environ.get("KAFKA_BOOTSTRAP", "kafka:9092")
 KAFKA_TOPIC = os.environ.get("KAFKA_TOPIC", "mysql.query.text")
 POLL_INTERVAL_SECONDS = float(os.environ.get("POLL_INTERVAL_SECONDS", "2"))
+
+MYSQL_HOST = os.environ.get("MYSQL_HOST", "mysql")
+MYSQL_PORT = int(os.environ.get("MYSQL_PORT", "3306"))
+TAILER_ACCOUNT_PASSWORD = os.environ["TAILER_ACCOUNT_PASSWORD"]
 
 AGENT_HOST = socket.gethostname()
 
@@ -47,6 +66,38 @@ RECORD_RE = re.compile(r"<AUDIT_RECORD>.*?</AUDIT_RECORD>", re.DOTALL)
 
 def build_producer() -> KafkaProducer:
     return KafkaProducer(bootstrap_servers=KAFKA_BOOTSTRAP, linger_ms=50)
+
+
+def build_introspection_connection():
+    """A dedicated, minimal-privilege (PROCESS only, no table data access)
+    connection used purely to look up which account owns a connection_id."""
+    return pymysql.connect(
+        host=MYSQL_HOST, port=MYSQL_PORT, user="audit_tailer_ro",
+        password=TAILER_ACCOUNT_PASSWORD, autocommit=True, connect_timeout=5,
+    )
+
+
+def resolve_account(introspect_conn, connection_id: str, cache: dict):
+    """Looks up the MySQL account for a given connection_id via
+    performance_schema.threads, caching the result (connections are
+    long-lived in this project's generators, so one lookup per
+    connection_id is enough -- no need to re-query on every record)."""
+    if connection_id in cache:
+        return cache[connection_id]
+    account = None
+    try:
+        with introspect_conn.cursor() as cur:
+            cur.execute(
+                "SELECT PROCESSLIST_USER FROM performance_schema.threads "
+                "WHERE PROCESSLIST_ID = %s", (connection_id,),
+            )
+            row = cur.fetchone()
+            if row and row[0]:
+                account = row[0]
+    except Exception as exc:  # noqa: BLE001 - introspection is best-effort
+        print(f"[audit-tailer] account lookup failed for connection_id={connection_id}: {exc}", flush=True)
+    cache[connection_id] = account  # cache the miss too -- avoid re-querying a closed connection every time
+    return account
 
 
 def emit(producer: KafkaProducer, payload: dict) -> None:
@@ -71,14 +122,16 @@ def wait_for_file(path: str) -> None:
 
 
 def parse_record(xml_fragment: str):
+    """Returns a dict for a 'Query Start' record, or None for anything
+    else (Query Status End duplicates, or a record type this tailer
+    doesn't need)."""
     try:
         root = ET.fromstring(xml_fragment)
     except ET.ParseError:
         return None
 
-    name = root.findtext("NAME")
-    if name != "Query Start":
-        return None  # skip Query Status End -- duplicate text, no new info
+    if root.findtext("NAME") != "Query Start":
+        return None
 
     sql_text = root.findtext("SQLTEXT")
     if not sql_text:
@@ -92,8 +145,10 @@ def parse_record(xml_fragment: str):
     }
 
 
-def run(producer: KafkaProducer) -> None:
+def run(producer: KafkaProducer, introspect_conn) -> None:
     wait_for_file(AUDIT_LOG_PATH)
+
+    account_cache = {}  # connection_id -> account (or None), see resolve_account()
 
     with open(AUDIT_LOG_PATH, "r", encoding="utf-8", errors="replace") as f:
         f.seek(0, os.SEEK_END)  # only new records from here -- no replay of history
@@ -113,7 +168,8 @@ def run(producer: KafkaProducer) -> None:
                 for match in RECORD_RE.finditer(buffer):
                     record = parse_record(match.group(0))
                     if record:
-                        emit(producer, record)
+                        account = resolve_account(introspect_conn, record["connection_id"], account_cache)
+                        emit(producer, {**record, "account": account})
                     last_end = match.end()
                 buffer = buffer[last_end:]  # keep only the unparsed remainder
             else:
@@ -122,15 +178,21 @@ def run(producer: KafkaProducer) -> None:
 
 if __name__ == "__main__":
     kafka_producer = build_producer()
+    introspection_conn = None
     try:
         while True:
             try:
-                run(kafka_producer)
+                if introspection_conn is None:
+                    introspection_conn = build_introspection_connection()
+                run(kafka_producer, introspection_conn)
             except KeyboardInterrupt:
                 break
             except Exception as exc:  # noqa: BLE001 - top-level retry loop, log and retry
                 print(f"[audit-tailer] error: {exc}; retrying in 5s", flush=True)
+                introspection_conn = None  # force reconnect next loop
                 time.sleep(5)
     finally:
         kafka_producer.flush(timeout=10)
         kafka_producer.close()
+        if introspection_conn:
+            introspection_conn.close()

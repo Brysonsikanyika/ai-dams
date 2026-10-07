@@ -41,6 +41,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
       MYSQL_DATABASE: aidams_demo
       MYSQL_AGENT_PASSWORD: ${MYSQL_AGENT_PASSWORD:-changeme_agent}
+      STUDENT_ACCOUNT_PASSWORD: ${STUDENT_ACCOUNT_PASSWORD}
+      TAILER_ACCOUNT_PASSWORD: ${TAILER_ACCOUNT_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -131,6 +133,7 @@ services:
       - mysql-data:/var/lib/mysql:ro
     environment:
       KAFKA_BOOTSTRAP: kafka:29092
+      TAILER_ACCOUNT_PASSWORD: ${TAILER_ACCOUNT_PASSWORD}
 
 volumes:
   kafka-data:
