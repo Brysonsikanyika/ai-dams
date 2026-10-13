@@ -86,6 +86,11 @@ def resolve_account(introspect_conn, connection_id: str, cache: dict):
         return cache[connection_id]
     account = None
     try:
+        # The introspection connection is long-lived and idle between lookups;
+        # MySQL closes idle connections after wait_timeout (8h by default).
+        # ping(reconnect=True) reopens it transparently. Without this, every
+        # lookup after the first idle timeout failed and returned account=None.
+        introspect_conn.ping(reconnect=True)
         with introspect_conn.cursor() as cur:
             cur.execute(
                 "SELECT PROCESSLIST_USER FROM performance_schema.threads "
@@ -96,6 +101,7 @@ def resolve_account(introspect_conn, connection_id: str, cache: dict):
                 account = row[0]
     except Exception as exc:  # noqa: BLE001 - introspection is best-effort
         print(f"[audit-tailer] account lookup failed for connection_id={connection_id}: {exc}", flush=True)
+        return None  # transport failure: do NOT cache, so a later record retries
     cache[connection_id] = account  # cache the miss too -- avoid re-querying a closed connection every time
     return account
 

@@ -26,6 +26,7 @@ before this script is run.
 import csv
 import os
 import random
+import uuid
 from datetime import datetime, timedelta
 
 import pymysql
@@ -118,35 +119,70 @@ def random_simulated_timestamp(start):
     )
 
 
+# ---------------------------------------------------------------------------
+# Event tagging (added for the NLP join).
+#
+# Every statement this script sends is prefixed with a SQL comment carrying a
+# unique event id, e.g.  /* evt:3fa9c1d2-17 */ SELECT * FROM grades ...
+# MySQL's audit log records the statement text as received, so the id travels
+# into mysql.query.text via the audit tailer, and the same id is written to
+# ground_truth.csv. That is what lets a captured query be matched to its exact
+# ground-truth row. Matching by time is impossible here: the generator runs for
+# minutes of wall-clock time but labels events with simulated timestamps spread
+# over SIMULATED_DAYS days.
+#
+# RUN_ID comes from uuid4 (os.urandom), NOT the random module, so it does not
+# disturb the seeded random sequence that makes the traffic reproducible. It
+# keeps ids from different runs apart: the Kafka topic retains old runs, and a
+# bare counter would let an old run's query text match this run's rows.
+# The join script strips the tag before classification so the classifier sees
+# the query itself, not the comment (a /* */ comment is itself a classic
+# injection-style token and would bias the result).
+# ---------------------------------------------------------------------------
+RUN_ID = uuid.uuid4().hex[:8]
+_event_counter = 0
+
+
+def next_event_id() -> str:
+    global _event_counter
+    _event_counter += 1
+    return f"{RUN_ID}-{_event_counter}"
+
+
+def tagged(sql: str, event_id: str) -> str:
+    return f"/* evt:{event_id} */ {sql}"
+
+
 def normal_event(student_conn, student_id, writer, sim_ts) -> int:
     kind = random.choice(["check_grades", "check_fees", "pay_fee", "enroll", "library"])
+    eid = next_event_id()
     with student_conn.cursor() as cur:
         if kind == "check_grades":
-            cur.execute("SELECT * FROM grades WHERE student_id = %s", (student_id,))
+            cur.execute(tagged("SELECT * FROM grades WHERE student_id = %s", eid), (student_id,))
             table, op = "grades", "SELECT"
         elif kind == "check_fees":
-            cur.execute("SELECT * FROM fees WHERE student_id = %s", (student_id,))
+            cur.execute(tagged("SELECT * FROM fees WHERE student_id = %s", eid), (student_id,))
             table, op = "fees", "SELECT"
         elif kind == "pay_fee":
             cur.execute(
-                "INSERT INTO payments (student_id, amount, payment_date, method) VALUES (%s,%s,%s,%s)",
+                tagged("INSERT INTO payments (student_id, amount, payment_date, method) VALUES (%s,%s,%s,%s)", eid),
                 (student_id, round(random.uniform(200, 3000), 2), datetime.now(), random.choice(["mobile_money", "bank_transfer"])),
             )
             table, op = "payments", "INSERT"
         elif kind == "enroll":
             course_code = random.choice(COURSES)[0]
             cur.execute(
-                "INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES (%s,%s,%s,%s)",
+                tagged("INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES (%s,%s,%s,%s)", eid),
                 (student_id, course_code, "S2 2026", datetime.now()),
             )
             table, op = "enrollments", "INSERT"
         else:
             cur.execute(
-                "INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES (%s,%s,%s,%s)",
+                tagged("INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES (%s,%s,%s,%s)", eid),
                 (student_id, random.choice(LIBRARY_TITLES), datetime.now(), (datetime.now() + timedelta(days=14)).date()),
             )
             table, op = "library_loans", "INSERT"
-    writer.writerow([sim_ts.isoformat(), student_id, student_id, table, op, 0, ""])
+    writer.writerow([sim_ts.isoformat(), student_id, student_id, table, op, 0, "", eid])
     return 1
 
 
@@ -160,46 +196,59 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
 
     if anomaly_type == "bulk_scan":
         # The one case where target != actor: one student's own MySQL
-        # account querying many OTHER students' grades and fee records
-        # -- exactly the pattern a curious or malicious student might
-        # attempt, and now genuinely visible in the real audit log as
-        # ONE account running many cross-student lookups.
+        # account querying many OTHER students' grades.
         targets = random.sample([s for s in student_ids if s != actor], k=min(8, len(student_ids) - 1))
+        eids = []
         with actor_conn.cursor() as cur:
             for target in targets:
-                cur.execute("SELECT * FROM grades WHERE student_id = %s", (target,))
-        for target in targets:
-            writer.writerow([sim_ts.isoformat(), actor, target, "grades", "SELECT", 1, anomaly_type])
+                eid = next_event_id()
+                eids.append(eid)
+                cur.execute(tagged("SELECT * FROM grades WHERE student_id = %s", eid), (target,))
+        for target, eid in zip(targets, eids):
+            writer.writerow([sim_ts.isoformat(), actor, target, "grades", "SELECT", 1, anomaly_type, eid])
             written += 1
 
     elif anomaly_type == "off_hours_bulk_delete":
+        eids = []
         with actor_conn.cursor() as cur:
             for _ in range(5):
+                eid = next_event_id()
+                eids.append(eid)
                 cur.execute(
-                    "DELETE FROM payments WHERE student_id = %s ORDER BY id ASC LIMIT 1", (actor,)
+                    tagged("DELETE FROM payments WHERE student_id = %s ORDER BY id ASC LIMIT 1", eid), (actor,)
                 )
-        for _ in range(5):
-            writer.writerow([sim_ts.isoformat(), actor, actor, "payments", "DELETE", 1, anomaly_type])
+        for eid in eids:
+            writer.writerow([sim_ts.isoformat(), actor, actor, "payments", "DELETE", 1, anomaly_type, eid])
             written += 1
 
     elif anomaly_type == "high_frequency_burst":
+        eids = []
         with actor_conn.cursor() as cur:
             for _ in range(30):
+                eid = next_event_id()
+                eids.append(eid)
                 cur.execute(
-                    "INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES (%s,%s,%s,%s)",
+                    tagged("INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES (%s,%s,%s,%s)", eid),
                     (actor, random.choice(LIBRARY_TITLES), datetime.now(), (datetime.now() + timedelta(days=14)).date()),
                 )
-        for _ in range(30):
-            writer.writerow([sim_ts.isoformat(), actor, actor, "library_loans", "INSERT", 1, anomaly_type])
+        for eid in eids:
+            writer.writerow([sim_ts.isoformat(), actor, actor, "library_loans", "INSERT", 1, anomaly_type, eid])
             written += 1
 
     else:  # unusual_table_combo
+        combo = [
+            ("students", "SELECT * FROM students WHERE student_id = %s"),
+            ("fees", "SELECT * FROM fees WHERE student_id = %s"),
+            ("library_loans", "SELECT * FROM library_loans WHERE student_id = %s"),
+        ]
+        eids = []
         with actor_conn.cursor() as cur:
-            cur.execute("SELECT * FROM students WHERE student_id = %s", (actor,))
-            cur.execute("SELECT * FROM fees WHERE student_id = %s", (actor,))
-            cur.execute("SELECT * FROM library_loans WHERE student_id = %s", (actor,))
-        for table in ("students", "fees", "library_loans"):
-            writer.writerow([sim_ts.isoformat(), actor, actor, table, "SELECT", 1, anomaly_type])
+            for _table, sql in combo:
+                eid = next_event_id()
+                eids.append(eid)
+                cur.execute(tagged(sql, eid), (actor,))
+        for (table, _sql), eid in zip(combo, eids):
+            writer.writerow([sim_ts.isoformat(), actor, actor, table, "SELECT", 1, anomaly_type, eid])
             written += 1
 
     return written
@@ -213,6 +262,7 @@ def main():
     print(f"Seeded {len(student_ids)} students and {len(COURSES)} courses")
     root_conn.close()
 
+    print(f"Run id for this generation: {RUN_ID}")
     print("Opening one MySQL connection per student (this is the attribution fix)...")
     connections = {sid: student_connect(sid) for sid in student_ids}
 
@@ -222,7 +272,7 @@ def main():
         writer = csv.writer(f)
         writer.writerow(
             ["simulated_timestamp", "customer_id", "target_customer_id",
-             "table", "operation", "is_anomaly", "anomaly_type"]
+             "table", "operation", "is_anomaly", "anomaly_type", "event_id"]
         )
 
         generated = 0
@@ -248,8 +298,8 @@ def main():
     print(
         f"Done. Wrote {GROUND_TRUTH_PATH}: {generated} total events, "
         f"{anomaly_events} anomalous ({anomaly_events / generated:.1%}). "
-        f"Each event was executed through that student's OWN MySQL account -- "
-        f"check the Percona audit log to confirm distinct accounts appear."
+        f"Each event ran through that student's OWN MySQL account and carries "
+        f"a /* evt:{RUN_ID}-N */ tag for the NLP join."
     )
 
 

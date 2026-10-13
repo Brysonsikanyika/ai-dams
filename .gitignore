@@ -25,3 +25,5 @@ kafka/certs/
 # OS/editor cruft
 .DS_Store
 *.log
+
+ml-engine/data/captured_query_text.jsonl
