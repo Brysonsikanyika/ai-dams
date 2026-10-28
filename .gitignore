@@ -27,3 +27,7 @@ kafka/certs/
 *.log
 
 ml-engine/data/captured_query_text.jsonl
+
+ml-engine/data/external/
+ml-engine/data/sqli_v2_*.csv
+ml-engine/data/nlp_classifier_v2_model.joblib

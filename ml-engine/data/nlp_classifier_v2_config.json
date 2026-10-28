@@ -1,0 +1,12 @@
+{
+ "design": "B char 2-5",
+ "C": 1.0,
+ "fitted_on": "sqli_v2_train.csv",
+ "fitted_rows": 6127,
+ "baseline_file": "sqli_v2_calib.csv",
+ "baseline_rows": 540,
+ "fpr_target": 0.01,
+ "cutoff": 0.517075188692596,
+ "sklearn_version": "1.9.1",
+ "created": "2026-10-28T10:38:42"
+}

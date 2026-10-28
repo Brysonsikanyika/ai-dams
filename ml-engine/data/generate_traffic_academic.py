@@ -1,26 +1,32 @@
 """
-AI-DAMS academic traffic generator (v2 architecture).
+AI-DAMS academic traffic generator (v3).
 
-Replaces the earlier e-commerce generator (customers/orders/products)
-with ZUT-style academic tables, and replaces the single shared root
-connection with one real MySQL connection per simulated student. The
-second change is the actual point: Percona's audit_log_filter records
-the connecting account on every query, so twenty distinct accounts
-means the audit log can now genuinely distinguish which student ran
-which query -- not just in this script's own ground_truth.csv, but in
-MySQL's own audit trail, which is what mysql-audit-tailer reads.
+One real MySQL connection per simulated student, so the audit log can tell
+students apart. Every statement carries an event-id comment tag that is also
+written to ground_truth.csv, so a captured query can be matched to its exact
+ground-truth row (see the tagging note below).
 
-ground_truth.csv keeps the same column names used throughout the ML
-pipeline (customer_id, target_customer_id, table, operation,
-is_anomaly, anomaly_type) so train_isolation_forest.py,
-train_lstm_autoencoder.py, and build_risk_aggregator.py all keep
-working unchanged -- customer_id now holds a student_id value instead
-of a numeric customer id, which every downstream script treats as an
-opaque identifier anyway.
+v3 adds, over v2:
+  * a wider benign workload (academic_workload.BENIGN_KINDS: 17 kinds, with
+    JOINs, aggregates, BETWEEN, NOW(), CURDATE(), LIKE, UPDATE, apostrophe
+    names) -- v2 sent only 8 trivial shapes, too few to measure a text
+    classifier's false-positive rate;
+  * SQL-injection probes (academic_workload.INJECTION_PAYLOADS), sent as
+    isolated single events. Each is behaviourally ordinary -- one SELECT on one
+    table at its own timestamp -- so only the query TEXT distinguishes it.
+    That is the case the NLP model exists for; it is not claimed that every
+    real attack looks like this (an automated scanner firing bursts would also
+    trip the behavioural models);
+  * a `detail` column: the benign kind, or the injection payload family.
 
-REQUIRES: schema.sql already applied, and the 20 student MySQL
-accounts already created via mysql-init/03-create-student-users.sh,
-before this script is run.
+ground_truth.csv keeps the column names used by the ML pipeline
+(customer_id, target_customer_id, table, operation, is_anomaly,
+anomaly_type) and appends event_id and detail, so train_isolation_forest.py,
+train_lstm_autoencoder.py and build_risk_aggregator.py read it unchanged.
+customer_id holds a student_id value.
+
+REQUIRES: schema.sql applied by this script, the 20 student MySQL accounts
+(mysql-init/03-create-student-users.sh), and academic_workload.py alongside.
 """
 
 import csv
@@ -30,6 +36,10 @@ import uuid
 from datetime import datetime, timedelta
 
 import pymysql
+
+from academic_workload import (
+    BENIGN_KINDS, COURSES, INJECTION_CONTEXTS, INJECTION_PAYLOADS, LIBRARY_TITLES,
+)
 
 random.seed(7)
 
@@ -41,7 +51,8 @@ STUDENT_ACCOUNT_PASSWORD = os.environ["STUDENT_ACCOUNT_PASSWORD"]
 
 N_STUDENTS = 20
 N_EVENTS = 5000
-ANOMALY_RATE = 0.106
+ANOMALY_RATE = 0.106      # behavioural anomaly bursts, as a share of events
+INJECTION_RATE = 0.03     # injection probes, as a share of events
 SIMULATED_DAYS = 21
 GROUND_TRUTH_PATH = "ground_truth.csv"
 
@@ -49,17 +60,6 @@ PROGRAMMES = [
     "Bachelor of Cyber Security",
     "Bachelor of Computer Science",
     "Bachelor of Information Technology",
-]
-COURSES = [
-    ("CSC301", "Database Security", 3), ("CSC302", "Network Defence", 3),
-    ("CSC210", "Data Structures", 4), ("CSC401", "Machine Learning", 3),
-    ("CSC115", "Introduction to Programming", 4), ("CSC320", "Operating Systems", 3),
-    ("CSC250", "Web Application Security", 3), ("CSC330", "Cryptography", 3),
-]
-FEE_TYPES = ["tuition", "accommodation", "registration"]
-LIBRARY_TITLES = [
-    "Applied Cryptography", "Database System Concepts", "Computer Networking: A Top-Down Approach",
-    "Introduction to Algorithms", "The Web Application Hacker's Handbook", "Operating System Concepts",
 ]
 
 
@@ -71,11 +71,9 @@ def root_connect():
 
 
 def student_connect(student_id):
-    # student_id looks like '2300001' .. '2300020'; the MySQL accounts
-    # created by mysql-init/03-create-student-users.sh are named
-    # student_0001 .. student_0020 -- derive the username from the last
-    # two digits of student_id rather than the student_id itself.
-    username = 'student_00' + student_id[-2:]
+    # student_id looks like '2300001' .. '2300020'; the MySQL accounts created by
+    # mysql-init/03-create-student-users.sh are student_0001 .. student_0020.
+    username = "student_00" + student_id[-2:]
     return pymysql.connect(
         host=MYSQL_HOST, port=MYSQL_PORT, user=username, password=STUDENT_ACCOUNT_PASSWORD,
         database=MYSQL_DB, autocommit=True,
@@ -120,24 +118,21 @@ def random_simulated_timestamp(start):
 
 
 # ---------------------------------------------------------------------------
-# Event tagging (added for the NLP join).
+# Event tagging.
 #
-# Every statement this script sends is prefixed with a SQL comment carrying a
-# unique event id, e.g.  /* evt:3fa9c1d2-17 */ SELECT * FROM grades ...
-# MySQL's audit log records the statement text as received, so the id travels
-# into mysql.query.text via the audit tailer, and the same id is written to
-# ground_truth.csv. That is what lets a captured query be matched to its exact
-# ground-truth row. Matching by time is impossible here: the generator runs for
-# minutes of wall-clock time but labels events with simulated timestamps spread
-# over SIMULATED_DAYS days.
+# Every statement is prefixed with a SQL comment carrying a unique event id,
+# e.g.  /* evt:3fa9c1d2-17 */ SELECT ...   MySQL's audit log records the
+# statement text as received (verified live, including the leading comment), so
+# the id travels into mysql.query.text via the audit tailer, and the same id is
+# written to ground_truth.csv. Matching by time is impossible: the generator runs
+# for minutes of wall-clock time but labels events with simulated timestamps
+# spread over SIMULATED_DAYS days.
 #
 # RUN_ID comes from uuid4 (os.urandom), NOT the random module, so it does not
-# disturb the seeded random sequence that makes the traffic reproducible. It
-# keeps ids from different runs apart: the Kafka topic retains old runs, and a
-# bare counter would let an old run's query text match this run's rows.
-# The join script strips the tag before classification so the classifier sees
-# the query itself, not the comment (a /* */ comment is itself a classic
-# injection-style token and would bias the result).
+# disturb the seeded sequence that makes the traffic reproducible. It keeps runs
+# apart: the Kafka topic retains old runs, and a bare counter would let an old
+# run's query text match this run's rows. The join script strips the tag before
+# classification (a /* */ comment is itself an injection-style token).
 # ---------------------------------------------------------------------------
 RUN_ID = uuid.uuid4().hex[:8]
 _event_counter = 0
@@ -154,35 +149,35 @@ def tagged(sql: str, event_id: str) -> str:
 
 
 def normal_event(student_conn, student_id, writer, sim_ts) -> int:
-    kind = random.choice(["check_grades", "check_fees", "pay_fee", "enroll", "library"])
+    kind = random.choice(list(BENIGN_KINDS))
+    table, op, sql, params_fn = BENIGN_KINDS[kind]
     eid = next_event_id()
     with student_conn.cursor() as cur:
-        if kind == "check_grades":
-            cur.execute(tagged("SELECT * FROM grades WHERE student_id = %s", eid), (student_id,))
-            table, op = "grades", "SELECT"
-        elif kind == "check_fees":
-            cur.execute(tagged("SELECT * FROM fees WHERE student_id = %s", eid), (student_id,))
-            table, op = "fees", "SELECT"
-        elif kind == "pay_fee":
-            cur.execute(
-                tagged("INSERT INTO payments (student_id, amount, payment_date, method) VALUES (%s,%s,%s,%s)", eid),
-                (student_id, round(random.uniform(200, 3000), 2), datetime.now(), random.choice(["mobile_money", "bank_transfer"])),
-            )
-            table, op = "payments", "INSERT"
-        elif kind == "enroll":
-            course_code = random.choice(COURSES)[0]
-            cur.execute(
-                tagged("INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES (%s,%s,%s,%s)", eid),
-                (student_id, course_code, "S2 2026", datetime.now()),
-            )
-            table, op = "enrollments", "INSERT"
-        else:
-            cur.execute(
-                tagged("INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES (%s,%s,%s,%s)", eid),
-                (student_id, random.choice(LIBRARY_TITLES), datetime.now(), (datetime.now() + timedelta(days=14)).date()),
-            )
-            table, op = "library_loans", "INSERT"
-    writer.writerow([sim_ts.isoformat(), student_id, student_id, table, op, 0, "", eid])
+        cur.execute(tagged(sql, eid), params_fn(student_id))
+    writer.writerow([sim_ts.isoformat(), student_id, student_id, table, op, 0, "", eid, kind])
+    return 1
+
+
+def injection_event(connections, student_ids, writer, sim_ts) -> int:
+    """One SQL-injection probe from one student account.
+
+    The payload is formatted into the SQL text directly (no parameter binding),
+    simulating an application that concatenates user input into SQL. Many probes
+    are syntax errors on purpose; the attempt is what the audit log records, so
+    database errors are swallowed.
+    """
+    actor = random.choice(student_ids)
+    family, context, suffix = random.choice(INJECTION_PAYLOADS)
+    table, template = INJECTION_CONTEXTS[context]
+    value = actor + suffix if context == "quoted" else suffix
+    sql = template.format(v=value)
+    eid = next_event_id()
+    try:
+        with connections[actor].cursor() as cur:
+            cur.execute(tagged(sql, eid))
+    except pymysql.MySQLError:
+        pass
+    writer.writerow([sim_ts.isoformat(), actor, actor, table, "SELECT", 1, "sql_injection", eid, family])
     return 1
 
 
@@ -195,8 +190,8 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
     written = 0
 
     if anomaly_type == "bulk_scan":
-        # The one case where target != actor: one student's own MySQL
-        # account querying many OTHER students' grades.
+        # The one case where target != actor: one student's own MySQL account
+        # querying many OTHER students' grades.
         targets = random.sample([s for s in student_ids if s != actor], k=min(8, len(student_ids) - 1))
         eids = []
         with actor_conn.cursor() as cur:
@@ -205,7 +200,7 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                 eids.append(eid)
                 cur.execute(tagged("SELECT * FROM grades WHERE student_id = %s", eid), (target,))
         for target, eid in zip(targets, eids):
-            writer.writerow([sim_ts.isoformat(), actor, target, "grades", "SELECT", 1, anomaly_type, eid])
+            writer.writerow([sim_ts.isoformat(), actor, target, "grades", "SELECT", 1, anomaly_type, eid, ""])
             written += 1
 
     elif anomaly_type == "off_hours_bulk_delete":
@@ -218,7 +213,7 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                     tagged("DELETE FROM payments WHERE student_id = %s ORDER BY id ASC LIMIT 1", eid), (actor,)
                 )
         for eid in eids:
-            writer.writerow([sim_ts.isoformat(), actor, actor, "payments", "DELETE", 1, anomaly_type, eid])
+            writer.writerow([sim_ts.isoformat(), actor, actor, "payments", "DELETE", 1, anomaly_type, eid, ""])
             written += 1
 
     elif anomaly_type == "high_frequency_burst":
@@ -232,7 +227,7 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                     (actor, random.choice(LIBRARY_TITLES), datetime.now(), (datetime.now() + timedelta(days=14)).date()),
                 )
         for eid in eids:
-            writer.writerow([sim_ts.isoformat(), actor, actor, "library_loans", "INSERT", 1, anomaly_type, eid])
+            writer.writerow([sim_ts.isoformat(), actor, actor, "library_loans", "INSERT", 1, anomaly_type, eid, ""])
             written += 1
 
     else:  # unusual_table_combo
@@ -248,7 +243,7 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                 eids.append(eid)
                 cur.execute(tagged(sql, eid), (actor,))
         for (table, _sql), eid in zip(combo, eids):
-            writer.writerow([sim_ts.isoformat(), actor, actor, table, "SELECT", 1, anomaly_type, eid])
+            writer.writerow([sim_ts.isoformat(), actor, actor, table, "SELECT", 1, anomaly_type, eid, ""])
             written += 1
 
     return written
@@ -263,7 +258,7 @@ def main():
     root_conn.close()
 
     print(f"Run id for this generation: {RUN_ID}")
-    print("Opening one MySQL connection per student (this is the attribution fix)...")
+    print("Opening one MySQL connection per student...")
     connections = {sid: student_connect(sid) for sid in student_ids}
 
     start = datetime.now() - timedelta(days=SIMULATED_DAYS)
@@ -271,20 +266,25 @@ def main():
     with open(GROUND_TRUTH_PATH, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(
-            ["simulated_timestamp", "customer_id", "target_customer_id",
-             "table", "operation", "is_anomaly", "anomaly_type", "event_id"]
+            ["simulated_timestamp", "customer_id", "target_customer_id", "table", "operation",
+             "is_anomaly", "anomaly_type", "event_id", "detail"]
         )
 
         generated = 0
-        anomaly_events = 0
+        burst_events = 0
+        injection_events = 0
         anomaly_budget = int(N_EVENTS * ANOMALY_RATE)
         while generated < N_EVENTS:
             sim_ts = random_simulated_timestamp(start)
-            want_anomaly = anomaly_events < anomaly_budget and random.random() < ANOMALY_RATE
+            if random.random() < INJECTION_RATE:
+                generated += injection_event(connections, student_ids, writer, sim_ts)
+                injection_events += 1
+                continue
+            want_anomaly = burst_events < anomaly_budget and random.random() < ANOMALY_RATE
             if want_anomaly:
                 count = anomaly_burst(connections, student_ids, writer, sim_ts)
                 generated += count
-                anomaly_events += count
+                burst_events += count
             else:
                 sid = random.choice(student_ids)
                 generated += normal_event(connections[sid], sid, writer, sim_ts)
@@ -295,11 +295,12 @@ def main():
     for conn in connections.values():
         conn.close()
 
+    anomalous = burst_events + injection_events
     print(
-        f"Done. Wrote {GROUND_TRUTH_PATH}: {generated} total events, "
-        f"{anomaly_events} anomalous ({anomaly_events / generated:.1%}). "
-        f"Each event ran through that student's OWN MySQL account and carries "
-        f"a /* evt:{RUN_ID}-N */ tag for the NLP join."
+        f"Done. Wrote {GROUND_TRUTH_PATH}: {generated} events, {anomalous} anomalous "
+        f"({anomalous / generated:.1%}): {burst_events} behavioural-burst events and "
+        f"{injection_events} SQL-injection probes. Every statement carries a "
+        f"/* evt:{RUN_ID}-N */ tag for the NLP join."
     )
 
 

@@ -15,19 +15,25 @@ The tag is STRIPPED before classification. A /* */ comment is a classic
 injection-style token; leaving it in would make the classifier react to the
 tag instead of the query.
 
-IMPORTANT for reading the result: the generator sends no injection attempts.
-Every query in this traffic is benign, so every query the classifier flags is a
-false positive. The anomaly types in ground_truth.csv (bulk_scan, etc.) are
-behavioural anomalies, not injection attacks. And the traffic is built from a
-small number of query shapes repeated thousands of times, so the number of
-independent test cases is the number of distinct shapes (printed below), not the
-number of rows.
+HOW TO READ THE RESULT. ground_truth.csv marks two different things as
+anomalies. The behavioural anomalies (bulk_scan, high_frequency_burst, ...) have
+perfectly ordinary SQL text, so for THIS classifier they count as benign text.
+Only anomaly_type == "sql_injection" rows carry attack text. The report
+therefore gives (a) a false-positive rate on benign text, broken down by query
+kind, and (b) recall on injection probes, broken down by payload family.
+Two limits to keep in mind: the traffic is synthetic and drawn from a fixed
+catalogue (academic_workload.py), so the number of independent test cases is the
+number of distinct kinds and payloads, not the number of rows; and the injection
+payloads were fixed before any classifier output was seen and must not be edited
+to improve the numbers.
 
 Usage:
     python3 join_nlp_scores.py                  # read Kafka, then analyse
     python3 join_nlp_scores.py --offline FILE   # re-analyse a saved capture
-Requires: ground_truth.csv with an event_id column, and the model files written
-by train_nlp_classifier.py.
+Requires: ground_truth.csv with an event_id column, and the deployed classifier
+written by train_final_nlp_v2.py (nlp_classifier_v2_model.joblib and
+nlp_classifier_v2_config.json). A query is flagged when its probability exceeds the
+cutoff in that config, which was calibrated on the application's own benign baseline.
 """
 
 import argparse
@@ -43,8 +49,8 @@ BOOTSTRAP = "localhost:9092"
 IDLE_SECONDS = 20  # stop reading once no new message arrives for this long
 
 GROUND_TRUTH = "ground_truth.csv"
-MODEL_PATH = "nlp_classifier_model.joblib"
-VECTORIZER_PATH = "nlp_classifier_vectorizer.joblib"
+MODEL_PATH = "nlp_classifier_v2_model.joblib"
+CONFIG_PATH = "nlp_classifier_v2_config.json"
 CAPTURE_DUMP = "captured_query_text.jsonl"
 OUTPUT = "nlp_scores.csv"
 
@@ -94,13 +100,10 @@ def load_captured(path: str, run_ids: set) -> pd.DataFrame:
     return df.drop_duplicates("event_id")
 
 
-def shape(sql: str) -> str:
-    """Collapse literal values so identical query templates group together."""
-    s = re.sub(r"'(?:[^'\\]|\\.)*'", "?", sql)          # quoted strings, incl. escaped quotes
-    return re.sub(r"\b\d+(?:\.\d+)?(?:e\d+)?\b", "?", s)  # numbers, incl. 1234.56e0
+THRESHOLDS = (0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
 
 
-def report(df: pd.DataFrame, expected_total: int) -> None:
+def report(df: pd.DataFrame, expected_total: int, cutoff: float) -> None:
     n = len(df)
     print(f"\nCoverage: {n}/{expected_total} ground-truth events found in the captured query text")
 
@@ -113,26 +116,55 @@ def report(df: pd.DataFrame, expected_total: int) -> None:
         print("  mismatches (customer_id, account seen):")
         print(bad.to_string())
 
-    flagged = int(df["nlp_flagged"].sum())
-    print(f"\nClassifier flagged {flagged}/{n} queries as malicious = {flagged / n:.1%}")
-    print("None of these queries is an injection attempt, so every flag is a false positive.")
+    df = df.assign(detail=df["detail"].fillna(""))
+    is_attack = df["anomaly_type"] == "sql_injection"
+    benign, attack = df[~is_attack], df[is_attack]
+    fp, tp = int(benign["nlp_flagged"].sum()), int(attack["nlp_flagged"].sum())
 
-    print("\nFlag rate if the decision threshold were raised:")
-    for t in (0.5, 0.7, 0.9, 0.99):
-        print(f"  probability > {t:<4}: {(df['nlp_prob'] > t).mean():6.1%}")
+    print(f"\n=== Classifier at its calibrated cutoff (probability > {cutoff:.3f}) ===")
+    print(f"Benign text:    {len(benign):5d} queries, {fp:4d} flagged -> "
+          f"false-positive rate {fp / len(benign):.2%}")
+    print(f"Injection text: {len(attack):5d} queries, {tp:4d} caught  -> "
+          f"recall {tp / len(attack):.1%}")
+    if tp + fp:
+        print(f"Precision: {tp / (tp + fp):.1%} of everything flagged was a real injection probe "
+              f"(this depends on the {len(attack) / n:.1%} attack share of the traffic)")
 
-    df = df.assign(shape=df["sql_text"].map(shape))
-    table = (
-        df.groupby("shape")
+    print("\n=== Trade-off if the cutoff is moved (illustrative) ===")
+    print(" cutoff   false-positive rate   recall")
+    for t in sorted(set(THRESHOLDS) | {cutoff}):
+        mark = "   <- calibrated cutoff" if t == cutoff else ""
+        print(f"  >{t:<5.3f}  {(benign['nlp_prob'] > t).mean():17.2%}   "
+              f"{(attack['nlp_prob'] > t).mean():6.1%}{mark}")
+
+    kinds = (
+        benign.assign(kind=benign["detail"].replace("", "(behavioural-anomaly traffic)"))
+        .groupby("kind")
         .agg(queries=("nlp_flagged", "size"), flagged=("nlp_flagged", "sum"),
-             mean_prob=("nlp_prob", "mean"))
-        .sort_values("queries", ascending=False)
+             mean_prob=("nlp_prob", "mean"), max_prob=("nlp_prob", "max"))
+        .sort_values("max_prob", ascending=False)
     )
-    table["flag_rate"] = table["flagged"] / table["queries"]
-    print(f"\nBy query shape ({len(table)} distinct shapes in {n} queries):")
-    with pd.option_context("display.max_colwidth", 95, "display.width", 200):
-        print(table[["queries", "flagged", "flag_rate", "mean_prob"]]
-              .to_string(float_format=lambda x: f"{x:.3f}"))
+    print(f"\n=== Benign text by query kind ({len(kinds)} kinds), sorted by highest probability ===")
+    print(kinds.to_string(float_format=lambda x: f"{x:.3f}"))
+
+    fams = (
+        attack.groupby("detail")
+        .agg(probes=("nlp_flagged", "size"), caught=("nlp_flagged", "sum"),
+             mean_prob=("nlp_prob", "mean"), min_prob=("nlp_prob", "min"))
+    )
+    fams["recall"] = fams["caught"] / fams["probes"]
+    print(f"\n=== Injection probes by family ({len(fams)} families) ===")
+    print(fams[["probes", "caught", "recall", "mean_prob", "min_prob"]]
+          .sort_values("recall").to_string(float_format=lambda x: f"{x:.3f}"))
+
+    missed = attack[attack["nlp_flagged"] == 0].drop_duplicates("sql_text")
+    print(f"\nDistinct injection queries the classifier MISSED: {len(missed)}")
+    for r in missed.sort_values("nlp_prob").head(12).itertuples():
+        print(f"  p={r.nlp_prob:.3f} [{r.detail}] {r.sql_text[:110]}")
+    wrong = benign[benign["nlp_flagged"] == 1].drop_duplicates("sql_text")
+    print(f"\nDistinct benign queries the classifier FLAGGED: {len(wrong)}")
+    for r in wrong.sort_values("nlp_prob", ascending=False).head(8).itertuples():
+        print(f"  p={r.nlp_prob:.3f} [{r.detail or r.anomaly_type}] {r.sql_text[:110]}")
 
 
 def main() -> None:
@@ -142,6 +174,8 @@ def main() -> None:
     args = parser.parse_args()
 
     gt = pd.read_csv(GROUND_TRUTH)
+    if "detail" not in gt.columns:
+        gt["detail"] = ""
     if "event_id" not in gt.columns:
         sys.exit("ground_truth.csv has no event_id column. Regenerate it with the "
                  "tagged generate_traffic_academic.py first.")
@@ -163,15 +197,17 @@ def main() -> None:
 
     df = gt.merge(captured, on="event_id", how="inner")
     model = joblib.load(MODEL_PATH)
-    vectorizer = joblib.load(VECTORIZER_PATH)
-    features = vectorizer.transform(df["sql_text"])
-    df["nlp_prob"] = model.predict_proba(features)[:, list(model.classes_).index(1)]
-    df["nlp_flagged"] = model.predict(features)
+    config = json.load(open(CONFIG_PATH))
+    cutoff = float(config["cutoff"])
+    print(f"Classifier: design {config['design']}, cutoff {cutoff:.4f} calibrated on "
+          f"{config['baseline_rows']} benign baseline queries ({config['baseline_file']})")
+    df["nlp_prob"] = model.predict_proba(df["sql_text"])[:, 1]
+    df["nlp_flagged"] = (df["nlp_prob"] > cutoff).astype(int)
 
-    report(df, expected_total=len(gt))
+    report(df, expected_total=len(gt), cutoff=cutoff)
 
     keep = ["event_id", "simulated_timestamp", "customer_id", "target_customer_id", "table",
-            "operation", "is_anomaly", "anomaly_type", "account", "sql_text",
+            "operation", "is_anomaly", "anomaly_type", "detail", "account", "sql_text",
             "nlp_prob", "nlp_flagged"]
     df[keep].to_csv(OUTPUT, index=False)
     print(f"\nSaved {OUTPUT}")
