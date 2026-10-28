@@ -62,6 +62,15 @@ app.get('/api/risk-scores', requireAuth, (req, res) => {
   fs.createReadStream(csvPath).pipe(res)
 })
 
+app.get('/api/alerts', requireAuth, (req, res) => {
+  const jsonPath = path.join(__dirname, 'data', 'alerts.json')
+  if (!fs.existsSync(jsonPath)) {
+    return res.status(404).json({ error: 'alerts.json not found in dashboard-server/data/' })
+  }
+  res.type('application/json')
+  fs.createReadStream(jsonPath).pipe(res)
+})
+
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }))
 
 app.listen(PORT, () => {

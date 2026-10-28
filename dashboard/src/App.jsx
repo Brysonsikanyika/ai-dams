@@ -5,6 +5,7 @@ import {
   CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts'
 import Login from './Login.jsx'
+import AlertExplanations from './AlertExplanations.jsx'
 import { fetchRiskScoresCsv } from './api'
 import './App.css'
 
@@ -403,6 +404,8 @@ export default function App() {
           </tbody>
         </table>
       </div>
+
+      <AlertExplanations token={token} />
 
       <DetailPanel row={selectedRow} onClose={() => setSelectedRow(null)} />
     </div>
