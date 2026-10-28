@@ -16,6 +16,7 @@ customer's own event history.
 
 import numpy as np
 import pandas as pd
+from behaviour_features import engineer, feature_columns, LSTM_NUMERIC
 from sklearn.preprocessing import StandardScaler
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -25,22 +26,8 @@ WINDOW_SIZE = 10
 
 
 def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
-    df = df.sort_values(["customer_id", "simulated_timestamp"]).reset_index(drop=True)
-    df["hour_of_day"] = df["simulated_timestamp"].dt.hour
-    df["day_of_week"] = df["simulated_timestamp"].dt.dayofweek
-    df["is_night"] = ((df["hour_of_day"] < 6) | (df["hour_of_day"] >= 22)).astype(int)
-    df["events_at_exact_timestamp"] = df.groupby(
-        ["customer_id", "simulated_timestamp"]
-    )["table"].transform("size")
-    # NEW: distinct targets touched by this actor at this exact moment --
-    # 1 everywhere except bulk_scan, where it spikes. See
-    # train_isolation_forest.py's comment for the full rationale; this is
-    # the same fix, applied identically to keep both models comparable.
-    df["distinct_targets_at_exact_timestamp"] = df.groupby(
-        ["customer_id", "simulated_timestamp"]
-    )["target_customer_id"].transform("nunique")
-    df = pd.get_dummies(df, columns=["table", "operation"], prefix=["table", "op"])
-    return df
+    # v4: trailing-window rate features + operation and table one-hots
+    return engineer(df, tables=True)
 
 
 def build_windows(df: pd.DataFrame, feature_cols, window_size: int):
@@ -103,14 +90,9 @@ def main():
 
     df = engineer_features(raw.copy())
 
-    feature_cols = [
-        c for c in df.columns
-        if c.startswith("table_") or c.startswith("op_")
-        or c in ("hour_of_day", "day_of_week", "is_night", "events_at_exact_timestamp",
-                  "distinct_targets_at_exact_timestamp")
-    ]
+    feature_cols = feature_columns(df, tables=True)
 
-    numeric_cols = ["hour_of_day", "day_of_week", "events_at_exact_timestamp"]
+    numeric_cols = list(LSTM_NUMERIC)
     scaler = StandardScaler()
     df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
 

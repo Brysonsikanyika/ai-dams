@@ -1,5 +1,16 @@
 """
-AI-DAMS academic traffic generator (v3).
+AI-DAMS academic traffic generator (v4: realistic timing).
+
+v4 changes (timestamps only; the SQL sent is unchanged):
+  * bursts are spread over seconds, one timestamp per statement, instead of one
+    shared timestamp (a shared timestamp was an artifact that handed the behavioural
+    models the answer);
+  * all timestamps are whole seconds, like a real audit log;
+  * benign traffic follows working hours and has natural concurrency (a page load
+    firing 2-4 queries within about 2 seconds);
+  * off-hours deletes really happen at night.
+
+The v3 description follows.
 
 One real MySQL connection per simulated student, so the audit log can tell
 students apart. Every statement carries an event-id comment tag that is also
@@ -109,12 +120,22 @@ def seed_students_and_courses(conn):
     return student_ids
 
 
-def random_simulated_timestamp(start):
-    return start + timedelta(
-        days=random.uniform(0, SIMULATED_DAYS),
-        hours=random.uniform(0, 24),
-        seconds=random.uniform(0, 60),
-    )
+HOUR_WEIGHTS = [1] * 6 + [4, 8, 10, 10, 10, 8, 8, 10, 10, 8, 6] + [3, 3, 2, 2, 1, 1, 1]  # 24 hours, quiet at night
+
+
+def random_simulated_timestamp(start, night=False):
+    """A whole-second timestamp, working-hours-weighted unless night=True."""
+    day = random.randint(0, SIMULATED_DAYS - 1)
+    hour = random.randint(0, 5) if night else random.choices(range(24), weights=HOUR_WEIGHTS)[0]
+    base = start.replace(hour=0, minute=0, second=0, microsecond=0)
+    return base + timedelta(days=day, hours=hour, minutes=random.randint(0, 59), seconds=random.randint(0, 59))
+
+
+def spread(sim_ts, n, min_span, max_span):
+    """n non-decreasing whole-second timestamps from sim_ts, spread over min..max seconds."""
+    span = random.uniform(min_span, max_span)
+    offsets = sorted(random.uniform(0, span) for _ in range(n))
+    return [sim_ts + timedelta(seconds=int(o)) for o in offsets]
 
 
 # ---------------------------------------------------------------------------
@@ -199,8 +220,8 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                 eid = next_event_id()
                 eids.append(eid)
                 cur.execute(tagged("SELECT * FROM grades WHERE student_id = %s", eid), (target,))
-        for target, eid in zip(targets, eids):
-            writer.writerow([sim_ts.isoformat(), actor, target, "grades", "SELECT", 1, anomaly_type, eid, ""])
+        for target, eid, ts in zip(targets, eids, spread(sim_ts, len(eids), 5, 60)):
+            writer.writerow([ts.isoformat(), actor, target, "grades", "SELECT", 1, anomaly_type, eid, ""])
             written += 1
 
     elif anomaly_type == "off_hours_bulk_delete":
@@ -212,8 +233,9 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                 cur.execute(
                     tagged("DELETE FROM payments WHERE student_id = %s ORDER BY id ASC LIMIT 1", eid), (actor,)
                 )
-        for eid in eids:
-            writer.writerow([sim_ts.isoformat(), actor, actor, "payments", "DELETE", 1, anomaly_type, eid, ""])
+        night_ts = random_simulated_timestamp(sim_ts.replace(hour=0, minute=0, second=0), night=True)
+        for eid, ts in zip(eids, spread(night_ts, len(eids), 10, 120)):
+            writer.writerow([ts.isoformat(), actor, actor, "payments", "DELETE", 1, anomaly_type, eid, ""])
             written += 1
 
     elif anomaly_type == "high_frequency_burst":
@@ -226,8 +248,8 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                     tagged("INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES (%s,%s,%s,%s)", eid),
                     (actor, random.choice(LIBRARY_TITLES), datetime.now(), (datetime.now() + timedelta(days=14)).date()),
                 )
-        for eid in eids:
-            writer.writerow([sim_ts.isoformat(), actor, actor, "library_loans", "INSERT", 1, anomaly_type, eid, ""])
+        for eid, ts in zip(eids, spread(sim_ts, len(eids), 20, 90)):
+            writer.writerow([ts.isoformat(), actor, actor, "library_loans", "INSERT", 1, anomaly_type, eid, ""])
             written += 1
 
     else:  # unusual_table_combo
@@ -242,8 +264,8 @@ def anomaly_burst(connections, student_ids, writer, sim_ts) -> int:
                 eid = next_event_id()
                 eids.append(eid)
                 cur.execute(tagged(sql, eid), (actor,))
-        for (table, _sql), eid in zip(combo, eids):
-            writer.writerow([sim_ts.isoformat(), actor, actor, table, "SELECT", 1, anomaly_type, eid, ""])
+        for (table, _sql), eid, ts in zip(combo, eids, spread(sim_ts, len(eids), 3, 30)):
+            writer.writerow([ts.isoformat(), actor, actor, table, "SELECT", 1, anomaly_type, eid, ""])
             written += 1
 
     return written
@@ -288,6 +310,10 @@ def main():
             else:
                 sid = random.choice(student_ids)
                 generated += normal_event(connections[sid], sid, writer, sim_ts)
+                if random.random() < 0.12:  # natural concurrency: one page firing several queries
+                    for _ in range(random.randint(1, 3)):
+                        generated += normal_event(connections[sid], sid, writer,
+                                                  sim_ts + timedelta(seconds=random.randint(0, 2)))
 
             if generated % 500 < 5:
                 print(f"...{generated}/{N_EVENTS} events generated")

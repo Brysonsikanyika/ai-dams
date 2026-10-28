@@ -38,6 +38,7 @@ weighting Isolation Forest down for the anomaly types it struggles with)
 
 import numpy as np
 import pandas as pd
+from behaviour_features import engineer, feature_columns, LSTM_NUMERIC
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 
@@ -51,13 +52,7 @@ TIME_BUCKET = "15min"
 
 def run_isolation_forest(raw: pd.DataFrame) -> pd.DataFrame:
     df = if_engineer_features(raw.copy())
-    feature_cols = [
-        c for c in df.columns
-        if c.startswith("table_") or c.startswith("op_")
-        or c in ("hour_of_day", "day_of_week", "is_night", "events_last_hour",
-                  "distinct_tables_last_hour", "events_at_exact_timestamp",
-                  "distinct_targets_at_exact_timestamp")
-    ]
+    feature_cols = feature_columns(df, tables=False)
     X = df[feature_cols].fillna(0)
 
     model = IsolationForest(n_estimators=200, contamination=0.11, random_state=42)
@@ -79,15 +74,9 @@ def run_lstm_autoencoder(raw: pd.DataFrame) -> pd.DataFrame:
         WINDOW_SIZE,
     )
     df = lstm_engineer_features(raw.copy())
-    feature_cols = [
-        c for c in df.columns
-        if c.startswith("table_") or c.startswith("op_")
-        or c in ("hour_of_day", "day_of_week", "is_night", "events_at_exact_timestamp",
-                  "distinct_targets_at_exact_timestamp")
-    ]
+    feature_cols = feature_columns(df, tables=True)
 
-    numeric_cols = ["hour_of_day", "day_of_week", "events_at_exact_timestamp",
-                     "distinct_targets_at_exact_timestamp"]
+    numeric_cols = list(LSTM_NUMERIC)
     scaler = StandardScaler()
     df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
 

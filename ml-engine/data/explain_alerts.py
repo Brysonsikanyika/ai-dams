@@ -43,6 +43,7 @@ import sys
 import joblib
 import numpy as np
 import pandas as pd
+from behaviour_features import engineer, feature_columns, LSTM_NUMERIC
 import shap
 from sklearn.ensemble import IsolationForest
 
@@ -73,8 +74,10 @@ PATTERNS = [
 ]
 
 FEATURE_WORDS = {
-    "events_at_exact_timestamp": lambda v: f"{int(v)} statements were issued at the same instant",
-    "distinct_targets_at_exact_timestamp": lambda v: f"it touched {int(v)} different student records at once",
+    "events_last_10s": lambda v: f"{int(v)} statements in the previous 10 seconds",
+    "events_last_60s": lambda v: f"{int(v)} statements in the previous minute",
+    "distinct_targets_last_60s": lambda v: f"it touched {int(v)} different student records within a minute",
+    "distinct_tables_last_60s": lambda v: f"it spanned {int(v)} different tables within a minute",
     "events_last_hour": lambda v: f"{int(v)} statements in the previous hour",
     "distinct_tables_last_hour": lambda v: f"{int(v)} different tables in the previous hour",
     "is_night": lambda v: "the activity was outside normal hours" if v else "it ran during normal hours",
@@ -104,11 +107,7 @@ def describe_feature(name: str, value: float) -> str:
 def fit_isolation_forest(raw: pd.DataFrame):
     """Same model as build_risk_aggregator.run_isolation_forest (same seed/params)."""
     df = if_engineer_features(raw.copy())
-    cols = [c for c in df.columns
-            if c.startswith("table_") or c.startswith("op_")
-            or c in ("hour_of_day", "day_of_week", "is_night", "events_last_hour",
-                     "distinct_tables_last_hour", "events_at_exact_timestamp",
-                     "distinct_targets_at_exact_timestamp")]
+    cols = feature_columns(df, tables=False)
     X = df[cols].fillna(0).astype(float)
     model = IsolationForest(n_estimators=200, contamination=0.11, random_state=42).fit(X)
     df["if_raw_score"] = -model.decision_function(X)
