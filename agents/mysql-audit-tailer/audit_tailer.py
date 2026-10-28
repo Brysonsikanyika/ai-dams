@@ -37,6 +37,19 @@ against performance_schema.threads, keyed by CONNECTION_ID, using a
 dedicated minimal-privilege MySQL account (see
 mysql-init/04-create-tailer-account.sh). This only needs the 'query'
 class to remain enabled exactly as it always was.
+
+FAILED STATEMENTS (v3): the 'query' class only fires for statements that PARSE.
+A syntax error, or a stacked query when multi-statement execution is off, produces
+no 'Query Start' record at all, so every such injection probe was invisible
+(measured: a valid statement left 2 audit lines, two kinds of syntax error left 0;
+all 9 stacked probes of a 5000-event run never arrived). The audit filter must
+therefore also include the 'general' class, whose 'Query' records carry a
+non-zero STATUS (the MySQL error number, e.g. 1064) for failed statements, with the
+full text and a <USER> field. Observed on Percona Server 8.4: a valid statement
+yields 3 identical general records, a failed one yields 2 consecutive identical
+ones. This tailer publishes failed statements once, takes their account from
+<USER> (no lookup needed), and does not re-publish a statement that already went
+out at 'Query Start' (a statement that parsed but failed at runtime).
 """
 
 import json
@@ -46,6 +59,7 @@ import socket
 import time
 from datetime import datetime, timezone
 import xml.etree.ElementTree as ET
+from collections import OrderedDict
 
 import pymysql
 from kafka import KafkaProducer
@@ -127,34 +141,109 @@ def wait_for_file(path: str) -> None:
         time.sleep(5)
 
 
+def extract_account(raw_user):
+    """The audit <USER> field looks like 'student_0001[student_0001] @  [172.19.0.1]';
+    the account name is the part before the first '['."""
+    if not raw_user:
+        return None
+    return raw_user.split("[")[0].strip() or None
+
+
 def parse_record(xml_fragment: str):
-    """Returns a dict for a 'Query Start' record, or None for anything
-    else (Query Status End duplicates, or a record type this tailer
-    doesn't need)."""
+    """Returns a dict (with a 'kind') for a record this tailer publishes, else None.
+
+    kind 'start'  -- 'Query Start' from the audit 'query' class (the statement parsed).
+    kind 'failed' -- 'Query' from the audit 'general' class with STATUS != 0 (the statement
+                     failed; for syntax errors this is the only record there is).
+    Everything else (Query Status End, successful general records, ...) is ignored."""
     try:
         root = ET.fromstring(xml_fragment)
     except ET.ParseError:
         return None
 
-    if root.findtext("NAME") != "Query Start":
-        return None
-
+    name = root.findtext("NAME")
     sql_text = root.findtext("SQLTEXT")
-    if not sql_text:
+    if not sql_text or name not in ("Query Start", "Query"):
         return None
 
-    return {
+    base = {
         "command_class": root.findtext("COMMAND_CLASS"),
         "sql_text": sql_text,
         "connection_id": root.findtext("CONNECTION_ID"),
         "record_id": root.findtext("RECORD_ID"),
     }
+    if name == "Query Start":
+        return {"kind": "start", **base}
+    try:
+        status = int(root.findtext("STATUS") or 0)
+    except ValueError:
+        return None
+    if status == 0:
+        return None
+    return {"kind": "failed", "status": status, "user": root.findtext("USER"), **base}
+
+
+class StatementTracker:
+    """Decides which 'failed' records are worth publishing.
+
+    A failure arrives as 2 identical records: publish the first, skip its partner. The
+    partner is tracked PER CONNECTION (a connection runs one statement at a time), not by
+    record number, because records from concurrent connections interleave in the log.
+    Skipping 'anything identical' would wrongly merge two real failures in a row, so the
+    records on a connection alternate first / partner / first / partner.
+    A statement that already went out at 'Query Start' parsed fine and failed later
+    (duplicate key, ...): its failure record is skipped so it is not published twice."""
+
+    def __init__(self, limit: int = 20000):
+        self.pending = OrderedDict()   # (connection_id, sql_text) -> published at Query Start, not yet failed
+        self.partner = OrderedDict()   # connection_id -> (sql_text, status) whose second record is expected next
+        self.limit = limit
+
+    def note_start(self, rec) -> None:
+        key = (rec["connection_id"], rec["sql_text"])
+        self.pending[key] = self.pending.get(key, 0) + 1
+        self.pending.move_to_end(key)
+        while len(self.pending) > self.limit:
+            self.pending.popitem(last=False)
+
+    def should_publish_failed(self, rec) -> bool:
+        conn, what = rec["connection_id"], (rec["sql_text"], rec["status"])
+        if self.partner.get(conn) == what:
+            del self.partner[conn]     # second copy of a failure already handled
+            return False
+        self.partner[conn] = what
+        self.partner.move_to_end(conn)
+        while len(self.partner) > self.limit:
+            self.partner.popitem(last=False)
+        start_key = (rec["connection_id"], rec["sql_text"])
+        if self.pending.get(start_key, 0) > 0:
+            self.pending[start_key] -= 1   # already published when its Query Start was seen
+            return False
+        return True
+
+
+def handle_buffer(buffer, producer, introspect_conn, account_cache, tracker) -> str:
+    """Process every complete record in the buffer; return the unparsed remainder."""
+    last_end = 0
+    for match in RECORD_RE.finditer(buffer):
+        record = parse_record(match.group(0))
+        if record and record["kind"] == "start":
+            tracker.note_start(record)
+            account = resolve_account(introspect_conn, record["connection_id"], account_cache)
+            payload = {k: v for k, v in record.items() if k != "kind"}
+            emit(producer, {**payload, "account": account})
+        elif record and record["kind"] == "failed" and tracker.should_publish_failed(record):
+            payload = {k: v for k, v in record.items() if k not in ("kind", "user")}
+            emit(producer, {**payload, "account": extract_account(record["user"]), "statement_failed": True})
+        last_end = match.end()
+    return buffer[last_end:]   # keep only the unparsed remainder
 
 
 def run(producer: KafkaProducer, introspect_conn) -> None:
     wait_for_file(AUDIT_LOG_PATH)
 
     account_cache = {}  # connection_id -> account (or None), see resolve_account()
+    tracker = StatementTracker()
 
     with open(AUDIT_LOG_PATH, "r", encoding="utf-8", errors="replace") as f:
         f.seek(0, os.SEEK_END)  # only new records from here -- no replay of history
@@ -169,15 +258,7 @@ def run(producer: KafkaProducer, introspect_conn) -> None:
         while True:
             chunk = f.read()
             if chunk:
-                buffer += chunk
-                last_end = 0
-                for match in RECORD_RE.finditer(buffer):
-                    record = parse_record(match.group(0))
-                    if record:
-                        account = resolve_account(introspect_conn, record["connection_id"], account_cache)
-                        emit(producer, {**record, "account": account})
-                    last_end = match.end()
-                buffer = buffer[last_end:]  # keep only the unparsed remainder
+                buffer = handle_buffer(buffer + chunk, producer, introspect_conn, account_cache, tracker)
             else:
                 time.sleep(POLL_INTERVAL_SECONDS)
 

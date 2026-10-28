@@ -43,7 +43,7 @@ echo "[init] setting event_mode=FULL -- default REDUCED mode disables the 'query
 mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SET PERSIST audit_log_filter.event_mode = 'FULL';"
 
 echo "[init] creating scoped filter (query class -- NOT nesting an 'event' sub-filter, which produces 'Wrong argument: incorrect rule definition')..."
-mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SELECT audit_log_filter_set_filter('aidams_query_filter', '{\"filter\": {\"class\": {\"name\": \"query\"}}}');"
+mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SELECT audit_log_filter_set_filter('aidams_query_filter', '{\"filter\": {\"class\": [{\"name\": \"query\"}, {\"name\": \"general\"}]}}');"
 
 echo "[init] assigning filter to all users..."
 mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "SELECT audit_log_filter_set_user('%', 'aidams_query_filter');"
