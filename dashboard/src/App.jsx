@@ -6,6 +6,7 @@ import {
 } from 'recharts'
 import Login from './Login.jsx'
 import AlertExplanations from './AlertExplanations.jsx'
+import LiveAlerts from './LiveAlerts.jsx'
 import { fetchRiskScoresCsv } from './api'
 import './App.css'
 
@@ -405,6 +406,7 @@ export default function App() {
         </table>
       </div>
 
+      <LiveAlerts token={token} />
       <AlertExplanations token={token} />
 
       <DetailPanel row={selectedRow} onClose={() => setSelectedRow(null)} />

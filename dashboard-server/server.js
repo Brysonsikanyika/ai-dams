@@ -106,6 +106,20 @@ app.get('/api/audit', requireAuth, requireRole('admin'), (req, res) => {
   res.json(entries)
 })
 
+const LIVE_ALERTS_PATH = process.env.LIVE_ALERTS_PATH || path.join(__dirname, '..', 'ml-engine', 'data', 'live_alerts.jsonl')
+
+app.get('/api/live-alerts', requireAuth, (req, res) => {
+  audit(req, req.user.sub, 'view_live_alerts', 'ok')
+  if (!fs.existsSync(LIVE_ALERTS_PATH)) {
+    return res.json([])
+  }
+  const lines = fs.readFileSync(LIVE_ALERTS_PATH, 'utf8').split('\n').filter(Boolean).slice(-50)
+  const alerts = lines.map((line) => {
+    try { return JSON.parse(line) } catch (err) { return null }
+  }).filter(Boolean).reverse()
+  res.json(alerts)
+})
+
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }))
 
 app.listen(PORT, () => {
