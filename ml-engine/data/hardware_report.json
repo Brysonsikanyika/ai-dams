@@ -1,0 +1,97 @@
+{
+ "system": {
+  "python": "3.14.7",
+  "platform": "Linux-7.1.5+kali-amd64-x86_64-with-glibc2.43",
+  "cpu_count": 8,
+  "cpu_model": "Intel(R) Core(TM) i5-10310U CPU @ 1.70GHz",
+  "ram_gb": 23.3,
+  "numpy": "2.5.3",
+  "pandas": "3.0.6",
+  "sklearn": "1.9.1",
+  "tensorflow": "2.22.0rc0",
+  "shap": "0.54.1"
+ },
+ "threads_limit": "none",
+ "stages": {
+  "features": {
+   "events": 5000,
+   "feature_time_s": 0.929,
+   "per_event_ms": 0.1858,
+   "baseline_rss_mb": 79,
+   "peak_rss_mb": 80
+  },
+  "if": {
+   "train_rows": 5000,
+   "train_s": 0.78,
+   "batch_score_s": 0.112,
+   "events_per_s_batch": 44567,
+   "single_event": {
+    "median_ms": 32.456,
+    "p95_ms": 50.172,
+    "n": 300
+   },
+   "baseline_rss_mb": 172,
+   "peak_rss_mb": 177
+  },
+  "lstm": {
+   "train_windows": 2381,
+   "epochs": 20,
+   "train_s": 27.9,
+   "batch_score_s": 2.05,
+   "windows_per_s_batch": 2347,
+   "single_window": {
+    "median_ms": 134.957,
+    "p95_ms": 262.814,
+    "n": 200
+   },
+   "model_file_mb": 0.22,
+   "baseline_rss_mb": 723,
+   "import_rss_mb": 150,
+   "peak_rss_mb": 857
+  },
+  "nlp": {
+   "model_file_mb": 1.84,
+   "load_s": 2.2,
+   "batch_score_s": 2.02,
+   "queries_per_s_batch": 2476,
+   "single_query": {
+    "median_ms": 1.913,
+    "p95_ms": 3.134,
+    "n": 500
+   },
+   "baseline_rss_mb": 185,
+   "peak_rss_mb": 289,
+   "train_rows": 6127,
+   "train_s": 10.3
+  },
+  "shap": {
+   "explainer_build_s": 2.51,
+   "per_alert_explanation": {
+    "median_ms": 5.706,
+    "p95_ms": 9.059,
+    "n": 100
+   },
+   "baseline_rss_mb": 186,
+   "peak_rss_mb": 189
+  },
+  "docker": {
+   "containers": [
+    {
+     "name": "aidams-mysql-audit-tailer",
+     "cpu": "0.00%",
+     "mem": "30.14MiB / 23.25GiB"
+    },
+    {
+     "name": "aidams-kafka",
+     "cpu": "183.42%",
+     "mem": "1.064GiB / 23.25GiB"
+    },
+    {
+     "name": "aidams-mysql",
+     "cpu": "0.93%",
+     "mem": "713MiB / 23.25GiB"
+    }
+   ]
+  }
+ }
+}

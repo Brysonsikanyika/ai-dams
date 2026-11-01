@@ -3,8 +3,8 @@ AI-DAMS academic workload definitions.
 
 Used by generate_traffic_academic.py. Two things live here:
 
-1. BENIGN_KINDS -- the catalogue of legitimate queries a ZUT-style student
-   portal would send (modelled on what sms.zut.ac.zm shows: fee totals,
+1. BENIGN_KINDS -- the catalogue of legitimate queries a generic university
+   student portal would send (fee totals,
    payment history, results by period, course registration, library). The
    first version of the generator sent only 8 trivial query shapes, which is
    too few to say anything about a text classifier's false-positive rate.

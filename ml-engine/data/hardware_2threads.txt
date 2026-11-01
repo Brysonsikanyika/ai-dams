@@ -1,0 +1,32 @@
+{
+ "python": "3.14.7",
+ "platform": "Linux-7.1.5+kali-amd64-x86_64-with-glibc2.43",
+ "cpu_count": 8,
+ "cpu_model": "Intel(R) Core(TM) i5-10310U CPU @ 1.70GHz",
+ "ram_gb": 23.3,
+ "numpy": "2.5.3",
+ "pandas": "3.0.6",
+ "sklearn": "1.9.1",
+ "tensorflow": "2.22.0-rc0",
+ "shap": "0.54.1"
+}
+
+== features ==
+{"events": 5000, "feature_time_s": 0.496, "per_event_ms": 0.0992, "baseline_rss_mb": 732, "peak_rss_mb": 732}
+
+== if ==
+{"train_rows": 5000, "train_s": 0.75, "batch_score_s": 0.115, "events_per_s_batch": 43367, "single_event": {"median_ms": 33.764, "p95_ms": 57.622, "n": 300}, "baseline_rss_mb": 732, "peak_rss_mb": 732}
+
+== lstm ==
+{"train_windows": 2381, "epochs": 20, "train_s": 26.1, "batch_score_s": 2.11, "windows_per_s_batch": 2286, "single_window": {"median_ms": 140.811, "p95_ms": 282.201, "n": 200}, "model_file_mb": 0.22, "baseline_rss_mb": 732, "import_rss_mb": 732, "peak_rss_mb": 855}
+
+== nlp ==
+{"model_file_mb": 1.84, "load_s": 2.57, "batch_score_s": 2.04, "queries_per_s_batch": 2454, "single_query": {"median_ms": 1.923, "p95_ms": 2.765, "n": 500}, "baseline_rss_mb": 732, "peak_rss_mb": 732, "train_rows": 6127, "train_s": 7.8}
+
+== shap ==
+{"explainer_build_s": 3.56, "per_alert_explanation": {"median_ms": 5.739, "p95_ms": 9.37, "n": 100}, "baseline_rss_mb": 732, "peak_rss_mb": 732}
+
+== docker ==
+{"containers": [{"name": "aidams-mysql-audit-tailer", "cpu": "0.01%", "mem": "30.14MiB / 23.25GiB"}, {"name": "aidams-kafka", "cpu": "1.65%", "mem": "1.022GiB / 23.25GiB"}, {"name": "aidams-mysql", "cpu": "1.03%", "mem": "713.3MiB / 23.25GiB"}]}
+
+Saved hardware_report.json

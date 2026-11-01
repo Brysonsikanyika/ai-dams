@@ -13,5 +13,6 @@
   },
   "[yaml]": {
     "editor.tabSize": 2
-  }
+  },
+  "python.terminal.useEnvFile": true
 }

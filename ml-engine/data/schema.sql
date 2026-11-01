@@ -1,9 +1,8 @@
 -- AI-DAMS academic schema, replacing the earlier e-commerce workload
--- (customers/orders/products) with ZUT-style tables. Field choices are
--- grounded in the actual ZUT Student Management System dashboard
--- (sms.zut.ac.zm): the fees/payments split, "Active" vs "Overall"
--- totals, and the academic_period concept (e.g. "S2 2026") all mirror
--- what that real system exposes.
+-- (customers/orders/products) with generic university tables. The schema
+-- was designed by the author: a fees/payments split, "Active" vs "Overall"
+-- totals, and an academic_period concept (e.g. "S2 2026"). No data or
+-- documentation from any institution's system was used.
 
 DROP TABLE IF EXISTS library_loans;
 DROP TABLE IF EXISTS payments;
