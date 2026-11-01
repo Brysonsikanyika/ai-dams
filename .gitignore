@@ -35,3 +35,4 @@ ml-engine/data/alerts.json
 ml-engine/data/alerts.csv
 dashboard-server/data/alerts.json
 dashboard-server/audit.log
+ml-engine/data/live_alerts.jsonl
