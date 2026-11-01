@@ -1,0 +1,167 @@
+query_text,label,source
+show databases,0,meta:show_databases
+SHOW DATABASES,0,meta:show_databases
+show tables,0,meta:show_tables
+SHOW TABLES,0,meta:show_tables
+show full tables,0,meta:show_tables
+SHOW FULL TABLES,0,meta:show_tables
+show tables from aidams_demo,0,meta:show_tables
+SHOW TABLES FROM AIDAMS_DEMO,0,meta:show_tables
+show columns from students,0,meta:show_columns
+SHOW COLUMNS FROM STUDENTS,0,meta:show_columns
+show columns from grades,0,meta:show_columns
+SHOW COLUMNS FROM GRADES,0,meta:show_columns
+show columns from courses,0,meta:show_columns
+SHOW COLUMNS FROM COURSES,0,meta:show_columns
+show columns from fees,0,meta:show_columns
+SHOW COLUMNS FROM FEES,0,meta:show_columns
+show columns from enrolments,0,meta:show_columns
+SHOW COLUMNS FROM ENROLMENTS,0,meta:show_columns
+show columns from library_loans,0,meta:show_columns
+SHOW COLUMNS FROM LIBRARY_LOANS,0,meta:show_columns
+show columns from payments,0,meta:show_columns
+SHOW COLUMNS FROM PAYMENTS,0,meta:show_columns
+show columns from staff,0,meta:show_columns
+SHOW COLUMNS FROM STAFF,0,meta:show_columns
+show columns from modules,0,meta:show_columns
+SHOW COLUMNS FROM MODULES,0,meta:show_columns
+show columns from timetable,0,meta:show_columns
+SHOW COLUMNS FROM TIMETABLE,0,meta:show_columns
+show full columns from students,0,meta:show_columns
+SHOW FULL COLUMNS FROM STUDENTS,0,meta:show_columns
+show full columns from grades,0,meta:show_columns
+SHOW FULL COLUMNS FROM GRADES,0,meta:show_columns
+show full columns from courses,0,meta:show_columns
+SHOW FULL COLUMNS FROM COURSES,0,meta:show_columns
+show full columns from fees,0,meta:show_columns
+SHOW FULL COLUMNS FROM FEES,0,meta:show_columns
+show full columns from enrolments,0,meta:show_columns
+SHOW FULL COLUMNS FROM ENROLMENTS,0,meta:show_columns
+show full columns from library_loans,0,meta:show_columns
+SHOW FULL COLUMNS FROM LIBRARY_LOANS,0,meta:show_columns
+show full columns from payments,0,meta:show_columns
+SHOW FULL COLUMNS FROM PAYMENTS,0,meta:show_columns
+show full columns from staff,0,meta:show_columns
+SHOW FULL COLUMNS FROM STAFF,0,meta:show_columns
+show full columns from modules,0,meta:show_columns
+SHOW FULL COLUMNS FROM MODULES,0,meta:show_columns
+show full columns from timetable,0,meta:show_columns
+SHOW FULL COLUMNS FROM TIMETABLE,0,meta:show_columns
+describe students,0,meta:describe
+DESCRIBE STUDENTS,0,meta:describe
+describe grades,0,meta:describe
+DESCRIBE GRADES,0,meta:describe
+describe courses,0,meta:describe
+DESCRIBE COURSES,0,meta:describe
+describe fees,0,meta:describe
+DESCRIBE FEES,0,meta:describe
+describe enrolments,0,meta:describe
+DESCRIBE ENROLMENTS,0,meta:describe
+describe library_loans,0,meta:describe
+DESCRIBE LIBRARY_LOANS,0,meta:describe
+describe payments,0,meta:describe
+DESCRIBE PAYMENTS,0,meta:describe
+describe staff,0,meta:describe
+DESCRIBE STAFF,0,meta:describe
+describe modules,0,meta:describe
+DESCRIBE MODULES,0,meta:describe
+describe timetable,0,meta:describe
+DESCRIBE TIMETABLE,0,meta:describe
+desc students,0,meta:describe
+DESC STUDENTS,0,meta:describe
+desc grades,0,meta:describe
+DESC GRADES,0,meta:describe
+desc courses,0,meta:describe
+DESC COURSES,0,meta:describe
+desc fees,0,meta:describe
+DESC FEES,0,meta:describe
+desc enrolments,0,meta:describe
+DESC ENROLMENTS,0,meta:describe
+desc library_loans,0,meta:describe
+DESC LIBRARY_LOANS,0,meta:describe
+desc payments,0,meta:describe
+DESC PAYMENTS,0,meta:describe
+desc staff,0,meta:describe
+DESC STAFF,0,meta:describe
+desc modules,0,meta:describe
+DESC MODULES,0,meta:describe
+desc timetable,0,meta:describe
+DESC TIMETABLE,0,meta:describe
+show create table students,0,meta:show_create
+SHOW CREATE TABLE STUDENTS,0,meta:show_create
+show create table grades,0,meta:show_create
+SHOW CREATE TABLE GRADES,0,meta:show_create
+show create table courses,0,meta:show_create
+SHOW CREATE TABLE COURSES,0,meta:show_create
+show create table fees,0,meta:show_create
+SHOW CREATE TABLE FEES,0,meta:show_create
+show create table enrolments,0,meta:show_create
+SHOW CREATE TABLE ENROLMENTS,0,meta:show_create
+show create table library_loans,0,meta:show_create
+SHOW CREATE TABLE LIBRARY_LOANS,0,meta:show_create
+show create table payments,0,meta:show_create
+SHOW CREATE TABLE PAYMENTS,0,meta:show_create
+show create table staff,0,meta:show_create
+SHOW CREATE TABLE STAFF,0,meta:show_create
+show create table modules,0,meta:show_create
+SHOW CREATE TABLE MODULES,0,meta:show_create
+show create table timetable,0,meta:show_create
+SHOW CREATE TABLE TIMETABLE,0,meta:show_create
+show index from students,0,meta:show_index
+SHOW INDEX FROM STUDENTS,0,meta:show_index
+show index from grades,0,meta:show_index
+SHOW INDEX FROM GRADES,0,meta:show_index
+show index from courses,0,meta:show_index
+SHOW INDEX FROM COURSES,0,meta:show_index
+show index from fees,0,meta:show_index
+SHOW INDEX FROM FEES,0,meta:show_index
+show index from enrolments,0,meta:show_index
+SHOW INDEX FROM ENROLMENTS,0,meta:show_index
+show index from library_loans,0,meta:show_index
+SHOW INDEX FROM LIBRARY_LOANS,0,meta:show_index
+show index from payments,0,meta:show_index
+SHOW INDEX FROM PAYMENTS,0,meta:show_index
+show index from staff,0,meta:show_index
+SHOW INDEX FROM STAFF,0,meta:show_index
+show index from modules,0,meta:show_index
+SHOW INDEX FROM MODULES,0,meta:show_index
+show index from timetable,0,meta:show_index
+SHOW INDEX FROM TIMETABLE,0,meta:show_index
+use aidams_demo,0,meta:use_db
+USE AIDAMS_DEMO,0,meta:use_db
+select database(),0,meta:select_database
+SELECT DATABASE(),0,meta:select_database
+select @@version_comment limit 1,0,meta:version_comment
+SELECT @@VERSION_COMMENT LIMIT 1,0,meta:version_comment
+select version(),0,meta:select_info
+SELECT VERSION(),0,meta:select_info
+select user(),0,meta:select_info
+SELECT USER(),0,meta:select_info
+select current_user(),0,meta:select_info
+SELECT CURRENT_USER(),0,meta:select_info
+select connection_id(),0,meta:select_info
+SELECT CONNECTION_ID(),0,meta:select_info
+select now(),0,meta:select_now
+SELECT NOW(),0,meta:select_now
+select current_timestamp,0,meta:select_now
+SELECT CURRENT_TIMESTAMP,0,meta:select_now
+select 1,0,meta:select_now
+SELECT 1,0,meta:select_now
+set names utf8,0,meta:set_names
+SET NAMES UTF8,0,meta:set_names
+set names utf8mb4,0,meta:set_names
+SET NAMES UTF8MB4,0,meta:set_names
+set names latin1,0,meta:set_names
+SET NAMES LATIN1,0,meta:set_names
+set autocommit=1,0,meta:set_autocommit
+SET AUTOCOMMIT=1,0,meta:set_autocommit
+set autocommit=0,0,meta:set_autocommit
+SET AUTOCOMMIT=0,0,meta:set_autocommit
+start transaction,0,meta:transaction
+START TRANSACTION,0,meta:transaction
+commit,0,meta:transaction
+COMMIT,0,meta:transaction
+rollback,0,meta:transaction
+ROLLBACK,0,meta:transaction
+begin,0,meta:transaction
+BEGIN,0,meta:transaction

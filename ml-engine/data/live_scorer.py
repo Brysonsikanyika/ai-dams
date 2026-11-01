@@ -8,6 +8,7 @@ between capture and scoring. Student numbers are masked in the stored text.
 Only student_NN accounts are scored (use --demo to also score root and unattributed sessions).
 Stage 1 covers the SQL classifier only; behavioural models stay batch.
 """
+from housekeeping import is_housekeeping
 import argparse
 import datetime as dt
 import json
@@ -46,7 +47,7 @@ def main():
         consumer.poll(timeout_ms=500)
     print(f"Listening on {a.topic} (cutoff {cutoff:.4f}). Ctrl+C to stop.", flush=True)
 
-    scored = alerts = 0
+    scored = alerts = skipped = 0
     try:
         for msg in consumer:
             ev = msg.value
@@ -55,6 +56,9 @@ def main():
                 continue
             sql = TAG_RE.sub("", ev.get("sql_text") or "").strip()
             if not sql:
+                continue
+            if is_housekeeping(sql):
+                skipped += 1
                 continue
             prob = float(model.predict_proba([sql])[0, 1])
             now = dt.datetime.now(dt.timezone.utc)
@@ -83,7 +87,7 @@ def main():
                 with open(a.out, "a") as f:
                     f.write(json.dumps(rec) + "\n")
     except KeyboardInterrupt:
-        print(f"\nStopped. Scored {scored} statements, {alerts} alerts.")
+        print(f"\nStopped. Scored {scored} statements, {alerts} alerts, {skipped} housekeeping skipped.")
 
 
 if __name__ == "__main__":

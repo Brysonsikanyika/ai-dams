@@ -1,0 +1,167 @@
+query_text,label,source
+SHOW DATABASES,0,calibmeta:show_databases
+SHOW DATABASES;,0,calibmeta:show_databases
+SHOW TABLES,0,calibmeta:show_tables
+SHOW TABLES;,0,calibmeta:show_tables
+SHOW FULL TABLES,0,calibmeta:show_tables
+SHOW FULL TABLES;,0,calibmeta:show_tables
+SHOW TABLES FROM aidams_demo,0,calibmeta:show_tables
+SHOW TABLES FROM aidams_demo;,0,calibmeta:show_tables
+SHOW COLUMNS FROM students,0,calibmeta:show_columns
+SHOW COLUMNS FROM students;,0,calibmeta:show_columns
+SHOW COLUMNS FROM grades,0,calibmeta:show_columns
+SHOW COLUMNS FROM grades;,0,calibmeta:show_columns
+SHOW COLUMNS FROM courses,0,calibmeta:show_columns
+SHOW COLUMNS FROM courses;,0,calibmeta:show_columns
+SHOW COLUMNS FROM fees,0,calibmeta:show_columns
+SHOW COLUMNS FROM fees;,0,calibmeta:show_columns
+SHOW COLUMNS FROM enrolments,0,calibmeta:show_columns
+SHOW COLUMNS FROM enrolments;,0,calibmeta:show_columns
+SHOW COLUMNS FROM library_loans,0,calibmeta:show_columns
+SHOW COLUMNS FROM library_loans;,0,calibmeta:show_columns
+SHOW COLUMNS FROM payments,0,calibmeta:show_columns
+SHOW COLUMNS FROM payments;,0,calibmeta:show_columns
+SHOW COLUMNS FROM staff,0,calibmeta:show_columns
+SHOW COLUMNS FROM staff;,0,calibmeta:show_columns
+SHOW COLUMNS FROM modules,0,calibmeta:show_columns
+SHOW COLUMNS FROM modules;,0,calibmeta:show_columns
+SHOW COLUMNS FROM timetable,0,calibmeta:show_columns
+SHOW COLUMNS FROM timetable;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM students,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM students;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM grades,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM grades;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM courses,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM courses;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM fees,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM fees;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM enrolments,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM enrolments;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM library_loans,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM library_loans;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM payments,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM payments;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM staff,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM staff;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM modules,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM modules;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM timetable,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM timetable;,0,calibmeta:show_columns
+DESCRIBE students,0,calibmeta:describe
+DESCRIBE students;,0,calibmeta:describe
+DESCRIBE grades,0,calibmeta:describe
+DESCRIBE grades;,0,calibmeta:describe
+DESCRIBE courses,0,calibmeta:describe
+DESCRIBE courses;,0,calibmeta:describe
+DESCRIBE fees,0,calibmeta:describe
+DESCRIBE fees;,0,calibmeta:describe
+DESCRIBE enrolments,0,calibmeta:describe
+DESCRIBE enrolments;,0,calibmeta:describe
+DESCRIBE library_loans,0,calibmeta:describe
+DESCRIBE library_loans;,0,calibmeta:describe
+DESCRIBE payments,0,calibmeta:describe
+DESCRIBE payments;,0,calibmeta:describe
+DESCRIBE staff,0,calibmeta:describe
+DESCRIBE staff;,0,calibmeta:describe
+DESCRIBE modules,0,calibmeta:describe
+DESCRIBE modules;,0,calibmeta:describe
+DESCRIBE timetable,0,calibmeta:describe
+DESCRIBE timetable;,0,calibmeta:describe
+DESC students,0,calibmeta:describe
+DESC students;,0,calibmeta:describe
+DESC grades,0,calibmeta:describe
+DESC grades;,0,calibmeta:describe
+DESC courses,0,calibmeta:describe
+DESC courses;,0,calibmeta:describe
+DESC fees,0,calibmeta:describe
+DESC fees;,0,calibmeta:describe
+DESC enrolments,0,calibmeta:describe
+DESC enrolments;,0,calibmeta:describe
+DESC library_loans,0,calibmeta:describe
+DESC library_loans;,0,calibmeta:describe
+DESC payments,0,calibmeta:describe
+DESC payments;,0,calibmeta:describe
+DESC staff,0,calibmeta:describe
+DESC staff;,0,calibmeta:describe
+DESC modules,0,calibmeta:describe
+DESC modules;,0,calibmeta:describe
+DESC timetable,0,calibmeta:describe
+DESC timetable;,0,calibmeta:describe
+SHOW CREATE TABLE students,0,calibmeta:show_create
+SHOW CREATE TABLE students;,0,calibmeta:show_create
+SHOW CREATE TABLE grades,0,calibmeta:show_create
+SHOW CREATE TABLE grades;,0,calibmeta:show_create
+SHOW CREATE TABLE courses,0,calibmeta:show_create
+SHOW CREATE TABLE courses;,0,calibmeta:show_create
+SHOW CREATE TABLE fees,0,calibmeta:show_create
+SHOW CREATE TABLE fees;,0,calibmeta:show_create
+SHOW CREATE TABLE enrolments,0,calibmeta:show_create
+SHOW CREATE TABLE enrolments;,0,calibmeta:show_create
+SHOW CREATE TABLE library_loans,0,calibmeta:show_create
+SHOW CREATE TABLE library_loans;,0,calibmeta:show_create
+SHOW CREATE TABLE payments,0,calibmeta:show_create
+SHOW CREATE TABLE payments;,0,calibmeta:show_create
+SHOW CREATE TABLE staff,0,calibmeta:show_create
+SHOW CREATE TABLE staff;,0,calibmeta:show_create
+SHOW CREATE TABLE modules,0,calibmeta:show_create
+SHOW CREATE TABLE modules;,0,calibmeta:show_create
+SHOW CREATE TABLE timetable,0,calibmeta:show_create
+SHOW CREATE TABLE timetable;,0,calibmeta:show_create
+SHOW INDEX FROM students,0,calibmeta:show_index
+SHOW INDEX FROM students;,0,calibmeta:show_index
+SHOW INDEX FROM grades,0,calibmeta:show_index
+SHOW INDEX FROM grades;,0,calibmeta:show_index
+SHOW INDEX FROM courses,0,calibmeta:show_index
+SHOW INDEX FROM courses;,0,calibmeta:show_index
+SHOW INDEX FROM fees,0,calibmeta:show_index
+SHOW INDEX FROM fees;,0,calibmeta:show_index
+SHOW INDEX FROM enrolments,0,calibmeta:show_index
+SHOW INDEX FROM enrolments;,0,calibmeta:show_index
+SHOW INDEX FROM library_loans,0,calibmeta:show_index
+SHOW INDEX FROM library_loans;,0,calibmeta:show_index
+SHOW INDEX FROM payments,0,calibmeta:show_index
+SHOW INDEX FROM payments;,0,calibmeta:show_index
+SHOW INDEX FROM staff,0,calibmeta:show_index
+SHOW INDEX FROM staff;,0,calibmeta:show_index
+SHOW INDEX FROM modules,0,calibmeta:show_index
+SHOW INDEX FROM modules;,0,calibmeta:show_index
+SHOW INDEX FROM timetable,0,calibmeta:show_index
+SHOW INDEX FROM timetable;,0,calibmeta:show_index
+USE aidams_demo,0,calibmeta:use_db
+USE aidams_demo;,0,calibmeta:use_db
+SELECT DATABASE(),0,calibmeta:select_database
+SELECT DATABASE();,0,calibmeta:select_database
+select @@version_comment limit 1,0,calibmeta:version_comment
+select @@version_comment limit 1;,0,calibmeta:version_comment
+SELECT VERSION(),0,calibmeta:select_info
+SELECT VERSION();,0,calibmeta:select_info
+SELECT USER(),0,calibmeta:select_info
+SELECT USER();,0,calibmeta:select_info
+SELECT CURRENT_USER(),0,calibmeta:select_info
+SELECT CURRENT_USER();,0,calibmeta:select_info
+SELECT CONNECTION_ID(),0,calibmeta:select_info
+SELECT CONNECTION_ID();,0,calibmeta:select_info
+SELECT NOW(),0,calibmeta:select_now
+SELECT NOW();,0,calibmeta:select_now
+SELECT CURRENT_TIMESTAMP,0,calibmeta:select_now
+SELECT CURRENT_TIMESTAMP;,0,calibmeta:select_now
+SELECT 1,0,calibmeta:select_now
+SELECT 1;,0,calibmeta:select_now
+SET NAMES utf8,0,calibmeta:set_names
+SET NAMES utf8;,0,calibmeta:set_names
+SET NAMES utf8mb4,0,calibmeta:set_names
+SET NAMES utf8mb4;,0,calibmeta:set_names
+SET NAMES latin1,0,calibmeta:set_names
+SET NAMES latin1;,0,calibmeta:set_names
+SET autocommit=1,0,calibmeta:set_autocommit
+SET autocommit=1;,0,calibmeta:set_autocommit
+SET autocommit=0,0,calibmeta:set_autocommit
+SET autocommit=0;,0,calibmeta:set_autocommit
+START TRANSACTION,0,calibmeta:transaction
+START TRANSACTION;,0,calibmeta:transaction
+COMMIT,0,calibmeta:transaction
+COMMIT;,0,calibmeta:transaction
+ROLLBACK,0,calibmeta:transaction
+ROLLBACK;,0,calibmeta:transaction
+BEGIN,0,calibmeta:transaction
+BEGIN;,0,calibmeta:transaction

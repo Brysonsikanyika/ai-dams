@@ -1,0 +1,83 @@
+query_text,label,source
+SHOW VARIABLES LIKE 'version%',0,heldmeta:show_variables
+show variables like 'version%',0,heldmeta:show_variables
+SHOW VARIABLES LIKE 'character_set%',0,heldmeta:show_variables
+show variables like 'character_set%',0,heldmeta:show_variables
+SHOW VARIABLES LIKE 'collation%',0,heldmeta:show_variables
+show variables like 'collation%',0,heldmeta:show_variables
+SHOW VARIABLES LIKE 'max_connections',0,heldmeta:show_variables
+show variables like 'max_connections',0,heldmeta:show_variables
+SHOW VARIABLES LIKE 'wait_timeout',0,heldmeta:show_variables
+show variables like 'wait_timeout',0,heldmeta:show_variables
+SHOW STATUS,0,heldmeta:show_status
+show status,0,heldmeta:show_status
+SHOW GLOBAL STATUS LIKE 'Threads%',0,heldmeta:show_status
+show global status like 'threads%',0,heldmeta:show_status
+SHOW STATUS LIKE 'Uptime',0,heldmeta:show_status
+show status like 'uptime',0,heldmeta:show_status
+SHOW PROCESSLIST,0,heldmeta:show_processlist
+show processlist,0,heldmeta:show_processlist
+SHOW FULL PROCESSLIST,0,heldmeta:show_processlist
+show full processlist,0,heldmeta:show_processlist
+SHOW GRANTS,0,heldmeta:show_grants
+show grants,0,heldmeta:show_grants
+SHOW GRANTS FOR CURRENT_USER(),0,heldmeta:show_grants
+show grants for current_user(),0,heldmeta:show_grants
+SHOW WARNINGS,0,heldmeta:show_misc
+show warnings,0,heldmeta:show_misc
+SHOW ERRORS,0,heldmeta:show_misc
+show errors,0,heldmeta:show_misc
+SHOW ENGINES,0,heldmeta:show_misc
+show engines,0,heldmeta:show_misc
+SHOW CHARACTER SET,0,heldmeta:show_misc
+show character set,0,heldmeta:show_misc
+SHOW COLLATION,0,heldmeta:show_misc
+show collation,0,heldmeta:show_misc
+SHOW TABLE STATUS,0,heldmeta:show_misc
+show table status,0,heldmeta:show_misc
+SELECT @@sql_mode,0,heldmeta:select_sysvar
+select @@sql_mode,0,heldmeta:select_sysvar
+SELECT @@autocommit,0,heldmeta:select_sysvar
+select @@autocommit,0,heldmeta:select_sysvar
+SELECT @@max_allowed_packet,0,heldmeta:select_sysvar
+select @@max_allowed_packet,0,heldmeta:select_sysvar
+SELECT @@time_zone,0,heldmeta:select_sysvar
+select @@time_zone,0,heldmeta:select_sysvar
+SELECT @@version,0,heldmeta:select_sysvar
+select @@version,0,heldmeta:select_sysvar
+SELECT @@session.time_zone,0,heldmeta:select_sysvar
+select @@session.time_zone,0,heldmeta:select_sysvar
+SELECT @@global.max_connections,0,heldmeta:select_sysvar
+select @@global.max_connections,0,heldmeta:select_sysvar
+"SELECT @@character_set_client, @@collation_connection",0,heldmeta:select_sysvar
+"select @@character_set_client, @@collation_connection",0,heldmeta:select_sysvar
+SET time_zone = '+00:00',0,heldmeta:set_session
+set time_zone = '+00:00',0,heldmeta:set_session
+SET SESSION sql_mode='STRICT_TRANS_TABLES',0,heldmeta:set_session
+set session sql_mode='strict_trans_tables',0,heldmeta:set_session
+SET SQL_SELECT_LIMIT=1000,0,heldmeta:set_session
+set sql_select_limit=1000,0,heldmeta:set_session
+SET character_set_results = NULL,0,heldmeta:set_session
+set character_set_results = null,0,heldmeta:set_session
+SET sql_safe_updates=1,0,heldmeta:set_session
+set sql_safe_updates=1,0,heldmeta:set_session
+EXPLAIN SELECT * FROM students WHERE id = 1,0,heldmeta:explain
+explain select * from students where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM grades WHERE id = 1,0,heldmeta:explain
+explain select * from grades where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM courses WHERE id = 1,0,heldmeta:explain
+explain select * from courses where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM fees WHERE id = 1,0,heldmeta:explain
+explain select * from fees where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM enrolments WHERE id = 1,0,heldmeta:explain
+explain select * from enrolments where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM library_loans WHERE id = 1,0,heldmeta:explain
+explain select * from library_loans where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM payments WHERE id = 1,0,heldmeta:explain
+explain select * from payments where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM staff WHERE id = 1,0,heldmeta:explain
+explain select * from staff where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM modules WHERE id = 1,0,heldmeta:explain
+explain select * from modules where id = 1,0,heldmeta:explain
+EXPLAIN SELECT * FROM timetable WHERE id = 1,0,heldmeta:explain
+explain select * from timetable where id = 1,0,heldmeta:explain
