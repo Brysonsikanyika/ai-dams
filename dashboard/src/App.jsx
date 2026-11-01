@@ -294,7 +294,7 @@ export default function App() {
           <IconWave />
           <span>LIVE RISK SIGNAL</span>
           <span className="panel-head-sub">{filteredRows.length} windows observed</span>
-          <span className="panel-head-live"><span className="dot dot-cyan" /> STREAMING</span>
+          <span className="panel-head-live"><span className="dot dot-cyan" /> BATCH · scored offline</span>
         </div>
         <ResponsiveContainer width="100%" height={160}>
           <ComposedChart data={signalData} margin={{ top: 8, right: 12, bottom: 0, left: 0 }}>
