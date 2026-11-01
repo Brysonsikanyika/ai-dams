@@ -5,6 +5,10 @@ database activity across MySQL, PostgreSQL, and MSSQL using an ensemble
 of Isolation Forest, LSTM Autoencoder, and an NLP SQL-injection classifier,
 streamed through Apache Kafka to a React analyst dashboard.
 
+## Data
+
+All data in this repository is synthetic. It is produced by a generator written for this project on a university-style schema designed by the author. No real audit logs or institutional data are used. Results show that the pipeline works end to end, not how it would perform on real traffic.
+
 ## Rebuild status (this scaffold)
 
 Previous repo and Kafka config (KRaft + mTLS) were deleted after a silent
