@@ -1,5 +1,5 @@
 """
-AI-DAMS hardware measurement (objective 2: "within ZUT hardware limits").
+AI-DAMS hardware measurement (objective 2: "within the limits of a modest institutional server").
 
 Measures, on THIS machine, what each component costs: training time, peak
 memory, and the time to score one event. Each stage runs in its own process so
@@ -11,8 +11,8 @@ hardware_report.json and a summary table.
     python3 measure_hardware.py --stage nlp     # one stage
 
 What this does and does not show:
-  * It measures this machine. Whether that is "within ZUT's limits" depends on
-    ZUT's real server specification, which you must state and compare against.
+  * It measures this machine. Whether that is "within the assumed server limits" depends on
+    the assumed server specification, which you must state and compare against.
   * Peak memory is the stage process's own peak (VmHWM). baseline_rss_mb is the peak after imports
     and data loading (TensorFlow alone is several hundred MB); if peak_rss_mb is
     close to it, training itself added little.
