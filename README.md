@@ -9,14 +9,24 @@ streamed through Apache Kafka to a React analyst dashboard.
 
 All data in this repository is synthetic. It is produced by a generator written for this project on a university-style schema designed by the author. No real audit logs or institutional data are used. Results show that the pipeline works end to end, not how it would perform on real traffic.
 
-## Rebuild status (this scaffold)
+## Running the prototype
 
-Previous repo and Kafka config (KRaft + mTLS) were deleted after a silent
-broker-exit bug that wasn't diagnosed. This scaffold rebuilds the infra
-layer with **mTLS deliberately removed for now** — Kafka stays (it's in
-the approved proposal scope), but runs PLAINTEXT until the broker is
-proven stable. Add TLS/SASL back once `kafka` passes its healthcheck
-reliably across restarts.
+Infrastructure (Kafka, MySQL, PostgreSQL, MSSQL, MySQL audit tailer):
+
+    cp .env.example .env   # set real passwords
+    docker compose up -d && docker compose ps
+
+Pipeline (scripts in ml-engine/data, run in this order; the evaluation uses MySQL):
+
+1. generate_traffic_academic.py -- synthetic academic traffic, one MySQL account per student
+2. train_isolation_forest.py, train_lstm_autoencoder.py, train_final_nlp_v2.py -- train the three models
+3. join_nlp_scores.py -- match captured query text (Kafka topic mysql.query.text) to events and score it
+4. build_risk_aggregator.py -- one risk score per customer per 15-minute bucket (max of behavioural and SQL-text risk)
+5. explain_alerts.py -- plain-English reasons (SHAP for the Isolation Forest, n-gram contributions for the classifier)
+
+Dashboard: cd dashboard-server && node server.js, then cd dashboard && npm run dev.
+
+Scoring runs in batch; capture is live. See the dissertation for results and limits.
 
 ## Structure
 

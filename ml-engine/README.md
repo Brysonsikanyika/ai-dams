@@ -1,14 +1,9 @@
 # ML Engine
 
-Ensemble of three models, per proposal 1.4 / 1.8:
+Three models and a risk aggregator, in `data/`:
 
-- **Isolation Forest** — volumetric/statistical outlier detection
-- **LSTM Autoencoder** — sequential session anomalies (reconstruction error)
-- **NLP SQL-injection classifier** — raw query text at the agent level
+- Isolation Forest: per-event behavioural outliers
+- LSTM autoencoder: sequence anomalies (reconstruction error)
+- SQL-injection classifier: character n-gram TF-IDF with logistic regression on query text
 
-Outputs feed a confidence-weighted risk aggregator producing one unified
-severity score per event, with SHAP-based explanation generation before
-it reaches the dashboard.
-
-Nothing to build here yet — needs real event data flowing through Kafka
-from at least one agent first.
+`build_risk_aggregator.py` fuses them (max of behavioural and SQL-text risk) and `explain_alerts.py` writes alerts. All data is synthetic. See the root README for run order.
