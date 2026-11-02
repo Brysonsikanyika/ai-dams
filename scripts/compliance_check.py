@@ -172,7 +172,13 @@ def check_roles():
     if not t_an or not t_ad:
         rec("Role separation", "SKIP", "could not log in with the supplied credentials; check them (this says nothing about the control)")
         return
-    an_alerts, _ = http("GET", "/api/alerts", token=t_an)
+    an_alerts, body = http("GET", "/api/alerts", token=t_an)
+    leaked = sorted({k for a in (body if isinstance(body, list) else [])[:200] for k in a if k in ("account", "truth")})
+    if an_alerts == 200:
+        if leaked:
+            rec("Analyst alert view", "FAIL", "GET /api/alerts returns fields an analyst should not receive: " + ", ".join(leaked))
+        else:
+            rec("Analyst alert view", "PASS", "GET /api/alerts as an analyst returns no account name and no ground-truth label")
     an_audit, _ = http("GET", "/api/audit", token=t_an)
     ad_audit, _ = http("GET", "/api/audit", token=t_ad)
     if anon == 401 and an_alerts == 200 and an_audit == 403 and ad_audit == 200:
@@ -192,12 +198,13 @@ def check_masking():
                 if ID.search(json.loads(l).get("sql_text", "")):
                     problems.append("live alert text holds a student number")
                     break
-    al = ROOT / "ml-engine" / "data" / "alerts.json"
-    if al.exists():
+    for al in (ROOT / "ml-engine" / "data" / "alerts.json", ROOT / "dashboard-server" / "data" / "alerts.json"):
+        if not al.exists():
+            continue
         for a in json.loads(al.read_text()):
             scanned += 1
             if ID.search(str(a.get("explanation", "")) + str(a.get("headline", ""))) or ID.fullmatch(str(a.get("pseudonym", ""))):
-                problems.append("batch alert text or pseudonym holds a student number")
+                problems.append("batch alert text or pseudonym holds a student number in " + al.parent.parent.name)
                 break
     audit = ROOT / "dashboard-server" / "audit.log"
     allowed = {"ts", "user", "action", "outcome", "ip", "prev", "hash"}
@@ -234,6 +241,10 @@ def check_subject(tmp):
     write_lines(d / "captured_query_text.jsonl", [{"account": "student_0010", "sql_text": "a"}, {"account": "student_0011", "sql_text": "b"}, {"account": "root", "sql_text": "c"}])
     (d / "alerts.json").write_text(json.dumps([{"alert_id": "A1", "account": "student_0010"}, {"alert_id": "A2", "account": "student_0011"}]))
     (d / "risk_scores.csv").write_text("customer_id,time_bucket,combined_risk\n2300010,2026-10-07 07:30:00,0.9\n2300011,2026-10-07 07:30:00,0.1\n2300010,2026-10-07 07:45:00,0.2\n")
+    dd = root / "dashboard-server" / "data"
+    dd.mkdir(parents=True, exist_ok=True)
+    (dd / "alerts.json").write_text(json.dumps([{"alert_id": "A1", "account": "student_0010"}, {"alert_id": "A2", "account": "student_0011"}]))
+    (dd / "risk_scores.csv").write_text("customer_id,time_bucket,combined_risk\n2300010,2026-10-07 07:30:00,0.9\n2300011,2026-10-07 07:30:00,0.1\n")
     sr = root / "scripts" / "subject_request.py"
     problems = []
     rc, out = run(sr, "export", "2300010")
@@ -243,7 +254,7 @@ def check_subject(tmp):
     else:
         b = json.loads(exp[0].read_text())["stores"]
         got = {k: len(v["records"]) for k, v in b.items()}
-        if got != {"live_alerts": 2, "captured_statements": 1, "batch_alerts": 1, "risk_scores": 2}:
+        if got != {"live_alerts": 2, "captured_statements": 1, "batch_alerts": 1, "risk_scores": 2, "dashboard_alerts": 1, "dashboard_risk_scores": 1}:
             problems.append(f"export counts wrong: {got}")
     snap = {p.name: p.read_bytes() for p in d.iterdir()}
     run(sr, "erase", "2300010")
@@ -252,7 +263,7 @@ def check_subject(tmp):
     rc, out = run(sr, "erase", "2300010", "--apply", "--force")
     if rc != 0:
         problems.append("erase failed: " + out[:80])
-    left = (d / "live_alerts.jsonl").read_text() + (d / "captured_query_text.jsonl").read_text() + (d / "alerts.json").read_text() + (d / "risk_scores.csv").read_text()
+    left = (d / "live_alerts.jsonl").read_text() + (d / "captured_query_text.jsonl").read_text() + (d / "alerts.json").read_text() + (d / "risk_scores.csv").read_text() + (dd / "alerts.json").read_text() + (dd / "risk_scores.csv").read_text()
     if "student_0010" in left or "2300010" in left:
         problems.append("records of the subject remain after erase")
     if not all(t in left for t in ("student_0011", "2300011", "root")):
@@ -265,7 +276,7 @@ def check_subject(tmp):
     if problems:
         rec("Subject access and erasure", "FAIL", "; ".join(problems))
     else:
-        rec("Subject access and erasure", "PASS", "export returns the subject's records; dry run changes nothing; erase removes only that student's records from four stores; the receipt chain verifies and holds no student number")
+        rec("Subject access and erasure", "PASS", "export returns the subject's records; dry run changes nothing; erase removes only that student's records from six stores; the receipt chain verifies and holds no student number")
 
 
 def main():

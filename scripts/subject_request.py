@@ -6,7 +6,8 @@ Usage:
   python scripts/subject_request.py erase  2300010            (dry run: counts only)
   python scripts/subject_request.py erase  2300010 --apply    (deletes; irreversible, no backup is kept)
 
-Stores covered: live_alerts.jsonl, alerts.json, risk_scores.csv, captured_query_text.jsonl.
+Stores covered: live_alerts.jsonl, captured_query_text.jsonl, and alerts.json and risk_scores.csv in both
+ml-engine/data and dashboard-server/data (the copies the dashboard serves).
 Not covered, on purpose: audit.log (records staff actions, and its integrity matters),
 ground_truth.csv (synthetic training data), and the MySQL application tables (the university
 system, not AI-DAMS).
@@ -31,6 +32,7 @@ import uuid
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "ml-engine" / "data"
+DASH = ROOT / "dashboard-server" / "data"   # copies the dashboard serves
 LOG = ROOT / "dashboard-server" / "subject_requests.log"
 EXPORTS = ROOT / "subject_exports"
 
@@ -62,6 +64,24 @@ def scan_jsonl(path, match):
     return keep, hit
 
 
+def alerts_store(path, acct):
+    allr = json.loads(path.read_text()) if path.exists() else []
+    return {"path": path, "kind": "json", "keep": [x for x in allr if x.get("account") != acct],
+            "hit": [x for x in allr if x.get("account") == acct]}
+
+
+def risk_store(path, cid):
+    rows, fields = [], None
+    if path.exists():
+        with open(path, newline="") as fh:
+            rd = csv.DictReader(fh)
+            fields = rd.fieldnames
+            rows = list(rd)
+    return {"path": path, "kind": "csv", "fields": fields,
+            "keep": [r for r in rows if r.get("customer_id") != cid],
+            "hit": [r for r in rows if r.get("customer_id") == cid]}
+
+
 def collect(cid):
     acct = account_for(cid)
     out = {}
@@ -69,20 +89,10 @@ def collect(cid):
     out["live_alerts"] = {"path": DATA / "live_alerts.jsonl", "kind": "jsonl", "keep": keep, "hit": hit}
     keep, hit = scan_jsonl(DATA / "captured_query_text.jsonl", lambda r: r.get("account") == acct)
     out["captured_statements"] = {"path": DATA / "captured_query_text.jsonl", "kind": "jsonl", "keep": keep, "hit": hit}
-    p = DATA / "alerts.json"
-    allr = json.loads(p.read_text()) if p.exists() else []
-    out["batch_alerts"] = {"path": p, "kind": "json", "keep": [a for a in allr if a.get("account") != acct],
-                           "hit": [a for a in allr if a.get("account") == acct]}
-    p = DATA / "risk_scores.csv"
-    rows, fields = [], None
-    if p.exists():
-        with open(p, newline="") as fh:
-            rd = csv.DictReader(fh)
-            fields = rd.fieldnames
-            rows = list(rd)
-    out["risk_scores"] = {"path": p, "kind": "csv", "fields": fields,
-                          "keep": [r for r in rows if r.get("customer_id") != cid],
-                          "hit": [r for r in rows if r.get("customer_id") == cid]}
+    out["batch_alerts"] = alerts_store(DATA / "alerts.json", acct)
+    out["risk_scores"] = risk_store(DATA / "risk_scores.csv", cid)
+    out["dashboard_alerts"] = alerts_store(DASH / "alerts.json", acct)
+    out["dashboard_risk_scores"] = risk_store(DASH / "risk_scores.csv", cid)
     return out
 
 
@@ -142,7 +152,7 @@ def main():
         EXPORTS.mkdir(exist_ok=True)
         out = EXPORTS / f"{cid}-{dt.datetime.now(dt.timezone.utc):%Y%m%dT%H%M%SZ}.json"
         bundle = {"subject_account": account_for(cid), "exported_at": dt.datetime.now(dt.timezone.utc).isoformat(),
-                  "stores": {k: {"file": v["path"].name, "records": v["hit"]} for k, v in stores.items()}}
+                  "stores": {k: {"file": str(v["path"].relative_to(ROOT)), "records": v["hit"]} for k, v in stores.items()}}
         out.write_text(json.dumps(bundle, indent=2))
         os.chmod(out, 0o600)
         receipt("subject_export", f"req={req} {summary}")

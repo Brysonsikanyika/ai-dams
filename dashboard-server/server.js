@@ -125,8 +125,9 @@ app.get('/api/alerts', requireAuth, (req, res) => {
   if (!fs.existsSync(jsonPath)) {
     return res.status(404).json({ error: 'alerts.json not found in dashboard-server/data/' })
   }
-  res.type('application/json')
-  fs.createReadStream(jsonPath).pipe(res)
+  // Analysts get the alert text and the pseudonym, not the account name or the synthetic ground-truth label.
+  const alerts = JSON.parse(fs.readFileSync(jsonPath, 'utf8')).map(({ account, truth, ...rest }) => rest)
+  res.json(alerts)
 })
 
 function requireRole(role) {
