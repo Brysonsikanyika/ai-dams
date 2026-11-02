@@ -43,3 +43,4 @@ ml-engine/data/analyst_test_key.json
 ml-engine/data/responses.csv
 subject_exports/
 dashboard-server/subject_requests.log
+retention_cron.log
