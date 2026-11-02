@@ -34,9 +34,9 @@ export default function LiveAlerts({ token }) {
   return (
     <div className="panel">
       <div className="panel-head">
-        <span>LIVE SQL ALERTS</span>
+        <span>LIVE ALERTS</span>
         <span className="panel-head-sub">
-          scored from Kafka as statements arrive, refreshes every 5 s{updated && ` · updated ${updated}`}
+          SQL text and Isolation Forest behaviour, scored from Kafka as statements arrive, refreshes every 5 s{updated && ` · updated ${updated}`}
         </span>
       </div>
       {error && <p className="mono">Could not load live alerts: {error}</p>}
@@ -45,10 +45,10 @@ export default function LiveAlerts({ token }) {
       {alerts && alerts.slice(0, 20).map((a) => (
         <div key={`${a.record_id}-${a.scored_at}`} style={{ borderTop: '1px solid #1f2937', padding: '8px 12px' }}>
           <div className="mono">
-            {a.scored_at} · {a.account || 'unattributed'} · score {Number(a.nlp_prob).toFixed(3)} (line {Number(a.cutoff).toFixed(3)})
+            {a.scored_at} · {a.account || 'unattributed'} · {a.source === 'live_behaviour' ? 'behaviour score' : 'SQL score'} {Number(a.nlp_prob).toFixed(3)} (line {Number(a.cutoff).toFixed(3)})
             {a.delay_s != null && ` · ${a.delay_s}s from log to score`}
           </div>
-          <div className="mono" style={{ opacity: 0.85 }}>SQL: {a.sql_text}</div>
+          <div className="mono" style={{ opacity: 0.85 }}>{a.source === 'live_behaviour' ? 'Why: ' + String(a.sql_text).replace('[behaviour] ', '') : 'SQL: ' + a.sql_text}</div>
         </div>
       ))}
     </div>
