@@ -37,3 +37,5 @@ dashboard-server/data/alerts.json
 dashboard-server/audit.log
 ml-engine/data/live_alerts.jsonl
 refit.log
+ml-engine/data/live_traffic_truth.jsonl
+ml-engine/data/if_live_model.joblib
