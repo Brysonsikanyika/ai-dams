@@ -11,8 +11,8 @@ Two explanation paths, matching the two kinds of evidence:
    riskiest event's anomaly score to its input features. The top features are
    turned into a sentence ("12 statements at the same instant", "off-hours").
    This is a genuine SHAP explanation of the Isolation Forest only. The LSTM
-   autoencoder is NOT explained: it has no SHAP path here, and alerts it alone
-   raised say so.
+   autoencoder has no SHAP path; alerts where it scores higher than the Isolation
+   Forest also get its per-feature reconstruction error (not SHAP), from a refit.
 
 2. SQL-TEXT alerts (injection classifier). The classifier is a linear model
    (char n-gram TF-IDF + logistic regression), so each n-gram's contribution
@@ -157,6 +157,53 @@ def explain_sql(pipe, cutoff, sql_text, prob) -> dict:
             "patterns": [lab for lab, _ in found], "top_ngrams": grams, "nlp_prob": round(prob, 4)}
 
 
+def fit_lstm(raw: pd.DataFrame):
+    """Refit the LSTM autoencoder with the same procedure as build_risk_aggregator.run_lstm_autoencoder
+    and keep the per-feature reconstruction error of every window (for explanation, not scoring)."""
+    import numpy as np
+    from sklearn.preprocessing import StandardScaler
+    from tensorflow import keras
+    from train_lstm_autoencoder import engineer_features as lstm_fe, build_windows, build_autoencoder, WINDOW_SIZE
+    df = lstm_fe(raw.copy())
+    cols = feature_columns(df, tables=True)
+    df[cols] = df[cols].fillna(0)
+    unscaled = df.copy()
+    df[list(LSTM_NUMERIC)] = StandardScaler().fit_transform(df[list(LSTM_NUMERIC)])
+    Xw, y, _types, cids, ends = build_windows(df, cols, WINDOW_SIZE)
+    Xw = np.asarray(Xw, dtype="float32")
+    y = np.asarray(y)
+    normal = Xw[y == 0]
+    train = normal[: int(len(normal) * 0.8)]
+    keras.utils.set_random_seed(42)
+    model = build_autoencoder(WINDOW_SIZE, Xw.shape[2])
+    model.fit(train, train, epochs=20, batch_size=32, validation_split=0.1, verbose=0)
+    recon = model.predict(Xw, verbose=0)
+    per_feat = np.mean(np.square(Xw - recon), axis=1)   # (windows, features): error of each feature
+    return {"per_feat": per_feat, "cols": cols, "cids": np.asarray(cids),
+            "ends": pd.to_datetime(pd.Series(ends)).values, "raw": unscaled}
+
+
+def explain_lstm(lstm, cust, tb):
+    """Features that made up most of the reconstruction error of the worst window ending in this bucket."""
+    import numpy as np
+    m = (lstm["cids"] == cust) & (lstm["ends"] >= np.datetime64(tb)) & (lstm["ends"] < np.datetime64(tb + pd.Timedelta(TIME_BUCKET)))
+    idx = np.flatnonzero(m)
+    if len(idx) == 0:
+        return None
+    j = idx[np.argmax(lstm["per_feat"][idx].mean(axis=1))]
+    pf = pd.Series(lstm["per_feat"][j], index=lstm["cols"])
+    if pf.sum() <= 0:
+        return None
+    share = (pf / pf.sum()).sort_values(ascending=False).head(3)
+    raw = lstm["raw"]
+    r = raw[(raw.customer_id == cust) & (raw.simulated_timestamp == pd.Timestamp(lstm["ends"][j]))]
+    bits = [describe_feature(n, float(r.iloc[0][n])) if len(r) else n for n in share.index]
+    return {"explanation": "The LSTM's own reason: the three features with the largest share of its reconstruction error (" +
+            f"{float(share.sum()):.0%} together) were: " + "; ".join(bits) +
+            ". (Error attribution on a refit with the same procedure; this is not SHAP.)",
+            "top_features": [{"feature": n, "share_of_error": round(float(share[n]), 3)} for n in share.index]}
+
+
 def main():
     threshold, max_alerts = THRESHOLD, MAX_ALERTS
     if "--threshold" in sys.argv:
@@ -180,6 +227,7 @@ def main():
 
     alerts = risk[risk["combined_risk"] > threshold].sort_values("combined_risk", ascending=False).head(max_alerts)
     out = []
+    lstm = None
     for n, (_, a) in enumerate(alerts.iterrows(), 1):
         cust, tb = a["customer_id"], a["time_bucket"]
         from_text = a["nlp_risk"] >= a["behavioural_risk"]
@@ -199,7 +247,15 @@ def main():
             rec.update(explain_behaviour(df, X, cols, sv, i))
             rec["source"] = "behaviour"
             if pd.notna(a.get("lstm_risk")) and a["lstm_risk"] > a["if_risk"]:
-                rec["explanation"] += " (The LSTM scored this window higher than the Isolation Forest did; the LSTM has no SHAP explanation.)"
+                if lstm is None:
+                    print("Fitting the LSTM autoencoder for error attribution (about a minute)...")
+                    lstm = fit_lstm(raw)
+                le = explain_lstm(lstm, cust, tb)
+                if le:
+                    rec["explanation"] += " The LSTM scored this window higher than the Isolation Forest did. " + le["explanation"]
+                    rec["lstm_top_features"] = le["top_features"]
+                else:
+                    rec["explanation"] += " (The LSTM scored this window higher than the Isolation Forest did, but no LSTM window ended in this bucket, so it could not be explained.)"
         rec["truth"] = {"bucket_has_anomaly": int(a.get("bucket_has_anomaly", 0)),
                         "bucket_has_injection": int(a.get("bucket_has_injection", 0)),
                         "bucket_has_burst": int(a.get("bucket_has_burst", 0))}
