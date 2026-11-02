@@ -217,16 +217,67 @@ def check_masking():
         rec("Captured statements", "INFO", "captured_query_text.jsonl stores raw statements, student numbers unmasked; it is protected by access to the server and by the retention script only")
 
 
+def check_subject(tmp):
+    root = tmp / "subj"
+    for d in ("scripts", "dashboard-server", "ml-engine/data"):
+        (root / d).mkdir(parents=True)
+    src = ROOT / "scripts" / "subject_request.py"
+    if not src.exists():
+        rec("Subject access and erasure", "SKIP", "scripts/subject_request.py not found")
+        return
+    for f in ("subject_request.py", "verify_audit.py"):
+        shutil.copy(ROOT / "scripts" / f, root / "scripts" / f)
+    d = root / "ml-engine" / "data"
+    write_lines(d / "live_alerts.jsonl", [{"customer_id": 2300010, "account": "student_0010", "sql_text": "x"},
+                                          {"customer_id": 2300011, "account": "student_0011", "sql_text": "y"},
+                                          {"customer_id": 2300010, "account": "student_0010", "sql_text": "z"}])
+    write_lines(d / "captured_query_text.jsonl", [{"account": "student_0010", "sql_text": "a"}, {"account": "student_0011", "sql_text": "b"}, {"account": "root", "sql_text": "c"}])
+    (d / "alerts.json").write_text(json.dumps([{"alert_id": "A1", "account": "student_0010"}, {"alert_id": "A2", "account": "student_0011"}]))
+    (d / "risk_scores.csv").write_text("customer_id,time_bucket,combined_risk\n2300010,2026-10-07 07:30:00,0.9\n2300011,2026-10-07 07:30:00,0.1\n2300010,2026-10-07 07:45:00,0.2\n")
+    sr = root / "scripts" / "subject_request.py"
+    problems = []
+    rc, out = run(sr, "export", "2300010")
+    exp = list((root / "subject_exports").glob("2300010-*.json"))
+    if rc != 0 or len(exp) != 1:
+        problems.append("export failed: " + out[:80])
+    else:
+        b = json.loads(exp[0].read_text())["stores"]
+        got = {k: len(v["records"]) for k, v in b.items()}
+        if got != {"live_alerts": 2, "captured_statements": 1, "batch_alerts": 1, "risk_scores": 2}:
+            problems.append(f"export counts wrong: {got}")
+    snap = {p.name: p.read_bytes() for p in d.iterdir()}
+    run(sr, "erase", "2300010")
+    if {p.name: p.read_bytes() for p in d.iterdir()} != snap:
+        problems.append("dry run changed data")
+    rc, out = run(sr, "erase", "2300010", "--apply", "--force")
+    if rc != 0:
+        problems.append("erase failed: " + out[:80])
+    left = (d / "live_alerts.jsonl").read_text() + (d / "captured_query_text.jsonl").read_text() + (d / "alerts.json").read_text() + (d / "risk_scores.csv").read_text()
+    if "student_0010" in left or "2300010" in left:
+        problems.append("records of the subject remain after erase")
+    if not all(t in left for t in ("student_0011", "2300011", "root")):
+        problems.append("other people's records were damaged")
+    rcv, outv = run(root / "scripts" / "verify_audit.py", str(root / "dashboard-server" / "subject_requests.log"))
+    if rcv != 0:
+        problems.append("receipt chain does not verify: " + outv[:80])
+    if "2300010" in (root / "dashboard-server" / "subject_requests.log").read_text():
+        problems.append("receipt log holds the student number")
+    if problems:
+        rec("Subject access and erasure", "FAIL", "; ".join(problems))
+    else:
+        rec("Subject access and erasure", "PASS", "export returns the subject's records; dry run changes nothing; erase removes only that student's records from four stores; the receipt chain verifies and holds no student number")
+
+
 def main():
     print(f"AI-DAMS control checks, {dt.datetime.now().isoformat(timespec='seconds')}\n")
     with tempfile.TemporaryDirectory() as t:
         tmp = pathlib.Path(t)
         check_audit_chain(tmp)
         check_retention(tmp)
+        check_subject(tmp)
     check_lockout()
     check_roles()
     check_masking()
-    rec("Subject access and erasure", "SKIP", "not built yet")
     bad = [r for r in RESULTS if r[1] == "FAIL"]
     c = {k: sum(1 for r in RESULTS if r[1] == k) for k in ("PASS", "FAIL", "SKIP", "INFO")}
     print(f"\n{c['PASS']} passed, {c['FAIL']} failed, {c['SKIP']} skipped, {c['INFO']} info")

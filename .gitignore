@@ -41,3 +41,5 @@ ml-engine/data/live_traffic_truth.jsonl
 ml-engine/data/if_live_model.joblib
 ml-engine/data/analyst_test_key.json
 ml-engine/data/responses.csv
+subject_exports/
+dashboard-server/subject_requests.log
