@@ -46,8 +46,22 @@ for path, key in TARGETS:
     if APPLY and dropped:
         path.write_text("\n".join(keep) + ("\n" if keep else ""))
 
+import hashlib
+
+
+def _last_hash(path):
+    try:
+        lines = [l for l in path.read_text().splitlines() if l.strip()]
+        return json.loads(lines[-1]).get("hash", "GENESIS") if lines else "GENESIS"
+    except Exception:
+        return "GENESIS"
+
+
 if APPLY:
+    audit_path = ROOT / "dashboard-server" / "audit.log"
     entry = {"ts": dt.datetime.now(dt.timezone.utc).isoformat(), "user": "system",
              "action": "retention", "outcome": f"{DAYS}d: " + ", ".join(summary), "ip": None}
-    with open(ROOT / "dashboard-server" / "audit.log", "a") as f:
+    entry["prev"] = _last_hash(audit_path)
+    entry["hash"] = hashlib.sha256("|".join([entry["prev"], entry["ts"], entry["user"], entry["action"], entry["outcome"], ""]).encode()).hexdigest()
+    with open(audit_path, "a") as f:
         f.write(json.dumps(entry) + "\n")

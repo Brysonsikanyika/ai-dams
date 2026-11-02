@@ -179,7 +179,8 @@ def parse_record(xml_fragment: str):
     except ValueError:
         return None
     if status == 0:
-        return None
+        # a successful statement: keep who ran it, so a closed connection can still be attributed
+        return {"kind": "seen", "user": root.findtext("USER"), "connection_id": base["connection_id"]}
     return {"kind": "failed", "status": status, "user": root.findtext("USER"), **base}
 
 
@@ -222,20 +223,34 @@ class StatementTracker:
         return True
 
 
+# connection_id -> account taken from the audit log's own USER field (used when the live lookup finds nothing)
+CONN_USERS = OrderedDict()
+
+
 def handle_buffer(buffer, producer, introspect_conn, account_cache, tracker) -> str:
     """Process every complete record in the buffer; return the unparsed remainder."""
     last_end = 0
+    parsed = []
     for match in RECORD_RE.finditer(buffer):
         record = parse_record(match.group(0))
+        parsed.append(record)
+        if record and record.get("user") and record.get("connection_id"):
+            CONN_USERS[record["connection_id"]] = extract_account(record["user"])
+            CONN_USERS.move_to_end(record["connection_id"])
+            while len(CONN_USERS) > 5000:
+                CONN_USERS.popitem(last=False)
+        last_end = match.end()
+    for record in parsed:
         if record and record["kind"] == "start":
             tracker.note_start(record)
             account = resolve_account(introspect_conn, record["connection_id"], account_cache)
+            if account is None:
+                account = CONN_USERS.get(record["connection_id"])
             payload = {k: v for k, v in record.items() if k != "kind"}
             emit(producer, {**payload, "account": account})
         elif record and record["kind"] == "failed" and tracker.should_publish_failed(record):
             payload = {k: v for k, v in record.items() if k not in ("kind", "user")}
             emit(producer, {**payload, "account": extract_account(record["user"]), "statement_failed": True})
-        last_end = match.end()
     return buffer[last_end:]   # keep only the unparsed remainder
 
 

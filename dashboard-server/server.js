@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -25,9 +26,46 @@ app.use(cors({ origin: FRONTEND_ORIGIN }))
 app.use(express.json())
 
 const AUDIT_PATH = path.join(__dirname, 'audit.log')
+// Hash-chained audit log: each line stores prev (hash of the previous line) and hash
+// (SHA-256 of prev + the entry's fields). Editing or deleting a line breaks the chain.
+function lastAuditHash() {
+  try {
+    const text = fs.readFileSync(AUDIT_PATH, 'utf8').trimEnd()
+    if (!text) return 'GENESIS'
+    return JSON.parse(text.slice(text.lastIndexOf('\n') + 1)).hash || 'GENESIS'
+  } catch (e) {
+    return 'GENESIS'
+  }
+}
+function auditHash(prev, e) {
+  return crypto.createHash('sha256').update([prev, e.ts, e.user || '', e.action, e.outcome, e.ip || ''].join('|')).digest('hex')
+}
 function audit(req, user, action, outcome) {
-  const entry = { ts: new Date().toISOString(), user: user || null, action, outcome, ip: req.ip }
-  fs.appendFile(AUDIT_PATH, JSON.stringify(entry) + '\n', () => {})
+  const entry = { ts: new Date().toISOString(), user: user || null, action, outcome: String(outcome), ip: req.ip }
+  entry.prev = lastAuditHash()
+  entry.hash = auditHash(entry.prev, entry)
+  fs.appendFileSync(AUDIT_PATH, JSON.stringify(entry) + '\n')
+}
+
+// Lockout: 5 failed logins for a username lock it for 15 minutes (in memory; a restart clears it).
+const MAX_FAILS = 5
+const LOCK_MS = 15 * 60 * 1000
+const fails = new Map()
+function lockedFor(username) {
+  const f = fails.get(String(username).toLowerCase())
+  return f && f.lockedUntil > Date.now()
+}
+function noteFail(req, username) {
+  const key = String(username).toLowerCase()
+  const now = Date.now()
+  let f = fails.get(key)
+  if (!f || f.lockedUntil <= now && f.lockedUntil !== 0 || now - f.first > LOCK_MS) f = { count: 0, first: now, lockedUntil: 0 }
+  f.count += 1
+  if (f.count >= MAX_FAILS) {
+    f.lockedUntil = now + LOCK_MS
+    audit(req, username, 'login', 'locked')
+  }
+  fails.set(key, f)
 }
 
 app.post('/api/login', async (req, res) => {
@@ -35,17 +73,24 @@ app.post('/api/login', async (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ error: 'username and password required' })
   }
+  if (lockedFor(username)) {
+    audit(req, username, 'login', 'blocked')
+    return res.status(429).json({ error: 'Too many failed attempts. Try again later.' })
+  }
   const user = USERS.find((candidate) => candidate.username === username)
   if (!user) {
     audit(req, username, 'login', 'failed')
+    noteFail(req, username)
     return res.status(401).json({ error: 'Invalid credentials' })
   }
   const valid = await bcrypt.compare(password, user.passwordHash)
   if (!valid) {
     audit(req, username, 'login', 'failed')
+    noteFail(req, username)
     return res.status(401).json({ error: 'Invalid credentials' })
   }
   const token = jwt.sign({ sub: username, role: user.role }, JWT_SECRET, { expiresIn: '8h' })
+  fails.delete(String(username).toLowerCase())
   audit(req, username, 'login', 'ok')
   res.json({ token })
 })
