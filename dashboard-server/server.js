@@ -163,7 +163,10 @@ app.get('/api/live-alerts', requireAuth, (req, res) => {
   const alerts = lines.map((line) => {
     try { return JSON.parse(line) } catch (err) { return null }
   }).filter(Boolean).reverse()
-  res.json(alerts)
+  // Only admins see who the alert is about. Everyone else gets the alert without the account
+  // name or customer_id (customer_id is the student number, so it identifies the person).
+  if (req.user.role === 'admin') return res.json(alerts)
+  res.json(alerts.map(({ account, customer_id, ...rest }) => rest))
 })
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }))

@@ -179,6 +179,21 @@ def check_roles():
             rec("Analyst alert view", "FAIL", "GET /api/alerts returns fields an analyst should not receive: " + ", ".join(leaked))
         else:
             rec("Analyst alert view", "PASS", "GET /api/alerts as an analyst returns no account name and no ground-truth label")
+    live_an_code, live_an = http("GET", "/api/live-alerts", token=t_an)
+    live_ad_code, live_ad = http("GET", "/api/live-alerts", token=t_ad)
+    if live_an_code != 200:
+        rec("Analyst live-alert view", "FAIL", f"GET /api/live-alerts as an analyst returned {live_an_code}")
+    elif not (isinstance(live_an, list) and live_an):
+        rec("Analyst live-alert view", "SKIP", "no live alerts to inspect; run the live demo first")
+    else:
+        leaked_live = sorted({k for a in live_an[:200] for k in a if k in ("account", "customer_id", "truth")})
+        admin_sees = live_ad_code == 200 and isinstance(live_ad, list) and any("account" in a for a in live_ad)
+        if leaked_live:
+            rec("Analyst live-alert view", "FAIL", "GET /api/live-alerts returns fields an analyst should not receive: " + ", ".join(leaked_live))
+        elif not admin_sees:
+            rec("Analyst live-alert view", "FAIL", "analyst view is clean, but the admin no longer sees the account either")
+        else:
+            rec("Analyst live-alert view", "PASS", "GET /api/live-alerts as an analyst returns no account name and no customer id; the admin still sees the account")
     an_audit, _ = http("GET", "/api/audit", token=t_an)
     ad_audit, _ = http("GET", "/api/audit", token=t_ad)
     if anon == 401 and an_alerts == 200 and an_audit == 403 and ad_audit == 200:
@@ -219,6 +234,7 @@ def check_masking():
         rec("Masking in stored alerts", "FAIL", "; ".join(problems))
     else:
         rec("Masking in stored alerts", "PASS", f"{scanned} alert records: no student numbers in alert text, pseudonyms are not numbers, audit entries hold only the allowed fields")
+    rec("Risk console endpoint", "INFO", "/api/risk-scores serves student numbers and ground-truth labels to any logged-in user; the console is an evaluation view over synthetic data, not an analyst view")
     cap = ROOT / "ml-engine" / "data" / "captured_query_text.jsonl"
     if cap.exists():
         rec("Captured statements", "INFO", "captured_query_text.jsonl stores raw statements, student numbers unmasked; it is protected by access to the server and by the retention script only")
