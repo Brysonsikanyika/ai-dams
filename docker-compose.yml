@@ -38,9 +38,9 @@ services:
     restart: unless-stopped
     command: --log-bin=mysql-bin --binlog-format=ROW --server-id=1
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set it in .env}
       MYSQL_DATABASE: aidams_demo
-      MYSQL_AGENT_PASSWORD: ${MYSQL_AGENT_PASSWORD:-changeme_agent}
+      MYSQL_AGENT_PASSWORD: ${MYSQL_AGENT_PASSWORD:?set it in .env}
       STUDENT_ACCOUNT_PASSWORD: ${STUDENT_ACCOUNT_PASSWORD}
       TAILER_ACCOUNT_PASSWORD: ${TAILER_ACCOUNT_PASSWORD}
     ports:
@@ -61,9 +61,9 @@ services:
     restart: unless-stopped
     command: ["postgres", "-c", "wal_level=logical", "-c", "max_replication_slots=4", "-c", "max_wal_senders=4"]
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set it in .env}
       POSTGRES_DB: aidams_demo
-      PG_AGENT_PASSWORD: ${PG_AGENT_PASSWORD:-changeme_agent}
+      PG_AGENT_PASSWORD: ${PG_AGENT_PASSWORD:?set it in .env}
     ports:
       - "5432:5432"
     volumes:
@@ -84,7 +84,7 @@ services:
     restart: unless-stopped
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-ChangeMe123!}
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?set it in .env}
       MSSQL_AGENT_ENABLED: "true"
     ports:
       - "1433:1433"
@@ -107,8 +107,8 @@ services:
       mssql:
         condition: service_healthy
     environment:
-      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-ChangeMe123!}
-      MSSQL_AGENT_PASSWORD: ${MSSQL_AGENT_PASSWORD:-changeme_agent}
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?set it in .env}
+      MSSQL_AGENT_PASSWORD: ${MSSQL_AGENT_PASSWORD:?set it in .env}
     entrypoint: ["/bin/bash", "/mssql-init/init.sh"]
     volumes:
       - ./mssql-init:/mssql-init:ro

@@ -1,0 +1,707 @@
+query_text,label,source
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300001' AND academic_period = 'S2 2025',0,calib:fee_total
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300013' AND academic_period = 'S2 2026',0,calib:fee_total
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300005' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300011','CSC401','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300009' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300015' AND g.academic_period = 'S1 2026' ORDER BY c.course_code",0,calib:results_by_period
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300010' AND academic_period = 'S1 2026',0,calib:fee_total
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300008',0,calib:update_surname
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300005' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',1376.37e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300011' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300011'",0,calib:payment_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300010','CSC401','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300013' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300008' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300014' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300007' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300017' AND academic_period = 'S2 2026',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300003','Database System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE students SET last_name = 'Chanda' WHERE student_id = '2300004',0,calib:update_surname
+UPDATE students SET last_name = 'Lungu' WHERE student_id = '2300019',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300007','CSC320','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT * FROM fees WHERE student_id = '2300007',0,calib:check_fees
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300018' GROUP BY academic_period",0,calib:average_by_period
+SELECT * FROM fees WHERE student_id = '2300003',0,calib:check_fees
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300005' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300007' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300001','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300007','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE students SET last_name = 'Lungu' WHERE student_id = '2300003',0,calib:update_surname
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300012' AND academic_period = 'S2 2026',0,calib:fee_total
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300012' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300020',2602.55e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300010' AND academic_period = 'S1 2025',0,calib:fee_total
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300006' AND academic_period = 'S1 2026',0,calib:fee_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',2392.93e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300020','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300015' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300002','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300018',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300010','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300005',655.03e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300004' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300013' AND academic_period = 'S1 2025',0,calib:fee_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300017',252.68e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT * FROM grades WHERE student_id = '2300010',0,calib:check_grades
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300005','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300012' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300006',2776.52e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',2977.07e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300004' AND academic_period = 'S1 2026',0,calib:fee_total
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300006' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+SELECT * FROM fees WHERE student_id = '2300017',0,calib:check_fees
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300002' AND academic_period = 'S2 2026',0,calib:fee_total
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300005' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300014',800.82e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300018','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300020' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+SELECT * FROM grades WHERE student_id = '2300020',0,calib:check_grades
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300001' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300005' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300001' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300015' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300007',2438.31e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+UPDATE students SET last_name = 'Sakala' WHERE student_id = '2300015',0,calib:update_surname
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300014' AND academic_period = 'S2 2025',0,calib:fee_total
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300013'",0,calib:payment_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300008','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300013' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300001' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300013',0,calib:update_surname
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300009'",0,calib:payment_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300003','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300019','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300017',0,calib:update_surname
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300018' AND academic_period = 'S2 2025',0,calib:fee_total
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300012' AND academic_period = 'S1 2025',0,calib:fee_total
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300014' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300011',516.31e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300014',1115.12e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300010' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300003' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+SELECT * FROM grades WHERE student_id = '2300015',0,calib:check_grades
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300016' GROUP BY academic_period",0,calib:average_by_period
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300020' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300016' AND academic_period = 'S2 2026',0,calib:fee_total
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300006' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300014','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300013',627.59e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT * FROM grades WHERE student_id = '2300017',0,calib:check_grades
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300015','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300010','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300006' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300020','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300010','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300007',1955.35e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300018','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300013' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Phiri' WHERE student_id = '2300015',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300009','CSC115','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300011','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300020' AND return_date IS NULL,0,calib:open_loan_count
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300006' AND academic_period = 'S2 2026',0,calib:fee_total
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300019' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300005' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300014' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300011',2096.62e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300020' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300011' GROUP BY academic_period",0,calib:average_by_period
+SELECT * FROM grades WHERE student_id = '2300001',0,calib:check_grades
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300020' AND academic_period = 'S1 2026',0,calib:fee_total
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300006',0,calib:update_surname
+SELECT * FROM fees WHERE student_id = '2300010',0,calib:check_fees
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300015' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300009' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+UPDATE students SET last_name = 'Mwape' WHERE student_id = '2300018',0,calib:update_surname
+UPDATE students SET last_name = 'Mulenga' WHERE student_id = '2300002',0,calib:update_surname
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300001','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300012' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300018',454.03e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300015','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300019' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+SELECT * FROM fees WHERE student_id = '2300012',0,calib:check_fees
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300007',538.95e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300019',2640.95e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300012' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300002','CSC401','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300014' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+SELECT * FROM fees WHERE student_id = '2300001',0,calib:check_fees
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300020',0,calib:update_surname
+"SELECT course_code, course_name FROM courses WHERE course_name LIKE '%Web%' ORDER BY course_name LIMIT 10",0,calib:course_search
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300007' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300013','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300018',2313.37e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300002' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300017' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',414.58e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300016' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300008' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300009','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE students SET last_name = 'Mwape' WHERE student_id = '2300010',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300001','CSC210','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300009',226.99e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300016',949.2e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT course_code, course_name FROM courses WHERE course_name LIKE '%Machine%' ORDER BY course_name LIMIT 10",0,calib:course_search
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300004',1619.07e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300018' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300007','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300016' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300009' GROUP BY academic_period",0,calib:average_by_period
+"SELECT course_code, course_name FROM courses WHERE course_name LIKE '%Data%' ORDER BY course_name LIMIT 10",0,calib:course_search
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300008','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300003' AND academic_period = 'S2 2026',0,calib:fee_total
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300018' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300019' GROUP BY academic_period",0,calib:average_by_period
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300005' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300010',0,calib:update_surname
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',1509.16e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300001' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300002'",0,calib:payment_total
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300011' AND academic_period = 'S1 2026',0,calib:fee_total
+SELECT * FROM fees WHERE student_id = '2300020',0,calib:check_fees
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',2320.87e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300017' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300006' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+SELECT * FROM grades WHERE student_id = '2300013',0,calib:check_grades
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300014' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300020'",0,calib:payment_total
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300017' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300019',0,calib:update_surname
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300013' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300015','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300006' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300010',1141.56e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300009' AND academic_period = 'S1 2025',0,calib:fee_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300015','CSC320','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300016' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300002' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300004' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300003',755.32e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300003' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300002',753.45e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300020',1331.25e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300015' AND academic_period = 'S2 2025',0,calib:fee_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300011',1697.93e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+UPDATE students SET last_name = 'Phiri' WHERE student_id = '2300012',0,calib:update_surname
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300009' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300003','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300009' AND academic_period = 'S1 2026',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300012','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300013' GROUP BY academic_period",0,calib:average_by_period
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300020',2365.28e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300005' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300001' GROUP BY academic_period",0,calib:average_by_period
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300019' AND academic_period = 'S1 2026',0,calib:fee_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300016','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300008',2945.72e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300001','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300008' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300002' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300009' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300003','CSC320','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300015','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300019' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+UPDATE students SET last_name = 'Mwansa' WHERE student_id = '2300014',0,calib:update_surname
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300004' AND g.academic_period = 'S1 2026' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Mwansa' WHERE student_id = '2300004',0,calib:update_surname
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300016',2624.84e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300014','Database System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300013' AND academic_period = 'S2 2025',0,calib:fee_total
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300018' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300001','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300013' AND return_date IS NULL,0,calib:open_loan_count
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300002' AND academic_period = 'S2 2025',0,calib:fee_total
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300015' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300001' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300001','CSC115','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT * FROM grades WHERE student_id = '2300005',0,calib:check_grades
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300003','CSC401','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300005',2472.62e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300012' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300011',0,calib:update_surname
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300014' AND academic_period = 'S1 2026',0,calib:fee_total
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300017' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300013' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300019',1819.97e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300016',1909.18e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+UPDATE students SET last_name = 'Mwape' WHERE student_id = '2300019',0,calib:update_surname
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300016' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300005' AND academic_period = 'S1 2026',0,calib:fee_total
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300014' AND academic_period = 'S2 2026',0,calib:fee_total
+UPDATE students SET last_name = 'Mwape' WHERE student_id = '2300006',0,calib:update_surname
+UPDATE students SET last_name = 'Mulenga' WHERE student_id = '2300005',0,calib:update_surname
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300005',1225.57e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300006' AND academic_period = 'S2 2025',0,calib:fee_total
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300017' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300020' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',2599.58e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300009' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300011' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+UPDATE students SET last_name = 'Phiri' WHERE student_id = '2300014',0,calib:update_surname
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300001' AND academic_period = 'S1 2025',0,calib:fee_total
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300006' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300002',399.75e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300015' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300002','CSC115','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300012',0,calib:update_surname
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300018' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+SELECT * FROM grades WHERE student_id = '2300008',0,calib:check_grades
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300010',1496.51e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300003','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300007' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300010' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300019',0,calib:update_surname
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300019',302.36e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT * FROM fees WHERE student_id = '2300018',0,calib:check_fees
+UPDATE students SET last_name = 'Mulenga' WHERE student_id = '2300006',0,calib:update_surname
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300002',1299.02e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300003','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300012' AND g.academic_period = 'S1 2026' ORDER BY c.course_code",0,calib:results_by_period
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300013' AND academic_period = 'S1 2026',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300019','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300005' AND academic_period = 'S2 2026',0,calib:fee_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300004','CSC115','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300011',235.15e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300004' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300005','Database System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300019','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300006',1096.18e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300002' GROUP BY academic_period",0,calib:average_by_period
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300014' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300009',1424.68e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300009' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300001' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300016','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300013','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300010' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Sakala' WHERE student_id = '2300008',0,calib:update_surname
+SELECT * FROM grades WHERE student_id = '2300014',0,calib:check_grades
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300017' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300012' GROUP BY academic_period",0,calib:average_by_period
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300010','CSC115','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300014' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300001',0,calib:update_surname
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300005'",0,calib:payment_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300007',1891.02e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300012' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300009','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300012' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300002' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+SELECT * FROM grades WHERE student_id = '2300018',0,calib:check_grades
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300011','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300004' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300009' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300006',1596.14e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300011' AND g.academic_period = 'S1 2026' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Lungu' WHERE student_id = '2300018',0,calib:update_surname
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300016' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300002','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300007' AND g.academic_period = 'S1 2026' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Mulenga' WHERE student_id = '2300019',0,calib:update_surname
+"SELECT course_code, course_name FROM courses WHERE course_name LIKE '%Security%' ORDER BY course_name LIMIT 10",0,calib:course_search
+SELECT * FROM fees WHERE student_id = '2300014',0,calib:check_fees
+SELECT * FROM fees WHERE student_id = '2300019',0,calib:check_fees
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',2414.94e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300020' AND academic_period = 'S2 2025',0,calib:fee_total
+SELECT * FROM fees WHERE student_id = '2300002',0,calib:check_fees
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300008' GROUP BY academic_period",0,calib:average_by_period
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300002','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT * FROM grades WHERE student_id = '2300012',0,calib:check_grades
+UPDATE students SET last_name = 'Chanda' WHERE student_id = '2300016',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300004','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300006' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300015','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300004',0,calib:update_surname
+UPDATE students SET last_name = 'Mwansa' WHERE student_id = '2300006',0,calib:update_surname
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300017','Database System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300013','CSC210','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300004','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300011' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300009','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300015'",0,calib:payment_total
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300018' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300007',0,calib:update_surname
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300017',0,calib:update_surname
+SELECT * FROM fees WHERE student_id = '2300013',0,calib:check_fees
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300010'",0,calib:payment_total
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300017',0,calib:update_surname
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300003','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300007' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300006' GROUP BY academic_period",0,calib:average_by_period
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300003' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300001' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300001' AND academic_period = 'S2 2026',0,calib:fee_total
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300002' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300009',0,calib:update_surname
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300011' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300014'",0,calib:payment_total
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300010' GROUP BY academic_period",0,calib:average_by_period
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300002',0,calib:update_surname
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300002' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300004' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300006',250.55e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300009',2680.86e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300008' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300003' GROUP BY academic_period",0,calib:average_by_period
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300014','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300002' AND academic_period = 'S1 2025',0,calib:fee_total
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300005' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300016',892.48e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300017' AND academic_period = 'S1 2026',0,calib:fee_total
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300010' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300018','CSC115','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300020','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300020' AND academic_period = 'S1 2025',0,calib:fee_total
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300003' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300014' AND academic_period = 'S1 2025',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300018','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300013' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300001',0,calib:update_surname
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300006','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300018'",0,calib:payment_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',1873.56e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300018' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300017','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',1032.43e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300011' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300018',2312.67e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300006' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300001','CSC320','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300003'",0,calib:payment_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300001','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300001'",0,calib:payment_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300005','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300001','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300016' AND academic_period = 'S1 2025',0,calib:fee_total
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300013' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+SELECT * FROM fees WHERE student_id = '2300015',0,calib:check_fees
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300008',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300013','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300010',1817.97e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300012','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE students SET last_name = 'Mwape' WHERE student_id = '2300017',0,calib:update_surname
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300020','Database System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT * FROM grades WHERE student_id = '2300002',0,calib:check_grades
+UPDATE students SET last_name = 'Sakala' WHERE student_id = '2300013',0,calib:update_surname
+UPDATE students SET last_name = 'Sakala' WHERE student_id = '2300010',0,calib:update_surname
+UPDATE students SET last_name = 'Lungu' WHERE student_id = '2300020',0,calib:update_surname
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300010' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+UPDATE students SET last_name = 'Chanda' WHERE student_id = '2300006',0,calib:update_surname
+SELECT * FROM grades WHERE student_id = '2300009',0,calib:check_grades
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300014',0,calib:update_surname
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300019','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300008' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300014','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT * FROM grades WHERE student_id = '2300016',0,calib:check_grades
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300016' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT course_code, course_name FROM courses WHERE course_name LIKE '%Network%' ORDER BY course_name LIMIT 10",0,calib:course_search
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300007',228.49e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300003' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300001' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300018','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300008' AND academic_period = 'S1 2025',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300008','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300008',2751.01e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT * FROM fees WHERE student_id = '2300016',0,calib:check_fees
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300019',1076.09e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+UPDATE students SET last_name = 'Phiri' WHERE student_id = '2300009',0,calib:update_surname
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300017' GROUP BY academic_period",0,calib:average_by_period
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300020' GROUP BY academic_period",0,calib:average_by_period
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300012' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300008'",0,calib:payment_total
+SELECT * FROM grades WHERE student_id = '2300011',0,calib:check_grades
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',2691.5e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+UPDATE students SET last_name = 'Zulu' WHERE student_id = '2300003',0,calib:update_surname
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300006' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300010' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300017','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300011' AND academic_period = 'S2 2026',0,calib:fee_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',1542.99e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300017' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300009',227.23e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300007' AND academic_period = 'S2 2025',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300014','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',718.25e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300015' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300010',0,calib:update_surname
+SELECT * FROM fees WHERE student_id = '2300011',0,calib:check_fees
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300010','CSC210','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT * FROM fees WHERE student_id = '2300009',0,calib:check_fees
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300011','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300019' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300014' GROUP BY academic_period",0,calib:average_by_period
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300007' GROUP BY academic_period",0,calib:average_by_period
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300015' GROUP BY academic_period",0,calib:average_by_period
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300006',241.97e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300019' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300020' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300013','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT course_code, course_name FROM courses WHERE course_name LIKE '%Crypto%' ORDER BY course_name LIMIT 10",0,calib:course_search
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300010','The Web Application Hacker\'s Handbook','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT * FROM grades WHERE student_id = '2300003',0,calib:check_grades
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300016' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300018' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Banda' WHERE student_id = '2300018',0,calib:update_surname
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300018' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300014','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300016',0,calib:update_surname
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300019' AND academic_period = 'S2 2025',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300015','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300009' AND academic_period = 'S2 2025',0,calib:fee_total
+UPDATE students SET last_name = 'Mwape' WHERE student_id = '2300020',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300013','CSC330','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE students SET last_name = 'Phiri' WHERE student_id = '2300016',0,calib:update_surname
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300016' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300004' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300006','CSC115','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300013',1967.2e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300007' AND academic_period = 'S1 2026',0,calib:fee_total
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300010','Database System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300018',402.88e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300010' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300007','Introduction to Algorithms','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300006','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300012','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300017' AND return_date IS NULL,0,calib:open_loan_count
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300016',1101.2e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300020' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+UPDATE students SET last_name = 'Lungu' WHERE student_id = '2300009',0,calib:update_surname
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300019' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+SELECT * FROM fees WHERE student_id = '2300008',0,calib:check_fees
+SELECT * FROM grades WHERE student_id = '2300006',0,calib:check_grades
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300019' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300017'",0,calib:payment_total
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300012'",0,calib:payment_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',954.2e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300016'",0,calib:payment_total
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300004' GROUP BY academic_period",0,calib:average_by_period
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300017','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+UPDATE students SET last_name = 'Ng\'andu' WHERE student_id = '2300005',0,calib:update_surname
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300009','CSC210','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300001','Database System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300003' AND g.academic_period = 'S1 2026' ORDER BY c.course_code",0,calib:results_by_period
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300002','CSC320','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300003' AND academic_period = 'S2 2025',0,calib:fee_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300007','CSC210','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300007','CSC401','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300020' AND g.academic_period = 'S1 2026' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Sakala' WHERE student_id = '2300003',0,calib:update_surname
+SELECT * FROM fees WHERE student_id = '2300005',0,calib:check_fees
+SELECT * FROM fees WHERE student_id = '2300006',0,calib:check_fees
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300012','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300019' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300015' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300011' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300012',1624.27e0,'2026-10-15 12:00:00','bank_transfer')",0,calib:pay_fee
+SELECT * FROM fees WHERE student_id = '2300004',0,calib:check_fees
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300014' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300010','Applied Cryptography','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+UPDATE library_loans SET return_date = CURDATE() WHERE student_id = '2300004' AND return_date IS NULL ORDER BY id LIMIT 1,0,calib:return_book
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300013',2555.13e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300009','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300002' AND g.academic_period = 'S2 2025' ORDER BY c.course_code",0,calib:results_by_period
+SELECT * FROM grades WHERE student_id = '2300004',0,calib:check_grades
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300007','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300011' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+SELECT COUNT(*) FROM library_loans WHERE student_id = '2300003' AND return_date IS NULL,0,calib:open_loan_count
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300004'",0,calib:payment_total
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300017' AND academic_period = 'S1 2025',0,calib:fee_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300012','CSC320','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT item_title, due_date FROM library_loans WHERE student_id = '2300007' AND return_date IS NULL AND due_date < CURDATE()",0,calib:overdue_books
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300008' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300014' AND g.academic_period = 'S2 2026' ORDER BY c.course_code",0,calib:results_by_period
+UPDATE students SET last_name = 'Mulenga' WHERE student_id = '2300020',0,calib:update_surname
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300007'",0,calib:payment_total
+UPDATE students SET last_name = 'Mwansa' WHERE student_id = '2300008',0,calib:update_surname
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300010' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300005','CSC302','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300014','CSC301','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT academic_period, AVG(score) AS avg_score FROM grades WHERE student_id = '2300005' GROUP BY academic_period",0,calib:average_by_period
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300004' AND academic_period = 'S2 2025',0,calib:fee_total
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300019','CSC210','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT amount, payment_date, method FROM payments WHERE student_id = '2300016' AND payment_date BETWEEN '2026-06-17 12:00:00' AND '2026-10-15 12:00:00' ORDER BY payment_date DESC LIMIT 20",0,calib:payment_history
+UPDATE students SET last_name = 'Mulenga' WHERE student_id = '2300015',0,calib:update_surname
+"SELECT amount, payment_date FROM payments WHERE student_id = '2300008' AND payment_date > NOW() - INTERVAL 30 DAY",0,calib:recent_payments
+SELECT * FROM grades WHERE student_id = '2300019',0,calib:check_grades
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300005',1275.26e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300006','CSC210','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300008','Operating System Concepts','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO library_loans (student_id, item_title, checkout_date, due_date) VALUES ('2300007','Computer Networking: A Top-Down Approach','2026-10-15 12:00:00','2026-10-29')",0,calib:borrow_book
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300006','CSC250','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"INSERT INTO enrollments (student_id, course_code, academic_period, enrolled_at) VALUES ('2300011','CSC320','S2 2026','2026-10-15 12:00:00')",0,calib:enroll
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300020' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+UPDATE students SET last_name = 'Mwape' WHERE student_id = '2300009',0,calib:update_surname
+SELECT SUM(amount_due) AS total_due FROM fees WHERE student_id = '2300007' AND academic_period = 'S2 2026',0,calib:fee_total
+"SELECT SUM(amount) AS total_paid, COUNT(*) AS n_payments FROM payments WHERE student_id = '2300006'",0,calib:payment_total
+"INSERT INTO payments (student_id, amount, payment_date, method) VALUES ('2300001',911.12e0,'2026-10-15 12:00:00','mobile_money')",0,calib:pay_fee
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300003' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"SELECT c.course_code, c.course_name, c.credit_hours FROM enrollments e JOIN courses c ON c.course_code = e.course_code WHERE e.student_id = '2300004' AND e.academic_period = 'S2 2026'",0,calib:enrolled_courses
+"SELECT c.course_code, c.course_name, g.score, g.grade_letter FROM grades g JOIN courses c ON c.course_code = g.course_code WHERE g.student_id = '2300009' AND g.academic_period = 'S1 2025' ORDER BY c.course_code",0,calib:results_by_period
+SHOW DATABASES,0,calibmeta:show_databases
+SHOW DATABASES;,0,calibmeta:show_databases
+SHOW TABLES,0,calibmeta:show_tables
+SHOW TABLES;,0,calibmeta:show_tables
+SHOW FULL TABLES,0,calibmeta:show_tables
+SHOW FULL TABLES;,0,calibmeta:show_tables
+SHOW TABLES FROM aidams_demo,0,calibmeta:show_tables
+SHOW TABLES FROM aidams_demo;,0,calibmeta:show_tables
+SHOW COLUMNS FROM students,0,calibmeta:show_columns
+SHOW COLUMNS FROM students;,0,calibmeta:show_columns
+SHOW COLUMNS FROM grades,0,calibmeta:show_columns
+SHOW COLUMNS FROM grades;,0,calibmeta:show_columns
+SHOW COLUMNS FROM courses,0,calibmeta:show_columns
+SHOW COLUMNS FROM courses;,0,calibmeta:show_columns
+SHOW COLUMNS FROM fees,0,calibmeta:show_columns
+SHOW COLUMNS FROM fees;,0,calibmeta:show_columns
+SHOW COLUMNS FROM enrolments,0,calibmeta:show_columns
+SHOW COLUMNS FROM enrolments;,0,calibmeta:show_columns
+SHOW COLUMNS FROM library_loans,0,calibmeta:show_columns
+SHOW COLUMNS FROM library_loans;,0,calibmeta:show_columns
+SHOW COLUMNS FROM payments,0,calibmeta:show_columns
+SHOW COLUMNS FROM payments;,0,calibmeta:show_columns
+SHOW COLUMNS FROM staff,0,calibmeta:show_columns
+SHOW COLUMNS FROM staff;,0,calibmeta:show_columns
+SHOW COLUMNS FROM modules,0,calibmeta:show_columns
+SHOW COLUMNS FROM modules;,0,calibmeta:show_columns
+SHOW COLUMNS FROM timetable,0,calibmeta:show_columns
+SHOW COLUMNS FROM timetable;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM students,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM students;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM grades,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM grades;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM courses,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM courses;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM fees,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM fees;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM enrolments,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM enrolments;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM library_loans,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM library_loans;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM payments,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM payments;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM staff,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM staff;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM modules,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM modules;,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM timetable,0,calibmeta:show_columns
+SHOW FULL COLUMNS FROM timetable;,0,calibmeta:show_columns
+DESCRIBE students,0,calibmeta:describe
+DESCRIBE students;,0,calibmeta:describe
+DESCRIBE grades,0,calibmeta:describe
+DESCRIBE grades;,0,calibmeta:describe
+DESCRIBE courses,0,calibmeta:describe
+DESCRIBE courses;,0,calibmeta:describe
+DESCRIBE fees,0,calibmeta:describe
+DESCRIBE fees;,0,calibmeta:describe
+DESCRIBE enrolments,0,calibmeta:describe
+DESCRIBE enrolments;,0,calibmeta:describe
+DESCRIBE library_loans,0,calibmeta:describe
+DESCRIBE library_loans;,0,calibmeta:describe
+DESCRIBE payments,0,calibmeta:describe
+DESCRIBE payments;,0,calibmeta:describe
+DESCRIBE staff,0,calibmeta:describe
+DESCRIBE staff;,0,calibmeta:describe
+DESCRIBE modules,0,calibmeta:describe
+DESCRIBE modules;,0,calibmeta:describe
+DESCRIBE timetable,0,calibmeta:describe
+DESCRIBE timetable;,0,calibmeta:describe
+DESC students,0,calibmeta:describe
+DESC students;,0,calibmeta:describe
+DESC grades,0,calibmeta:describe
+DESC grades;,0,calibmeta:describe
+DESC courses,0,calibmeta:describe
+DESC courses;,0,calibmeta:describe
+DESC fees,0,calibmeta:describe
+DESC fees;,0,calibmeta:describe
+DESC enrolments,0,calibmeta:describe
+DESC enrolments;,0,calibmeta:describe
+DESC library_loans,0,calibmeta:describe
+DESC library_loans;,0,calibmeta:describe
+DESC payments,0,calibmeta:describe
+DESC payments;,0,calibmeta:describe
+DESC staff,0,calibmeta:describe
+DESC staff;,0,calibmeta:describe
+DESC modules,0,calibmeta:describe
+DESC modules;,0,calibmeta:describe
+DESC timetable,0,calibmeta:describe
+DESC timetable;,0,calibmeta:describe
+SHOW CREATE TABLE students,0,calibmeta:show_create
+SHOW CREATE TABLE students;,0,calibmeta:show_create
+SHOW CREATE TABLE grades,0,calibmeta:show_create
+SHOW CREATE TABLE grades;,0,calibmeta:show_create
+SHOW CREATE TABLE courses,0,calibmeta:show_create
+SHOW CREATE TABLE courses;,0,calibmeta:show_create
+SHOW CREATE TABLE fees,0,calibmeta:show_create
+SHOW CREATE TABLE fees;,0,calibmeta:show_create
+SHOW CREATE TABLE enrolments,0,calibmeta:show_create
+SHOW CREATE TABLE enrolments;,0,calibmeta:show_create
+SHOW CREATE TABLE library_loans,0,calibmeta:show_create
+SHOW CREATE TABLE library_loans;,0,calibmeta:show_create
+SHOW CREATE TABLE payments,0,calibmeta:show_create
+SHOW CREATE TABLE payments;,0,calibmeta:show_create
+SHOW CREATE TABLE staff,0,calibmeta:show_create
+SHOW CREATE TABLE staff;,0,calibmeta:show_create
+SHOW CREATE TABLE modules,0,calibmeta:show_create
+SHOW CREATE TABLE modules;,0,calibmeta:show_create
+SHOW CREATE TABLE timetable,0,calibmeta:show_create
+SHOW CREATE TABLE timetable;,0,calibmeta:show_create
+SHOW INDEX FROM students,0,calibmeta:show_index
+SHOW INDEX FROM students;,0,calibmeta:show_index
+SHOW INDEX FROM grades,0,calibmeta:show_index
+SHOW INDEX FROM grades;,0,calibmeta:show_index
+SHOW INDEX FROM courses,0,calibmeta:show_index
+SHOW INDEX FROM courses;,0,calibmeta:show_index
+SHOW INDEX FROM fees,0,calibmeta:show_index
+SHOW INDEX FROM fees;,0,calibmeta:show_index
+SHOW INDEX FROM enrolments,0,calibmeta:show_index
+SHOW INDEX FROM enrolments;,0,calibmeta:show_index
+SHOW INDEX FROM library_loans,0,calibmeta:show_index
+SHOW INDEX FROM library_loans;,0,calibmeta:show_index
+SHOW INDEX FROM payments,0,calibmeta:show_index
+SHOW INDEX FROM payments;,0,calibmeta:show_index
+SHOW INDEX FROM staff,0,calibmeta:show_index
+SHOW INDEX FROM staff;,0,calibmeta:show_index
+SHOW INDEX FROM modules,0,calibmeta:show_index
+SHOW INDEX FROM modules;,0,calibmeta:show_index
+SHOW INDEX FROM timetable,0,calibmeta:show_index
+SHOW INDEX FROM timetable;,0,calibmeta:show_index
+USE aidams_demo,0,calibmeta:use_db
+USE aidams_demo;,0,calibmeta:use_db
+SELECT DATABASE(),0,calibmeta:select_database
+SELECT DATABASE();,0,calibmeta:select_database
+select @@version_comment limit 1,0,calibmeta:version_comment
+select @@version_comment limit 1;,0,calibmeta:version_comment
+SELECT VERSION(),0,calibmeta:select_info
+SELECT VERSION();,0,calibmeta:select_info
+SELECT USER(),0,calibmeta:select_info
+SELECT USER();,0,calibmeta:select_info
+SELECT CURRENT_USER(),0,calibmeta:select_info
+SELECT CURRENT_USER();,0,calibmeta:select_info
+SELECT CONNECTION_ID(),0,calibmeta:select_info
+SELECT CONNECTION_ID();,0,calibmeta:select_info
+SELECT NOW(),0,calibmeta:select_now
+SELECT NOW();,0,calibmeta:select_now
+SELECT CURRENT_TIMESTAMP,0,calibmeta:select_now
+SELECT CURRENT_TIMESTAMP;,0,calibmeta:select_now
+SELECT 1,0,calibmeta:select_now
+SELECT 1;,0,calibmeta:select_now
+SET NAMES utf8,0,calibmeta:set_names
+SET NAMES utf8;,0,calibmeta:set_names
+SET NAMES utf8mb4,0,calibmeta:set_names
+SET NAMES utf8mb4;,0,calibmeta:set_names
+SET NAMES latin1,0,calibmeta:set_names
+SET NAMES latin1;,0,calibmeta:set_names
+SET autocommit=1,0,calibmeta:set_autocommit
+SET autocommit=1;,0,calibmeta:set_autocommit
+SET autocommit=0,0,calibmeta:set_autocommit
+SET autocommit=0;,0,calibmeta:set_autocommit
+START TRANSACTION,0,calibmeta:transaction
+START TRANSACTION;,0,calibmeta:transaction
+COMMIT,0,calibmeta:transaction
+COMMIT;,0,calibmeta:transaction
+ROLLBACK,0,calibmeta:transaction
+ROLLBACK;,0,calibmeta:transaction
+BEGIN,0,calibmeta:transaction
+BEGIN;,0,calibmeta:transaction
